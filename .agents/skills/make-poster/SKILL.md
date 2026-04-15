@@ -18,6 +18,8 @@ Collect or confirm these inputs before generating output:
 3. Poster dimensions, orientation, and target column count (required).
 4. Optional reference posters in `references/` for style matching.
 5. Optional author or lab website URL for logo and brand signals.
+6. Event details: ask where the poster will be presented and the event name.
+7. If an event name is provided, ask whether the event has a logo and accept `event_logo.png` for inclusion.
 
 Do not assume dimensions, orientation, or columns when not provided.
 
@@ -27,7 +29,7 @@ Write generated artifacts to `poster/`:
 
 1. `poster/index.html` (interactive poster editor, single-file app).
 2. `poster/poster-config.json` (layout + typography defaults).
-3. Poster assets copied/downloaded into `poster/` (figures, logos, QR images).
+3. Poster assets copied/downloaded into `poster/` (figures, logos, optional QR images).
 
 Keep all asset paths local and relative to `poster/index.html`.
 
@@ -64,7 +66,8 @@ Build `poster/` and collect assets:
 
 1. Copy/convert figures from `overleaf/` into `poster/`.
 2. Download website images and institutional logos into `poster/` and `poster/logos/`.
-3. Generate QR codes for project URL and `https://github.com/ethanweber/posterskill`.
+3. Generate only the project QR code when requested or useful. Do not generate `qr-posterskill.png`.
+4. If provided, copy event logo as `poster/event_logo.png` and add it to the header.
 
 Use high-resolution figure conversions so print output remains sharp.
 
@@ -75,7 +78,7 @@ Use `assets/template.html` as the base and customize:
 1. `CARD_REGISTRY` with paper-specific card content.
 2. `DEFAULT_LAYOUT` with column widths and card ordering.
 3. `DEFAULT_LOGOS` from collected logos.
-4. Header title/authors/affiliations/conference badge.
+4. Header title/authors/affiliations/event name badge and optional event logo.
 5. Poster dimensions in CSS `@page`, `body`, and JS sizing constants.
 6. `DEFAULT_FONT_SCALE` (start around `1.3` unless content density demands otherwise).
 
@@ -116,4 +119,4 @@ When config JSON is provided, update defaults in `index.html` and write `poster/
 2. Keep text concise and figure-first.
 3. Match reference style when references exist.
 4. Keep poster build-free and self-contained.
-5. Include the Posterskill QR label in header.
+5. Include only project QR when relevant; no Posterskill QR requirement.

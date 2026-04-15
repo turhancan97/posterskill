@@ -38,7 +38,7 @@
   body.preview .divider, body.preview .swap-handle, body.preview .drop-zone { display:none!important; }
 
   /* === HEADER === */
-  .header { background: linear-gradient(135deg,#1b4f7a,#2d7fc1 50%,#45a0e0); padding:6mm var(--pad) 5mm; display:flex; align-items:center; gap:8mm; }
+  .header { background: linear-gradient(135deg,#d6434d,#f9535c 50%,#ff7a82); padding:6mm var(--pad) 5mm; display:flex; align-items:center; gap:8mm; }
   .header-left { flex:1; }
   .header h1 { font-size:34pt; font-weight:900; line-height:1.1; color:#fff; margin-bottom:2mm; }
   .header h1 .m { color:#ffd060; }
@@ -53,6 +53,8 @@
   .header-right .qr img { width:24mm; height:24mm; border-radius:1.5mm; background:#fff; padding:.8mm; }
   .header-right .ql { font-size:8pt; color:#ffd060; font-weight:800; text-align:center; }
   .header-right .qr { text-align:center; }
+  .header-right .event-logo img { height:24mm; width:auto; border-radius:0; background:transparent; padding:0; }
+  .header-right .event-logo { text-align:center; }
 
   /* === POSTER COLUMNS === */
   .poster { display:flex; gap:var(--gap); padding:var(--gap) var(--pad); min-height:0; flex:1; overflow:hidden; }
@@ -237,6 +239,13 @@ const DEFAULT_LOGOS = [
   /* { src: 'logos/institution.png', alt: 'Institution', heightMm: 28 }, */
 ];
 
+/* CUSTOMIZE: Event metadata */
+const EVENT_NAME = ''; /* e.g. 'NeurIPS 2026' */
+const EVENT_LOGO = null; /* e.g. { src: 'event_logo.png', alt: 'Event logo', label: 'Event' } */
+
+/* CUSTOMIZE: QR behavior */
+const PROJECT_QR = { enabled: true, src: 'qr.png', label: 'Project page', alt: 'Project QR' };
+
 /* ================================================================
    FRAMEWORK CODE — generally don't need to modify below this line
    ================================================================ */
@@ -304,7 +313,7 @@ function PosterApp() {
 
   function resetLayout() { setLayout(cloneLayout(DEFAULT_LAYOUT)); setCardHeights({...DEFAULT_CARD_HEIGHTS}); setFontScaleState(DEFAULT_FONT_SCALE); setLogos([...DEFAULT_LOGOS]); setSelectedCard(null); localStorage.removeItem(LS_KEY); }
   function saveConfig() { const cfg=getFullConfig(layout,cardHeights,fontScale,logos); const b=new Blob([JSON.stringify(cfg,null,2)+'\n'],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='poster-config.json'; a.click(); URL.revokeObjectURL(u); }
-  function copyConfig() { navigator.clipboard.writeText(JSON.stringify(getFullConfig(layout,cardHeights,fontScale,logos),null,2)).then(()=>alert('Config copied! Paste it to Claude.')); }
+  function copyConfig() { navigator.clipboard.writeText(JSON.stringify(getFullConfig(layout,cardHeights,fontScale,logos),null,2)).then(()=>alert('Config copied! Paste it to Codex.')); }
   function setFontScale(s) { setFontScaleState(parseFloat(s)||1.3); }
 
   useEffect(() => { window.posterAPI = { swapCards, moveCard, setColumnWidth, setCardHeight, setFontScale, getWaste, getLayout, getConfig:()=>getFullConfig(layout,cardHeights,fontScale,logos), resetLayout, saveConfig, copyConfig }; });
@@ -395,9 +404,19 @@ function PosterApp() {
           </div>
         )}
         <div className="header-right">
-          <div className="badge">CONF 2026</div>
-          <div className="qr"><img src="qr.png" alt="QR" /><div className="ql">Project page</div></div>
-          <div className="qr"><img src="qr-posterskill.png" alt="Posterskill" /><div className="ql">Poster made with my Claude skill</div></div>
+          {EVENT_LOGO && (
+            <div className="event-logo">
+              <img src={EVENT_LOGO.src} alt={EVENT_LOGO.alt || 'Event logo'} />
+              <div className="ql">{EVENT_LOGO.label || 'Event'}</div>
+            </div>
+          )}
+          {EVENT_NAME && <div className="badge">{EVENT_NAME}</div>}
+          {PROJECT_QR.enabled && (
+            <div className="qr">
+              <img src={PROJECT_QR.src} alt={PROJECT_QR.alt || 'Project QR'} />
+              <div className="ql">{PROJECT_QR.label || 'Project page'}</div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,8 +1,8 @@
 # posterskill
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that generates print-ready conference posters from your paper. Point it at your Overleaf source and project website — it extracts the content, downloads figures, fetches logos, and builds an interactive poster you can edit in your browser. Single HTML file, no build step.
+A Codex skill that generates print-ready conference posters from your paper. Point it at your Overleaf source and project website — it extracts the content, downloads figures, fetches logos, and builds an interactive poster you can edit in your browser. Single HTML file, no build step.
 
-The key idea: the poster is a **live editor**. Drag dividers to resize columns and rows, click cards to swap or move them, adjust font sizes — then feed your layout back to Claude for further refinement. Iterate between the browser and Claude until it's perfect.
+The key idea: the poster is a **live editor**. Drag dividers to resize columns and rows, click cards to swap or move them, adjust font sizes — then feed your layout back to Codex for further refinement. Iterate between the browser and Codex until it's perfect.
 
 ## Quick start
 
@@ -17,14 +17,14 @@ Optionally add reference posters for style matching:
 cp ~/some_poster.pdf references/
 ```
 
-Then start Claude Code and run the skill:
+Then start Codex and run the skill:
 
 ```bash
-claude
+codex
 ```
 
 ```
-/make-poster
+Use $make-poster at .agents/skills/make-poster to generate my poster.
 ```
 
 It reads your paper, fetches your project website, matches your reference style, and generates a `poster/` directory. Open `poster/index.html` in a browser to preview and edit.
@@ -57,10 +57,10 @@ No npm, no build step, no server. Just open `index.html` in Chrome.
 
 ## Editing workflow
 
-1. Claude generates the first draft and opens it in your browser
+1. Codex generates the first draft and opens it in your browser
 2. Drag dividers, swap cards, adjust font size in the browser
 3. Click **Copy Config** in the toolbar
-4. Paste the JSON back to Claude — it updates the defaults
+4. Paste the JSON back to Codex — it updates the defaults
 5. Repeat until you're happy
 6. Click **Preview** to verify, then print to PDF (margins: none, background graphics: on)
 
@@ -73,7 +73,7 @@ The poster uses a React app (loaded via CDN) with:
 - **`DEFAULT_LOGOS`** — institutional logos for the header
 - **`window.posterAPI`** — programmatic API for automation
 
-Claude uses [Playwright](https://playwright.dev/) to:
+Codex uses [Playwright](https://playwright.dev/) to:
 - Measure image aspect ratios and assign them to matching columns
 - Auto-optimize column widths to minimize whitespace
 - Take screenshots and visually verify the layout

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make Poster"
+  short_description: "Generate print-ready conference posters from paper sources"
+  default_prompt: "Generate a conference poster from Overleaf and website inputs."

@@ -1,6 +1,6 @@
 # posterskill
 
-A Codex skill that generates print-ready conference posters from your paper. Point it at your Overleaf source and project website — it extracts the content, downloads figures, fetches logos, and builds an interactive poster you can edit in your browser. Single HTML file, no build step.
+A Codex and Claude Code skill that generates print-ready conference posters from your paper. Point it at your Overleaf source and project website — it extracts the content, downloads figures, fetches logos, and builds an interactive poster you can edit in your browser. Single HTML file, no build step.
 
 The key idea: the poster is a **live editor**. Drag dividers to resize columns and rows, click cards to swap or move them, adjust font sizes — then feed your layout back to Codex for further refinement. Iterate between the browser and Codex until it's perfect.
 
@@ -17,7 +17,9 @@ Optionally add reference posters for style matching:
 cp ~/some_poster.pdf references/
 ```
 
-Then start Codex and run the skill:
+Then run the skill with either agent.
+
+**Codex:**
 
 ```bash
 codex
@@ -26,6 +28,18 @@ codex
 ```
 Use $make-poster at .agents/skills/make-poster to generate my poster.
 ```
+
+**Claude Code:**
+
+```bash
+claude
+```
+
+```
+/make-poster
+```
+
+Both point at the same instructions and template — `.claude/skills/make-poster/` is a thin wrapper (symlinked `SKILL.md` and `assets/template.html`) around the canonical copy in `.agents/skills/make-poster/`, so there's one source of truth to keep updated.
 
 It reads your paper, fetches your project website, matches your reference style, and generates a `poster/` directory. Open `poster/index.html` in a browser to preview and edit.
 

@@ -2,7 +2,7 @@
   "columns": [
     {
       "id": "col1",
-      "widthMm": 300,
+      "widthMm": 298,
       "cards": [
         "idea",
         "problem1",
@@ -12,7 +12,7 @@
     },
     {
       "id": "col2",
-      "widthMm": 340,
+      "widthMm": 372,
       "cards": [
         "method",
         "heads",

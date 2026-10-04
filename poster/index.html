@@ -291,7 +291,7 @@ function HookPanel() {
       <div className="hook-icon"><AmdfLogoTriple height="58mm" /></div>
       <div className="hook-q">Which layer of a frozen vision foundation model should you probe?</div>
       <div className="hook-a"><span>None alone.</span></div>
-      <div className="hook-a2">For dense prediction, try <b>AMDF</b>: it fuses <b>all</b> layers, for <b>every patch</b>.</div>
+      <div className="hook-a2">For dense prediction, try <b>AMDF</b>: it fuses <b>all</b> layers, for <b>every&nbsp;patch</b>.</div>
 
       <div className="hook-pt">
         <svg viewBox="0 0 300 120" className="hook-viz" xmlns="http://www.w3.org/2000/svg">
@@ -311,7 +311,7 @@ function HookPanel() {
         <div className="hook-num">&asymp;&frac14;</div>
         <div>of the <b>trainable parameters</b> of concatenating all layers (1.6M vs 6.8M, DINOv3-L, normals).</div>
       </div>
-      <div className="hook-foot">Frozen backbone &middot; no layer search &middot; one probe, any head</div>
+      <div className="hook-foot">Frozen backbone &middot; no layer search<br/>one probe, any head<br/><span style={{ fontWeight: 900 }}>Full tables &rarr; take a handout</span></div>
     </div>
   );
 }
@@ -358,7 +358,7 @@ function MethodSVG() {
       <text x="385" y="338" textAnchor="middle" style={{ ...F, fontSize: 24, fontWeight: 800, fill: B }}>values</text>
       <text x="385" y="372" textAnchor="middle" style={{ ...F, fontSize: 21, fill: T }}>v<tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan><tspan dy="-6"> = W</tspan><tspan dy="6" style={{ fontSize: 15 }}>v</tspan><tspan dy="-6"> h</tspan><tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan></text>
       {expertCols.map((c, k) => <rect key={k} x={318 + k * 34} y="390" width="30" height="20" rx="3" style={{ fill: c }} />)}
-      <text x="385" y="436" textAnchor="middle" style={{ ...F, fontSize: 15, fill: TL }}>D/2 ch. → 16 blocks of D/32</text>
+      <text x="385" y="436" textAnchor="middle" style={{ ...F, fontSize: 15, fill: TL }}>D/2 → 16 blocks</text>
       <text x="462" y="324" textAnchor="middle" style={{ fontSize: 18 }}>🔥</text>
 
       {[0, 1, 3].map((i) => <line key={i} x1="150" y1={ly(i) + 35} x2="215" y2={ly(i) + 35} style={{ stroke: B, strokeWidth: 2.5 }} />)}
@@ -421,7 +421,7 @@ function HeadsSVG() {
       <g transform={`translate(${x + 18},128)`}>{draw}</g>
       <text x={x + 128} y="152" style={{ ...F, fontSize: 24, fontWeight: 800, fill: B }}>{title}</text>
       <text x={x + 128} y="182" style={{ ...F, fontSize: 18, fill: T }}>{sub}</text>
-      <text x={x + 128} y="222" style={{ ...F, fontSize: 18, fontStyle: 'italic', fill: TL }}>{task}</text>
+      <text x={x + 124} y="222" style={{ ...F, fontSize: 16, fontStyle: 'italic', fill: TL }}>{task}</text>
     </g>
   );
   const dense = <g>{[0,1,2,3].map(c => [0,1,2,3].map(r => <rect key={c+'-'+r} x={c * 24} y={r * 24} width="22" height="22" rx="2" style={{ fill: (c + r) % 3 === 0 ? R : (c > 1 ? B : G) }} />))}</g>;
@@ -486,9 +486,9 @@ function RankHeatmap() {
 function ParamsBars() {
   const F = { fontFamily: 'Nunito' };
   const rows = [['AMDF (ours)', 1.48, 1.79, true], ['ConcatLayers', 1.72, 6.99], ['WeightedLayers', 3.40, 0.70], ['LastLayer', 4.09, 0.70], ['AvgLayer', 4.31, 0.70]];
-  const L0 = 230, LW = 300, R0 = 640, RW = 280, y0 = 56, dy = 46, bh = 32;
+  const L0 = 230, LW = 300, R0 = 640, RW = 280, y0 = 60, dy = 54, bh = 38;
   return (
-    <svg viewBox="0 0 1000 290" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1000 336" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
       <text x={L0} y="28" style={{ ...F, fontSize: 24, fontWeight: 800, fill: '#222' }}>Mean rank ↓ <tspan style={{ fontSize: 18, fontWeight: 600, fill: '#555' }}>(4 dense + pose)</tspan></text>
       <text x={R0} y="28" style={{ ...F, fontSize: 24, fontWeight: 800, fill: '#222' }}>Trainable params (M)</text>
       {rows.map(([n, rk, pm, ours], i) => { const y = y0 + i * dy, c = ours ? '#b83e2b' : '#d1d3d4', tc = ours ? '#b83e2b' : '#222', fw = ours ? 900 : 600; return <g key={n}>
@@ -521,7 +521,7 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <p className="verdict bad">&#x2717; Probing only the final layer misses what a task needs.</p>
+        <p className="verdict bad">&#x2717; Probing only the final layer misses what a&nbsp;task&nbsp;needs.</p>
         <div className="fig"><div className="fig-wrap"><img src="fig_motivation.png" alt="Single-layer probes of DINOv3-L on NYUv2 normals, depth and segmentation" /></div>
         <div className="cap"><b>Fig. 2:</b> One probe per layer of a frozen DINOv3-L on NYUv2: the best layer moves deeper as the task gets more semantic (L18 → L21 → L24).</div></div>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_pca_layers.png" style={{ height: 'auto' }} alt="PCA-to-RGB patch features of a frozen PESpatial-L at layers 1 to 23 for a NAVI lion and an NYUv2 kitchen" /></div>
@@ -577,19 +577,19 @@ const CARD_REGISTRY = {
     color: 'red',
     grow: true,
     body: (
-      <div className="fig fill"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
-      <div className="cap"><b>Fig. 5:</b> Measured on an earlier AMDF variant (with per-layer refinement). AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and shifts toward deep layers for semantic tasks (classification <i>r</i>=0.83).</div></div>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="cap"><b>Fig. 5:</b> Measured on an earlier AMDF variant (with per-layer refinement). AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and classification (<i>r</i>=0.83), weaker for camera and segmentation (<i>r</i>=0.46). Datasets differ from the tables (e.g. CIFAR-100, SpaRRTa).</div></div>
     ),
   },
   results: {
     title: 'Results',
-    color: 'dark',
+    color: 'red',
     grow: true,
     body: (
       <>
         <div className="callouts">
-          <div className="callout"><div className="cn">3 / 5</div><div className="cl">benchmarks where<br/>AMDF ranks best</div></div>
-          <div className="callout"><div className="cn">16</div><div className="cl">expert queries, each<br/>picking its own depth</div></div>
+          <div className="callout"><div className="cn">3 / 5</div><div className="cl">benchmarks won<br/>by AMDF</div></div>
+          <div className="callout"><div className="cn">16</div><div className="cl">experts, each with<br/>its own depth</div></div>
           <div className="callout"><div className="cn">7&times;6</div><div className="cl">backbones &times;<br/>benchmarks</div></div>
         </div>
         <h3>Mean rank per benchmark <span style={{ fontWeight: 600, color: '#555' }}>(1 = best, &#9733; = best in table)</span></h3>
@@ -608,7 +608,7 @@ const CARD_REGISTRY = {
     body: (
       <ul className="takeaways">
         <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
-        <li>AMDF has a better mean rank than LastLayer, AvgLayer and WeightedLayers in every table, and leads ConcatLayers on normals, segmentation and Taskonomy with <b>&frac14; of its parameters</b>.</li>
+        <li>AMDF has a better mean rank than LastLayer, AvgLayer and WeightedLayers in every table, and leads ConcatLayers on normals, segmentation and Taskonomy with <b>&asymp;&frac14; of its parameters</b>.</li>
         <li>On fine-grained classification, a dedicated last-layer probe (EfficientProbe) remains stronger.</li>
         <li>Study frozen VFMs as <b>full hierarchies</b>; no manual layer search needed.</li>
       </ul>
@@ -621,8 +621,8 @@ const CARD_REGISTRY = {
    ================================================================ */
 const DEFAULT_LAYOUT = {
   columns: [
-    { id: 'col1', widthMm: 300, cards: ['idea', 'problem1', 'problem2', 'setup'] },
-    { id: 'col2', widthMm: 340, cards: ['method', 'heads', 'analysis'] },
+    { id: 'col1', widthMm: 298, cards: ['idea', 'problem1', 'problem2', 'setup'] },
+    { id: 'col2', widthMm: 372, cards: ['method', 'heads', 'analysis'] },
     { id: 'col3', widthMm: null, cards: ['results', 'conclusion'] },
   ],
 };

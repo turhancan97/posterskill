@@ -4,8 +4,7 @@ overleaf/*
 references/*
 !references/.gitkeep
 
-# Generated output
-poster/
+# Generated output (poster/ is tracked on this poster branch)
 
 # OS
 .DS_Store

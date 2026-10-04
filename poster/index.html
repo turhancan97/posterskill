@@ -40,6 +40,7 @@
   .header .authors { font-size:27pt; color:#fff; font-weight:700; }
   .header .authors sup { font-size:15pt; color:#ffd060; }
   .header .aff { font-size:20pt; color:rgba(255,255,255,.85); margin-top:2.4mm; font-weight:600; }
+  .header .contact { font-size:19pt; color:#fff; margin-top:2mm; font-weight:700; opacity:.95; }
   .header .aff sup { color:#ffd060; font-size:15pt; }
 
   /* Institution logos: pre-whitened PNGs sit directly on the header; grouped with a wider gap between institutions */
@@ -209,7 +210,6 @@ const CARD_REGISTRY = {
       <>
         <div className="hl"><p>The final layer of a vision foundation model is <b>not</b> always the best representation. AMDF learns, for <b>every patch</b>, how to mix features from <b>all frozen layers</b>, with no layer search.</p></div>
         <ul>
-          <li>Different tasks peak at different depths: on DINOv3-L, normals at L18, depth at L21, segmentation at L24.</li>
           <li><b>AMDF = depth-aware fusion:</b> 16 learned expert queries attend over all L layers per patch; backbone frozen, no bottleneck.</li>
           <li><b>Best mean rank</b> on surface normals (all 7 backbones), segmentation and Taskonomy; second on depth and camera pose, behind ConcatLayers, at 2&ndash;4&times; fewer trainable parameters (1.6M vs 6.8M on DINOv3-L).</li>
           <li>Its learned depth-attention is interpretable, and recovers the same semantic&ndash;geometric split across depth found via exhaustive oracle layer sweeps.</li>
@@ -239,7 +239,7 @@ const CARD_REGISTRY = {
         <div className="fig"><div className="fig-wrap"><img src="fig_motivation.png" alt="Layer sweeps on NYUv2 for surface normals, depth and segmentation" /></div>
         <div className="cap"><b>Fig. 2:</b> Layer-wise probing on NYUv2 with DINOv3-L/16: the best layer shifts deeper as tasks become more semantic &mdash; surface normals peak at layer&nbsp;18, depth at layer&nbsp;21, segmentation at the final layer&nbsp;24 (the last layer).</div></div>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_pca_layers.png" style={{ height: 'auto' }} alt="PCA-to-RGB patch features of a frozen PESpatial-L at layers 1 to 23 for a NAVI lion and an NYUv2 kitchen" /></div>
-        <div className="cap"><b>Fig. 3:</b> Same images, different depths: frozen PESpatial-L patch features coloured by one PCA per image, shared across that image's layers (770&nbsp;px input). Early and middle layers respond to texture and outlines; object&ndash;background separation emerges late (from about L15) and is cleanest at L19&ndash;L23: the lion against its background, and in the kitchen the lower cabinets apart from the walls and upper cabinets.</div></div>
+        <div className="cap"><b>Fig. 3:</b> Frozen PESpatial-L patch features (one PCA per image, 770&nbsp;px input): object&ndash;background separation emerges only in deep layers (&ge;&nbsp;L15).</div></div>
         <div className="hl"><p>Exhaustive per-task layer search is costly and still commits to one <i>fixed</i> depth. Worse, a single layer ignores complementary information spread across <i>multiple</i> depths, and concatenating all layers is strong but expensive (6.8M vs 1.6M trainable parameters on DINOv3-L, including the task head). This motivates AMDF's patch-wise fusion across the full frozen hierarchy.</p></div>
       </>
     ),
@@ -318,10 +318,8 @@ const CARD_REGISTRY = {
     body: (
       <>
         <ul>
-          <li>Each layer's patch tokens get a shared key projection (plus a layer embedding) and a shared value projection to D/2 channels, split across 16 expert blocks. Each expert takes a softmax over layers and mixes its value block.</li>
           <li>The VFM backbone stays <b>frozen</b> throughout; only the lightweight fusion probe and the downstream task head are trained end-to-end.</li>
           <li>All available ViT blocks are exposed to AMDF: no manual subset selection or hand-picked layer depth is required.</li>
-          <li>Trainable: the two projections, layer embeddings, expert queries and the task head; the backbone stays frozen.</li>
         </ul>
         <div className="fig" style={{ flex: 1 }}>
           <div className="fig-wrap">
@@ -484,7 +482,7 @@ const CARD_REGISTRY = {
       <>
         <ul className="takeaways">
           <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
-          <li>AMDF beats last-layer and static multi-layer fusion (mean, weighted) everywhere. It leads ConcatLayers on normals, segmentation and Taskonomy, and comes close on depth and pose with far fewer parameters.</li>
+          <li>AMDF has a better mean rank than last-layer and static multi-layer fusion (mean, weighted) on every benchmark. It leads ConcatLayers on normals, segmentation and Taskonomy, and comes close on depth and pose with far fewer parameters.</li>
           <li>On fine-grained classification, a dedicated last-layer probe (EfficientProbe) remains stronger.</li>
           <li>Study VFMs as <b>full hierarchies</b>; no manual layer search needed.</li>
         </ul>
@@ -683,6 +681,7 @@ function PosterApp() {
           <h1><span className="m">AMDF:</span> Holistic Probing of Vision Foundation Models<br/>with Adaptive Multi-Layer Dense Fusion</h1>
           <div className="authors">Turhan Can Kargin<sup>1,2</sup> &middot; Bill Psomas<sup>3,4</sup> &middot; Paul Wagner<sup>5</sup> &middot; Giorgos Tolias<sup>3,4</sup> &middot; Bartosz Zieli&#324;ski<sup>1,2</sup> &middot; Marcin Przewi&#281;&#378;likowski<sup>1,2</sup></div>
           <div className="aff"><sup>1</sup> Jagiellonian University in Krak&oacute;w &nbsp;&nbsp; <sup>2</sup> GMUM &nbsp;&nbsp; <sup>3</sup> Czech Technical University in Prague &nbsp;&nbsp; <sup>4</sup> VRG &nbsp;&nbsp; <sup>5</sup> RWTH Aachen University</div>
+          <div className="contact">Contact: turhancan.kargin@doctoral.uj.edu.pl</div>
         </div>
         {logos.length > 0 && (
           <div className="header-logos">

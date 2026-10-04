@@ -21,3 +21,6 @@ references/*
 
 # Old overleaf clone dirs (hash-named folders from Overleaf git)
 66f48147915155a9aac9c3ae/
+
+# Local agent scratch files
+scratchpad/

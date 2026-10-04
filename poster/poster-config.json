@@ -7,7 +7,7 @@
         "tldr",
         "overview",
         "evidence",
-        "paramsrank"
+        "conclusion"
       ]
     },
     {
@@ -27,7 +27,7 @@
         "taskonomy",
         "classification",
         "camerapose",
-        "conclusion"
+        "paramsrank"
       ]
     }
   ],

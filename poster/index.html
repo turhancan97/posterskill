@@ -230,14 +230,14 @@ const CARD_REGISTRY = {
   evidence: {
     title: 'Abstraction–Depth Correlation: Empirical Evidence',
     color: null,
-    grow: false,
+    grow: true,
     body: (
       <>
         <p>We probe a frozen DINOv3-L/16 independently at every layer &#8467; &isin; {'{1,...,24}'} on three NYUv2 tasks of increasing abstraction, training a lightweight head per layer and recording its validation score. All three tasks share the same training images, yet the best-performing layer shifts systematically deeper as task abstraction increases.</p>
         <div className="fig"><div className="fig-wrap"><img src="fig_motivation.png" alt="Layer sweeps on NYUv2 for surface normals, depth and segmentation" /></div>
         <div className="cap"><b>Fig. 2:</b> Layer-wise probing on NYUv2 with DINOv3-L/16: the best layer shifts deeper as tasks become more semantic &mdash; surface normals peak at layer&nbsp;18, depth at layer&nbsp;21, segmentation at the final layer&nbsp;24 (the last layer).</div></div>
-        <div className="fig"><div className="fig-wrap"><img src="fig_pca_layers.png" alt="PCA-to-RGB patch features of a frozen DINOv3-L at layers 1 to 23" /></div>
-        <div className="cap"><b>Fig. 3:</b> Same image, different depths: frozen DINOv3-L patch features coloured by one PCA shared across layers. Early layers respond to texture and colour, middle layers are nearly uniform in these directions, deep layers separate object from background.</div></div>
+        <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_pca_layers.png" style={{ height: 'auto' }} alt="PCA-to-RGB patch features of a frozen DINOv3-L at layers 1 to 23" /></div>
+        <div className="cap"><b>Fig. 3:</b> Same image, different depths: frozen DINOv3-L patch features (768&nbsp;px input) coloured by one PCA shared across layers. Early layers respond to texture and colour (L1 picks up the window lattice), middle layers are nearly uniform in these directions, and deep layers trace the lion's outline, legs and mane against the background.</div></div>
         <div className="hl"><p>Exhaustive per-task layer search is costly and still commits to one <i>fixed</i> depth. Worse, a single layer ignores complementary information spread across <i>multiple</i> depths, and concatenating all layers is strong but expensive (6.8M vs 1.6M trainable parameters on DINOv3-L, including the task head). This motivates AMDF's patch-wise fusion across the full frozen hierarchy.</p></div>
       </>
     ),
@@ -247,13 +247,55 @@ const CARD_REGISTRY = {
     color: 'purple',
     grow: true,
     body: (
-      <div style={{ display: 'flex', gap: '5mm', alignItems: 'center', flex: 1 }}>
-        <div className="fig" style={{ flex: '0 0 36%' }}><div className="fig-wrap"><img src="fig_params_rank.png" alt="Mean rank over five dense benchmarks versus trainable parameters" /></div></div>
-        <div style={{ flex: 1 }}>
-          <p>Averaged over the five dense benchmarks, <b>AMDF has the best mean rank (1.48)</b> with about a <b>quarter of ConcatLayers' parameters</b> (1.8M vs 7.0M on ViT-L). ConcatLayers still wins depth and camera pose; AMDF wins normals, segmentation and Taskonomy.</p>
-          <div className="cap"><b>Fig. 4:</b> Mean of the per-table ranks over NYUv2 normals, depth, segmentation, Taskonomy and NAVI pose vs. trainable parameters (probe + task head) averaged over those tasks. CUB-200 is excluded (different set of methods).</div>
+      <>
+        <p>Averaged over the five dense benchmarks, <b>AMDF has the best mean rank</b> with about a <b>quarter of ConcatLayers' parameters</b>. ConcatLayers still wins depth and camera pose.</p>
+        <div className="fig">
+          <div className="fig-wrap">
+            <svg viewBox="0 0 1000 211" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+              <text x={205} y={26} style={{ fontFamily: 'Nunito', fontSize: 25, fontWeight: 800, fill: 'var(--text)' }}>Mean rank &darr; <tspan style={{ fontWeight: 600, fill: 'var(--text-light)', fontSize: 20 }}>(lower is better)</tspan></text>
+              <text x={625} y={26} style={{ fontFamily: 'Nunito', fontSize: 25, fontWeight: 800, fill: 'var(--text)' }}>Trainable params (M)</text>
+              <line x1={205.0} y1={44} x2={205.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={271.0} y1={44} x2={271.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={337.0} y1={44} x2={337.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={403.0} y1={44} x2={403.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={469.0} y1={44} x2={469.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={535.0} y1={44} x2={535.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={625.0} y1={44} x2={625.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={700.0} y1={44} x2={700.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={775.0} y1={44} x2={775.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={850.0} y1={44} x2={850.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <line x1={925.0} y1={44} x2={925.0} y2={205} style={{ stroke: '#e4e4e4', strokeWidth: 1.2 }} />
+              <rect x={0} y={46} width={1000} height={31} rx={5} style={{ fill: 'var(--orange-light)' }} />
+              <text x={193} y={70} textAnchor="end" style={{ fontFamily: 'Nunito', fontSize: 23, fontWeight: 800, fill: 'var(--orange)' }}>AMDF (ours)</text>
+              <rect x={205} y={50} width={97.7} height={23} rx={3} style={{ fill: 'var(--orange)' }} />
+              <text x={310.7} y={69} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 800, fill: 'var(--orange)' }}>1.48</text>
+              <rect x={625} y={50} width={67.1} height={23} rx={3} style={{ fill: 'var(--orange)' }} />
+              <text x={700.1} y={69} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 800, fill: 'var(--orange)' }}>1.79</text>
+              <text x={193} y={103} textAnchor="end" style={{ fontFamily: 'Nunito', fontSize: 23, fontWeight: 600, fill: 'var(--text)' }}>ConcatLayers</text>
+              <rect x={205} y={83} width={113.5} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={326.5} y={102} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>1.72</text>
+              <rect x={625} y={83} width={262.1} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={895.1} y={102} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>6.99</text>
+              <text x={193} y={136} textAnchor="end" style={{ fontFamily: 'Nunito', fontSize: 23, fontWeight: 600, fill: 'var(--text)' }}>WeightedLayers</text>
+              <rect x={205} y={116} width={224.4} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={437.4} y={135} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>3.40</text>
+              <rect x={625} y={116} width={26.2} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={659.2} y={135} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>0.70</text>
+              <text x={193} y={169} textAnchor="end" style={{ fontFamily: 'Nunito', fontSize: 23, fontWeight: 600, fill: 'var(--text)' }}>LastLayer</text>
+              <rect x={205} y={149} width={269.9} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={482.9} y={168} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>4.09</text>
+              <rect x={625} y={149} width={26.2} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={659.2} y={168} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>0.70</text>
+              <text x={193} y={202} textAnchor="end" style={{ fontFamily: 'Nunito', fontSize: 23, fontWeight: 600, fill: 'var(--text)' }}>AvgLayer</text>
+              <rect x={205} y={182} width={284.5} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={497.5} y={201} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>4.31</text>
+              <rect x={625} y={182} width={26.2} height={23} rx={3} style={{ fill: '#b9bfc9' }} />
+              <text x={659.2} y={201} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>0.70</text>
+            </svg>
+          </div>
+          <div className="cap"><b>Fig. 4:</b> Mean of the per-table ranks over NYUv2 normals, depth, segmentation, Taskonomy and NAVI pose; parameters (probe + task head, ViT-L backbones) averaged over the same tasks. CUB-200 is excluded (different set of methods).</div>
         </div>
-      </div>
+      </>
     ),
   },
   method: {
@@ -435,7 +477,7 @@ const CARD_REGISTRY = {
   conclusion: {
     title: 'Conclusion',
     color: 'teal',
-    grow: true,
+    grow: false,
     body: (
       <>
         <ul>
@@ -454,9 +496,9 @@ const CARD_REGISTRY = {
    ================================================================ */
 const DEFAULT_LAYOUT = {
   columns: [
-    { id: 'col1', widthMm: 445, cards: ['tldr', 'overview', 'evidence', 'paramsrank'] },
+    { id: 'col1', widthMm: 445, cards: ['tldr', 'overview', 'evidence', 'conclusion'] },
     { id: 'col2', widthMm: 385, cards: ['method', 'implementation', 'analysis'] },
-    { id: 'col3', widthMm: null, cards: ['results', 'taskonomy', 'classification', 'camerapose', 'conclusion'] },
+    { id: 'col3', widthMm: null, cards: ['results', 'taskonomy', 'classification', 'camerapose', 'paramsrank'] },
   ],
 };
 const DEFAULT_CARD_HEIGHTS = {};

@@ -208,7 +208,7 @@ const CARD_REGISTRY = {
           <li>Different tasks peak at different depths: on DINOv3-L, normals at L18, depth at L21, segmentation at L24.</li>
           <li><b>AMDF = depth-aware fusion:</b> 16 learned expert queries attend over all L layers per patch; backbone frozen, no bottleneck.</li>
           <li><b>Best mean rank</b> on surface normals (all 7 backbones), segmentation and Taskonomy; second on depth and camera pose, behind ConcatLayers, at 2&ndash;4&times; fewer trainable parameters (1.6M vs 6.8M on DINOv3-L).</li>
-          <li>Layers are not separate clusters: each patch follows a path through depth, and how much the layers differ depends on the backbone.</li>
+          <li>Its learned depth-attention is interpretable, and recovers the same semantic&ndash;geometric split across depth found via exhaustive oracle layer sweeps.</li>
         </ul>
       </>
     ),
@@ -404,15 +404,13 @@ const CARD_REGISTRY = {
       </>
     ),
   },
-  tsne: {
-    title: 'Layers are paths, not clusters',
+  analysis: {
+    title: 'Learned depth-attention tracks layer utility',
     color: 'teal',
     grow: true,
     body: (
-      <>
-        <div className="fig"><div className="fig-wrap"><img src="fig_tsne_cka.png" alt="t-SNE of patch features across layers and layer-by-layer CKA per backbone" /></div></div>
-        <p>Across depth, the same patch moves along a smooth path rather than layers forming separate clusters: once each layer's offset and scale are removed, a patch's nearest neighbours are mostly itself at nearby layers. How much the layers differ depends on the backbone (mean CKA 0.50 DINOv3-L to 0.76 V-JEPA2.1-L).</p>
-      </>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="cap"><b>Fig. 4:</b> AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and shifts toward deep layers for semantic tasks (classification <i>r</i>=0.83).</div></div>
     ),
   },
   conclusion: {
@@ -438,7 +436,7 @@ const CARD_REGISTRY = {
 const DEFAULT_LAYOUT = {
   columns: [
     { id: 'col1', widthMm: 445, cards: ['tldr', 'overview', 'evidence'] },
-    { id: 'col2', widthMm: 385, cards: ['method', 'implementation', 'tsne'] },
+    { id: 'col2', widthMm: 385, cards: ['method', 'implementation', 'analysis'] },
     { id: 'col3', widthMm: null, cards: ['results', 'taskonomy', 'classification', 'camerapose', 'conclusion'] },
   ],
 };

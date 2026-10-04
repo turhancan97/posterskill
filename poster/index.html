@@ -238,19 +238,28 @@ function Rank(props) {
 /* ================================================================
    Brand icon — three stacked layers fused into one (Turhan's design)
    ================================================================ */
-function Rhomb({ y, stroke, fill, w = 9 }) {
-  const d = `M80 ${y} L150 ${y + 42} L80 ${y + 84} L10 ${y + 42} Z`;
-  return <path d={d} style={{ fill, stroke, strokeWidth: w, strokeLinejoin: 'round' }} />;
+function Rhomb({ y, stroke, fill, w = 6 }) {
+  /* rounded rhombus: corners softened with quadratic curves, like the reference icon */
+  const P = [[80, y], [150, y + 40], [80, y + 80], [10, y + 40]];
+  const t = 0.22;
+  const lerp = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+  let d = '';
+  P.forEach((c, i) => {
+    const prev = P[(i + 3) % 4], next = P[(i + 1) % 4];
+    const s1 = lerp(c, prev, t), s2 = lerp(c, next, t);
+    d += (i === 0 ? 'M' : 'L') + s1.join(' ') + ' Q' + c.join(' ') + ' ' + s2.join(' ') + ' ';
+  });
+  return <path d={d + 'Z'} style={{ fill, stroke, strokeWidth: w, strokeLinejoin: 'round' }} />;
 }
 function AmdfIcon({ color = '#cf4832', bg = '#fff', arrow = '#111', height = '30mm' }) {
   return (
-    <svg viewBox="0 0 160 300" style={{ height, width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} xmlns="http://www.w3.org/2000/svg">
-      <Rhomb y={52} stroke={color} fill={bg} />
-      <Rhomb y={30} stroke={color} fill={bg} />
+    <svg viewBox="0 0 160 330" style={{ height, width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} xmlns="http://www.w3.org/2000/svg">
+      <Rhomb y={88} stroke={color} fill={bg} />
+      <Rhomb y={48} stroke={color} fill={bg} />
       <Rhomb y={8} stroke={color} fill={bg} />
-      <line x1="80" y1="92" x2="80" y2="232" style={{ stroke: arrow, strokeWidth: 7 }} />
-      <path d="M67 222 L80 242 L93 222 Z" style={{ fill: arrow, stroke: arrow, strokeWidth: 4, strokeLinejoin: 'round' }} />
-      <Rhomb y={208} stroke={color} fill={color} w={14} />
+      <line x1="80" y1="168" x2="80" y2="262" style={{ stroke: arrow, strokeWidth: 6 }} />
+      <path d="M68 252 L80 271 L92 252 Z" style={{ fill: arrow, stroke: arrow, strokeWidth: 3, strokeLinejoin: 'round' }} />
+      <Rhomb y={242} stroke={color} fill={color} w={6} />
     </svg>
   );
 }
@@ -262,7 +271,7 @@ function HookPanel() {
   const curve = (d, dash, op) => <path d={d} style={{ fill: 'none', stroke: '#fff', strokeWidth: 5, strokeDasharray: dash, opacity: op, strokeLinecap: 'round' }} />;
   return (
     <div className="hook">
-      <div className="hook-icon"><AmdfIcon color="#fff" bg="#cf4832" arrow="#fff" height="62mm" /></div>
+      <div className="hook-icon"><AmdfIcon color="#fff" bg="#cf4832" arrow="#fff" height="78mm" /></div>
       <div className="hook-q">Which layer of a frozen vision foundation model should you probe?</div>
       <div className="hook-a"><span>None alone.</span></div>
       <div className="hook-a2">For dense prediction, try <b>AMDF</b>: it fuses <b>all</b> layers, for <b>every patch</b>.</div>

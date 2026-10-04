@@ -1,13 +1,15 @@
 # posterskill
 
-A Codex and Claude Code skill that generates print-ready conference posters from your paper. Point it at your Overleaf source and project website — it extracts the content, downloads figures, fetches logos, and builds an interactive poster you can edit in your browser. Single HTML file, no build step.
+An agent skill (Claude Code, Codex, Cursor, Gemini CLI, Copilot, …) that generates print-ready conference posters from your paper. Point it at your Overleaf source and project website — it extracts the content, downloads figures, fetches logos, and builds an interactive poster you can edit in your browser. Single HTML file, no build step.
 
-The key idea: the poster is a **live editor**. Drag dividers to resize columns and rows, click cards to swap or move them, adjust font sizes — then feed your layout back to Codex for further refinement. Iterate between the browser and Codex until it's perfect.
+The key idea: the poster is a **live editor**. Drag dividers to resize columns and rows, click cards to swap or move them, adjust font sizes — then feed your layout back to your agent for further refinement. Iterate between the browser and the agent until it's perfect.
+
+> Fork of [ethanweber/posterskill](https://github.com/ethanweber/posterskill), extended with event name/logo support and multi-agent support.
 
 ## Quick start
 
 ```bash
-git clone git@github.com:ethanweber/posterskill.git poster && cd poster
+git clone https://github.com/turhancan97/posterskill.git poster && cd poster
 git clone https://git.overleaf.com/YOUR_PROJECT_ID overleaf   # your paper
 ```
 
@@ -39,7 +41,26 @@ claude
 /make-poster
 ```
 
-Both point at the same instructions and template — `.claude/skills/make-poster/` is a thin wrapper (symlinked `SKILL.md` and `assets/template.html`) around the canonical copy in `.agents/skills/make-poster/`, so there's one source of truth to keep updated.
+**Other agents** (Cursor, Gemini CLI, GitHub Copilot, or anything that reads `AGENTS.md`):
+
+```
+Make my poster.
+```
+
+## Supported agents
+
+All agents share one source of truth: `.agents/skills/make-poster/` (`SKILL.md` + `assets/template.html`). Everything else is a thin pointer to it:
+
+| Agent | Entry point |
+|-------|-------------|
+| Claude Code | `.claude/skills/make-poster/` (symlinks) → `/make-poster` |
+| Codex | `.agents/skills/make-poster/` (+ `agents/openai.yaml`) |
+| Cursor | `.cursor/rules/make-poster.mdc` |
+| Gemini CLI | `GEMINI.md` |
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Any other | `AGENTS.md` |
+
+Only edit `SKILL.md` and the template — the wrappers never duplicate instructions.
 
 It reads your paper, fetches your project website, matches your reference style, and generates a `poster/` directory. Open `poster/index.html` in a browser to preview and edit.
 
@@ -71,10 +92,10 @@ No npm, no build step, no server. Just open `index.html` in Chrome.
 
 ## Editing workflow
 
-1. Codex generates the first draft and opens it in your browser
+1. The agent generates the first draft and opens it in your browser
 2. Drag dividers, swap cards, adjust font size in the browser
 3. Click **Copy Config** in the toolbar
-4. Paste the JSON back to Codex — it updates the defaults
+4. Paste the JSON back to the agent — it updates the defaults
 5. Repeat until you're happy
 6. Click **Preview** to verify, then print to PDF (margins: none, background graphics: on)
 
@@ -87,7 +108,7 @@ The poster uses a React app (loaded via CDN) with:
 - **`DEFAULT_LOGOS`** — institutional logos for the header
 - **`window.posterAPI`** — programmatic API for automation
 
-Codex uses [Playwright](https://playwright.dev/) to:
+The agent uses [Playwright](https://playwright.dev/) to:
 - Measure image aspect ratios and assign them to matching columns
 - Auto-optimize column widths to minimize whitespace
 - Take screenshots and visually verify the layout
@@ -107,6 +128,40 @@ posterAPI.getWaste()                           // measure whitespace
 posterAPI.getLayout()                          // get current layout
 posterAPI.getConfig()                          // get full config JSON
 posterAPI.resetLayout()                        // restore defaults
+```
+
+## Branch model
+
+- **`main`** holds only the generic tool (upstream + extensions). No poster content.
+- **One branch per poster** (e.g. `eds2026`), created from `main`. On a poster branch, remove the `poster/` line from `.gitignore` so the generated poster is tracked. `overleaf/` and `references/` stay ignored everywhere — never commit the paper source.
+- Changes flow **`main` → poster branches** (`git merge main`), never the reverse. If you improve the skill or template while working on a poster, cherry-pick that generic commit onto `main`.
+- Don't push a poster branch while its paper is under anonymous review.
+
+### Publishing a finished poster
+
+Finished posters are hosted from a single `gh-pages` branch, one folder per poster:
+
+```bash
+# first time only: an empty gh-pages branch in a separate worktree
+git worktree add --orphan -b gh-pages ../posterskill-pages
+touch ../posterskill-pages/.nojekyll
+
+# copy the committed poster/ from a poster branch into its own folder
+mkdir -p ../posterskill-pages/eds2026
+git archive eds2026 poster | tar -x --strip-components=1 -C ../posterskill-pages/eds2026
+
+cd ../posterskill-pages
+git add . && git commit -m "Publish eds2026 poster" && git push origin gh-pages
+```
+
+Enable GitHub Pages (Settings → Pages → branch `gh-pages`, folder `/`). The poster is then at `https://turhancan97.github.io/posterskill/eds2026/`.
+
+## Syncing with upstream
+
+```bash
+git checkout main
+git fetch upstream && git merge upstream/main
+git push origin main
 ```
 
 ## Example

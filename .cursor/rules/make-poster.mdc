@@ -1,0 +1,8 @@
+---
+description: Generate or revise a conference poster from the paper in overleaf/ (posterskill make-poster workflow)
+alwaysApply: false
+---
+
+Follow `AGENTS.md` at the repo root. For poster work, read and follow
+`.agents/skills/make-poster/SKILL.md` and start from
+`.agents/skills/make-poster/assets/template.html`.

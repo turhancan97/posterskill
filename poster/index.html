@@ -131,7 +131,7 @@
 
   /* === v2: hook panel, card accents, callouts, verdicts === */
   .hook { background: linear-gradient(175deg,#b8361f,#cf4832 45%,#d85d47); color:#fff; padding:16mm 13mm 14mm; display:flex; flex-direction:column; justify-content:space-between; gap:6mm; overflow:hidden; }
-  .hook-icon { background:#fff; border-radius:5mm; padding:7mm 9mm; box-shadow:0 2px 10px rgba(0,0,0,.15); }
+  .hook-icon { padding:2mm 4mm; }
   .hook-q { font-size:50pt; font-weight:800; line-height:1.15; text-align:center; }
   .hook-a { text-align:center; } .hook-a span { display:inline-block; font-size:80pt; font-weight:900; color:#fff; border-bottom:6px solid #fff; line-height:1.1; }
   .hook-a2 { font-size:40pt; font-weight:600; line-height:1.25; text-align:center; }
@@ -251,13 +251,13 @@ function Rhomb({ cx = 215, y, stroke, fill, w = 14 }) {
   return <path d={d + 'Z'} style={{ fill, stroke, strokeWidth: w, strokeLinejoin: 'round' }} />;
 }
 /* One icon: three outlined layers -> arrow -> filled fused layer (viewBox 430 x 880) */
-function IconGlyph({ x = 0, color, bg = '#fff', arrow = '#111' }) {
+function IconGlyph({ x = 0, color, bg = '#fff', arrow = '#111', ring = null }) {
   return (
     <g transform={`translate(${x},0)`}>
       <Rhomb y={170} stroke={color} fill={bg} />
       <Rhomb y={90} stroke={color} fill={bg} />
       <Rhomb y={10} stroke={color} fill={bg} />
-      <Rhomb y={620} stroke={color} fill={color} w={0} />
+      <Rhomb y={620} stroke={ring || color} fill={color} w={ring ? 12 : 0} />
       <line x1="215" y1="345" x2="215" y2="660" style={{ stroke: arrow, strokeWidth: 13 }} />
       <path d="M190 655 L215 690 L240 655 Z" style={{ fill: arrow, stroke: arrow, strokeWidth: 8, strokeLinejoin: 'round' }} />
     </g>
@@ -275,7 +275,7 @@ function AmdfLogoTriple({ height = '60mm' }) {
   return (
     <svg viewBox="-10 0 1500 880" style={{ width: '100%', height: 'auto', display: 'block' }} xmlns="http://www.w3.org/2000/svg">
       <IconGlyph x={0} color="#3a7eab" />
-      <IconGlyph x={515} color="#cf4832" />
+      <IconGlyph x={515} color="#cf4832" ring="#fff" />
       <IconGlyph x={1030} color="#d1d3d4" />
     </svg>
   );

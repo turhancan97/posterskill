@@ -2,21 +2,20 @@
   "columns": [
     {
       "id": "col1",
-      "widthMm": 355,
+      "widthMm": 445,
       "cards": [
         "tldr",
         "overview",
-        "evidence",
-        "implementation"
+        "evidence"
       ]
     },
     {
       "id": "col2",
-      "widthMm": 347,
+      "widthMm": 385,
       "cards": [
         "method",
-        "analysis",
-        "conclusion"
+        "implementation",
+        "tsne"
       ]
     },
     {
@@ -26,15 +25,13 @@
         "results",
         "taskonomy",
         "classification",
-        "camerapose"
+        "camerapose",
+        "conclusion"
       ]
     }
   ],
-  "cardHeights": {
-    "method": 368,
-    "analysis": 215
-  },
-  "fontScale": 2,
+  "cardHeights": {},
+  "fontScale": 2.15,
   "logos": [
     {
       "src": "JU_logo_white.png",

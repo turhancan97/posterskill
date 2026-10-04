@@ -271,12 +271,12 @@ function AmdfIcon({ color = '#cf4832', bg = '#fff', arrow = '#111', height = '30
   );
 }
 /* The full three-colour logo (blue / red / grey), as designed */
-function AmdfLogoTriple({ height = '60mm' }) {
+function AmdfLogoTriple({ height = '60mm', bg = '#bd3b25' }) {
   return (
     <svg viewBox="-10 0 1500 880" style={{ width: '100%', height: 'auto', display: 'block' }} xmlns="http://www.w3.org/2000/svg">
-      <IconGlyph x={0} color="#3a7eab" />
-      <IconGlyph x={515} color="#cf4832" ring="#fff" />
-      <IconGlyph x={1030} color="#d1d3d4" />
+      <IconGlyph x={0} color="#fff" bg={bg} arrow="#fff" />
+      <IconGlyph x={515} color="#fff" bg={bg} arrow="#fff" />
+      <IconGlyph x={1030} color="#fff" bg={bg} arrow="#fff" />
     </svg>
   );
 }

@@ -248,10 +248,10 @@ const CARD_REGISTRY = {
     grow: true,
     body: (
       <div style={{ display: 'flex', gap: '5mm', alignItems: 'center', flex: 1 }}>
-        <div className="fig" style={{ flex: '0 0 42%' }}><div className="fig-wrap"><img src="fig_params_rank.png" alt="Mean rank over five dense benchmarks versus trainable parameters" /></div></div>
+        <div className="fig" style={{ flex: '0 0 36%' }}><div className="fig-wrap"><img src="fig_params_rank.png" alt="Mean rank over five dense benchmarks versus trainable parameters" /></div></div>
         <div style={{ flex: 1 }}>
           <p>Averaged over the five dense benchmarks, <b>AMDF has the best mean rank (1.48)</b> with about a <b>quarter of ConcatLayers' parameters</b> (1.8M vs 7.0M on ViT-L). ConcatLayers still wins depth and camera pose; AMDF wins normals, segmentation and Taskonomy.</p>
-          <div className="cap"><b>Fig. 4:</b> Mean of the per-table ranks over NYUv2 normals, depth, segmentation, Taskonomy and NAVI pose vs. trainable parameters averaged over those tasks. CUB-200 is excluded (different set of methods).</div>
+          <div className="cap"><b>Fig. 4:</b> Mean of the per-table ranks over NYUv2 normals, depth, segmentation, Taskonomy and NAVI pose vs. trainable parameters (probe + task head) averaged over those tasks. CUB-200 is excluded (different set of methods).</div>
         </div>
       </div>
     ),

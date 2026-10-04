@@ -124,6 +124,8 @@
   .best { font-weight:800; color:var(--orange); }
   td.params { color:var(--text-light); font-variant-numeric:tabular-nums; }
   .params-note { font-size:.85em; color:var(--text-light); margin-bottom:1mm; }
+  .takeaways { background:#e6f6f1; border-left:2.5px solid var(--teal); border-radius:0 1.5mm 1.5mm 0; padding:2.5mm 4mm 1.5mm 9mm !important; }
+  .takeaways li { font-weight:600; }
   .second { font-weight:700; text-decoration:underline; text-decoration-color:#bbb; }
   .ours td { font-weight:700; }
   .ours { background:#faf6ff; }
@@ -134,9 +136,9 @@
   .table-dense tbody td { padding:0.85mm 1.6mm; white-space:nowrap; }
   .table-dense tbody td:first-child, .table-dense thead th:first-child { white-space:normal; }
   /* Camera-pose table has 2 metrics x 7 backbones = extra columns; scale down to fit */
-  .table-pose { font-size:calc(6.2pt * var(--font-scale)); }
-  .table-pose thead th { padding:0.8mm 1mm; font-size:calc(6pt * var(--font-scale)); }
-  .table-pose tbody td { padding:0.7mm 1mm; }
+  .table-pose { font-size:calc(7pt * var(--font-scale)); }
+  .table-pose thead th { padding:0.8mm 1mm; font-size:calc(6.8pt * var(--font-scale)); }
+  .table-pose tbody td { padding:0.8mm 1mm; }
   .rank-badge { display:inline-block; min-width:8mm; padding:.3mm 1.4mm; border-radius:1mm; text-align:center; font-weight:800; color:#fff; }
 
   /* Math */
@@ -293,7 +295,7 @@ const CARD_REGISTRY = {
               <text x={659.2} y={201} style={{ fontFamily: 'Nunito', fontSize: 22, fontWeight: 600, fill: 'var(--text)' }}>0.70</text>
             </svg>
           </div>
-          <div className="cap"><b>Fig. 4:</b> Mean of the per-table ranks over NYUv2 normals, depth, segmentation, Taskonomy and NAVI pose; parameters (probe + task head, ViT-L backbones) averaged over the same tasks. CUB-200 is excluded (different set of methods).</div>
+          <div className="cap"><b>Fig. 6:</b> Mean of the per-table ranks over NYUv2 normals, depth, segmentation, Taskonomy and NAVI pose; parameters (probe + task head, ViT-L backbones) averaged over the same tasks. CUB-200 is excluded (different set of methods).</div>
         </div>
       </>
     ),
@@ -353,7 +355,7 @@ const CARD_REGISTRY = {
               <text x="570" y="195" textAnchor="middle" style={{ fill: 'var(--text-light)', fontSize: 10, fontFamily: 'Nunito', fontStyle: 'italic' }}>camera pose</text>
             </svg>
           </div>
-          <div className="cap"><b>Fig. 5:</b> The same frozen-backbone fusion module feeds three task-specific heads &mdash; only the head (and its supervision) changes per task.</div>
+          <div className="cap"><b>Fig. 4:</b> The same frozen-backbone fusion module feeds three task-specific heads &mdash; only the head (and its supervision) changes per task.</div>
         </div>
       </>
     ),
@@ -471,7 +473,7 @@ const CARD_REGISTRY = {
     grow: true,
     body: (
       <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
-      <div className="cap"><b>Fig. 6:</b> AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and shifts toward deep layers for semantic tasks (classification <i>r</i>=0.83).</div></div>
+      <div className="cap"><b>Fig. 5:</b> AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and shifts toward deep layers for semantic tasks (classification <i>r</i>=0.83).</div></div>
     ),
   },
   conclusion: {
@@ -480,7 +482,7 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <ul>
+        <ul className="takeaways">
           <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
           <li>AMDF beats last-layer and static multi-layer fusion (mean, weighted) everywhere. It leads ConcatLayers on normals, segmentation and Taskonomy, and comes close on depth and pose with far fewer parameters.</li>
           <li>On fine-grained classification, a dedicated last-layer probe (EfficientProbe) remains stronger.</li>

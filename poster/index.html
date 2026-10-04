@@ -301,7 +301,7 @@ function HookPanel() {
           {curve('M20 102 C 150 100, 240 60, 290 14', '3 8', .9)}
           <text x="292" y="118" textAnchor="end" style={{ fill: '#fff', fontSize: 15, fontFamily: 'Nunito', fontWeight: 700 }}>layer depth →</text>
         </svg>
-        <div>On DINOv3-L, NYUv2 probes <b>peak at different depths</b>: normals L18, depth L21, segmentation L24.</div>
+        <div>On DINOv3-L, NYUv2 probes <b>peak at different depths</b>: normals &asymp;L18, depth &asymp;L21, segmentation L24.</div>
       </div>
       <div className="hook-pt">
         <div className="hook-num">1.48</div>
@@ -522,8 +522,8 @@ const CARD_REGISTRY = {
     body: (
       <>
         <p className="verdict bad">&#x2717; Probing only the final layer misses what a&nbsp;task&nbsp;needs.</p>
-        <div className="fig"><div className="fig-wrap"><img src="fig_motivation.png" alt="Single-layer probes of DINOv3-L on NYUv2 normals, depth and segmentation" /></div>
-        <div className="cap"><b>Fig. 2:</b> One probe per layer of a frozen DINOv3-L on NYUv2: the best layer moves deeper as the task gets more semantic (L18 → L21 → L24).</div></div>
+        <div className="fig"><div className="fig-wrap"><img src="fig_layer_sweep.png" alt="Single-layer probes of DINOv3-L on NYUv2 normals, depth and segmentation" /></div>
+        <div className="cap"><b>Fig. 2:</b> One probe per layer of a frozen DINOv3-L on NYUv2 (single seed): the best layer moves deeper as the task gets more semantic, peaking around L18 &rarr; L21 &rarr; L24.</div></div>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_pca_layers.png" style={{ height: 'auto' }} alt="PCA-to-RGB patch features of a frozen PESpatial-L at layers 1 to 23 for a NAVI lion and an NYUv2 kitchen" /></div>
         <div className="cap"><b>Fig. 3:</b> Layers see differently: frozen PESpatial-L patch features (one PCA per image, 770&nbsp;px input); object&ndash;background separation appears only in deep layers.</div></div>
       </>

@@ -219,9 +219,9 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <p>Representations change abstraction level across network depth: low-level geometry, mid-level scene structure, and high-level semantics peak at different layers. AMDF removes the need to hand-pick a layer &mdash; it refines every layer, then fuses them <b>per patch</b> with a learned depth-attention distribution.</p>
+        <p>Representations change abstraction level across network depth: low-level geometry, mid-level scene structure, and high-level semantics peak at different layers. AMDF removes the need to hand-pick a layer &mdash; it reads all frozen layers and, for <b>every patch</b>, learns how to mix them with depth attention.</p>
         <div className="fig"><div className="fig-wrap"><img src="fig_teaser.png" alt="Motivation and overview of AMDF" /></div>
-        <div className="cap"><b>Fig. 1:</b> Task-specific layer utility varies with abstraction level (low/mid/high). AMDF refines each frozen layer, then fuses all layers per patch into a task-specific dense representation.</div></div>
+        <div className="cap"><b>Fig. 1:</b> Task-specific layer utility varies with abstraction level (low/mid/high). AMDF takes the frozen patch tokens of every layer and fuses them per patch, with learned depth attention, into a task-specific dense representation.</div></div>
       </>
     ),
   },
@@ -234,7 +234,7 @@ const CARD_REGISTRY = {
         <p>We probe a frozen DINOv3-L/16 independently at every layer &#8467; &isin; {'{1,...,24}'} on three NYUv2 tasks of increasing abstraction, training a lightweight head per layer and recording its validation score. All three tasks share the same training images, yet the best-performing layer shifts systematically deeper as task abstraction increases.</p>
         <div className="fig"><div className="fig-wrap"><img src="fig_motivation.png" alt="Layer sweeps on NYUv2 for surface normals, depth and segmentation" /></div>
         <div className="cap"><b>Fig. 2:</b> Layer-wise probing on NYUv2 with DINOv3-L/16: the best layer shifts deeper as tasks become more semantic &mdash; surface normals peak at layer&nbsp;18, depth at layer&nbsp;21, segmentation at the final layer&nbsp;24 (the last layer).</div></div>
-        <div className="hl"><p>Exhaustive per-task layer search is costly and still commits to one <i>fixed</i> depth. Worse, a single layer ignores that complementary information may be spread across <i>multiple</i> depths at once &mdash; while naively concatenating all layers yields prohibitively large dense features. This motivates AMDF's holistic, patch-wise fusion across the full frozen hierarchy.</p></div>
+        <div className="hl"><p>Exhaustive per-task layer search is costly and still commits to one <i>fixed</i> depth. Worse, a single layer ignores complementary information spread across <i>multiple</i> depths, and concatenating all layers is strong but expensive (6.8M vs 1.6M trainable parameters on DINOv3-L, including the task head). This motivates AMDF's patch-wise fusion across the full frozen hierarchy.</p></div>
       </>
     ),
   },

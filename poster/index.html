@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMDF - EDS 2026 Poster</title>
+<title>AMDF - ML in PL 2026 Poster</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
@@ -72,7 +72,7 @@
     background:radial-gradient(circle, rgba(255,255,255,.4), rgba(255,255,255,0) 70%);
     pointer-events:none; }
   .event-card > * { position:relative; z-index:1; }
-  .event-card img { height:42mm; width:auto; margin-bottom:2mm; filter:drop-shadow(0 2px 6px rgba(0,0,0,.2)); }
+  .event-card img { height:30mm; width:auto; margin-bottom:2.5mm; background:#fff; padding:3mm 4mm; border-radius:2.5mm; box-shadow:0 2px 8px rgba(0,0,0,.18); }
   .event-card .ev-name { font-size:26pt; font-weight:900; color:#ffd060; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.25); }
   .event-card .ev-sub { font-size:13.5pt; font-weight:700; color:#fff; margin-top:1.2mm; line-height:1.3; text-shadow:0 1px 2px rgba(0,0,0,.2); }
   .event-card .ev-loc { font-size:13.5pt; font-weight:800; color:#ffd060; margin-top:1mm; text-shadow:0 1px 2px rgba(0,0,0,.2); }
@@ -486,8 +486,8 @@ const DEFAULT_LOGOS = [
 ];
 
 /* Event metadata */
-const EVENT_NAME = 'EDS 2026';
-const EVENT_LOGO = { src: 'event_logo.png', alt: 'ELLIS Doctoral Symposium on Trustworthy AI logo' };
+const EVENT_NAME = ''; /* 'ML in PL Conference 2026' is already in the logo */
+const EVENT_LOGO = { src: 'event_logo.png', alt: 'ML in PL Conference 2026 logo' };
 
 /* No project website was provided, so no project QR code */
 const PROJECT_QR = { enabled: false, src: 'qr.png', label: 'Project page', alt: 'Project QR' };
@@ -686,8 +686,8 @@ function PosterApp() {
             <div className="event-card">
               <img src={EVENT_LOGO.src} alt={EVENT_LOGO.alt || 'Event logo'} />
               {EVENT_NAME && <div className="ev-name">{EVENT_NAME}</div>}
-              <div className="ev-sub">ELLIS Doctoral Symposium&nbsp;on Trustworthy AI</div>
-              <div className="ev-loc">Lisbon &middot; July 27&ndash;30, 2026</div>
+              <div className="ev-sub">Copernicus Science Centre</div>
+              <div className="ev-loc">Warsaw &middot; October 8&ndash;11, 2026</div>
             </div>
           )}
           {PROJECT_QR.enabled && (

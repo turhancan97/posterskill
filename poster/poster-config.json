@@ -1,0 +1,78 @@
+{
+  "columns": [
+    {
+      "id": "col1",
+      "widthMm": 355,
+      "cards": [
+        "tldr",
+        "overview",
+        "evidence",
+        "implementation"
+      ]
+    },
+    {
+      "id": "col2",
+      "widthMm": 347,
+      "cards": [
+        "method",
+        "analysis",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "col3",
+      "widthMm": null,
+      "cards": [
+        "results",
+        "taskonomy",
+        "classification",
+        "camerapose"
+      ]
+    }
+  ],
+  "cardHeights": {
+    "taskonomy": 104,
+    "results": 270,
+    "classification": 244,
+    "method": 368,
+    "analysis": 215
+  },
+  "fontScale": 2,
+  "logos": [
+    {
+      "src": "JU_logo_white.png",
+      "alt": "Jagiellonian University in Kraków",
+      "heightMm": 36,
+      "col": 1,
+      "row": 1
+    },
+    {
+      "src": "CTU_logo_white.png",
+      "alt": "Czech Technical University in Prague",
+      "heightMm": 36,
+      "col": 1,
+      "row": 2
+    },
+    {
+      "src": "gmum_logo.png",
+      "alt": "GMUM - Group of Machine Learning Research",
+      "heightMm": 27,
+      "col": 2,
+      "row": 1
+    },
+    {
+      "src": "vrg_logo_white.png",
+      "alt": "VRG - Visual Recognition Group",
+      "heightMm": 36,
+      "col": 2,
+      "row": 2
+    },
+    {
+      "src": "aachen_logo_white.png",
+      "alt": "RWTH Aachen University",
+      "heightMm": 34,
+      "col": 3,
+      "row": 1
+    }
+  ]
+}

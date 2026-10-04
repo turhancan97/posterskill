@@ -230,14 +230,30 @@ const CARD_REGISTRY = {
   evidence: {
     title: 'Abstraction–Depth Correlation: Empirical Evidence',
     color: null,
-    grow: true,
+    grow: false,
     body: (
       <>
         <p>We probe a frozen DINOv3-L/16 independently at every layer &#8467; &isin; {'{1,...,24}'} on three NYUv2 tasks of increasing abstraction, training a lightweight head per layer and recording its validation score. All three tasks share the same training images, yet the best-performing layer shifts systematically deeper as task abstraction increases.</p>
         <div className="fig"><div className="fig-wrap"><img src="fig_motivation.png" alt="Layer sweeps on NYUv2 for surface normals, depth and segmentation" /></div>
         <div className="cap"><b>Fig. 2:</b> Layer-wise probing on NYUv2 with DINOv3-L/16: the best layer shifts deeper as tasks become more semantic &mdash; surface normals peak at layer&nbsp;18, depth at layer&nbsp;21, segmentation at the final layer&nbsp;24 (the last layer).</div></div>
+        <div className="fig"><div className="fig-wrap"><img src="fig_pca_layers.png" alt="PCA-to-RGB patch features of a frozen DINOv3-L at layers 1 to 23" /></div>
+        <div className="cap"><b>Fig. 3:</b> Same image, different depths: frozen DINOv3-L patch features coloured by one PCA shared across layers. Early layers respond to texture and colour, middle layers are nearly uniform in these directions, deep layers separate object from background.</div></div>
         <div className="hl"><p>Exhaustive per-task layer search is costly and still commits to one <i>fixed</i> depth. Worse, a single layer ignores complementary information spread across <i>multiple</i> depths, and concatenating all layers is strong but expensive (6.8M vs 1.6M trainable parameters on DINOv3-L, including the task head). This motivates AMDF's patch-wise fusion across the full frozen hierarchy.</p></div>
       </>
+    ),
+  },
+  paramsrank: {
+    title: 'Accuracy vs. trainable parameters',
+    color: 'purple',
+    grow: true,
+    body: (
+      <div style={{ display: 'flex', gap: '5mm', alignItems: 'center', flex: 1 }}>
+        <div className="fig" style={{ flex: '0 0 42%' }}><div className="fig-wrap"><img src="fig_params_rank.png" alt="Mean rank over five dense benchmarks versus trainable parameters" /></div></div>
+        <div style={{ flex: 1 }}>
+          <p>Averaged over the five dense benchmarks, <b>AMDF has the best mean rank (1.48)</b> with about a <b>quarter of ConcatLayers' parameters</b> (1.8M vs 7.0M on ViT-L). ConcatLayers still wins depth and camera pose; AMDF wins normals, segmentation and Taskonomy.</p>
+          <div className="cap"><b>Fig. 4:</b> Mean of the per-table ranks over NYUv2 normals, depth, segmentation, Taskonomy and NAVI pose vs. trainable parameters averaged over those tasks. CUB-200 is excluded (different set of methods).</div>
+        </div>
+      </div>
     ),
   },
   method: {
@@ -295,7 +311,7 @@ const CARD_REGISTRY = {
               <text x="570" y="195" textAnchor="middle" style={{ fill: 'var(--text-light)', fontSize: 10, fontFamily: 'Nunito', fontStyle: 'italic' }}>camera pose</text>
             </svg>
           </div>
-          <div className="cap"><b>Fig. 3:</b> The same frozen-backbone fusion module feeds three task-specific heads &mdash; only the head (and its supervision) changes per task.</div>
+          <div className="cap"><b>Fig. 5:</b> The same frozen-backbone fusion module feeds three task-specific heads &mdash; only the head (and its supervision) changes per task.</div>
         </div>
       </>
     ),
@@ -413,7 +429,7 @@ const CARD_REGISTRY = {
     grow: true,
     body: (
       <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
-      <div className="cap"><b>Fig. 4:</b> AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and shifts toward deep layers for semantic tasks (classification <i>r</i>=0.83).</div></div>
+      <div className="cap"><b>Fig. 6:</b> AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and shifts toward deep layers for semantic tasks (classification <i>r</i>=0.83).</div></div>
     ),
   },
   conclusion: {
@@ -438,7 +454,7 @@ const CARD_REGISTRY = {
    ================================================================ */
 const DEFAULT_LAYOUT = {
   columns: [
-    { id: 'col1', widthMm: 445, cards: ['tldr', 'overview', 'evidence'] },
+    { id: 'col1', widthMm: 445, cards: ['tldr', 'overview', 'evidence', 'paramsrank'] },
     { id: 'col2', widthMm: 385, cards: ['method', 'implementation', 'analysis'] },
     { id: 'col3', widthMm: null, cards: ['results', 'taskonomy', 'classification', 'camerapose', 'conclusion'] },
   ],

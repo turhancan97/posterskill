@@ -2,20 +2,20 @@
   "columns": [
     {
       "id": "col1",
-      "widthMm": 445,
+      "widthMm": 300,
       "cards": [
-        "tldr",
-        "overview",
-        "evidence",
-        "conclusion"
+        "idea",
+        "problem1",
+        "problem2",
+        "setup"
       ]
     },
     {
       "id": "col2",
-      "widthMm": 385,
+      "widthMm": 340,
       "cards": [
         "method",
-        "implementation",
+        "heads",
         "analysis"
       ]
     },
@@ -24,15 +24,12 @@
       "widthMm": null,
       "cards": [
         "results",
-        "taskonomy",
-        "classification",
-        "camerapose",
-        "paramsrank"
+        "conclusion"
       ]
     }
   ],
   "cardHeights": {},
-  "fontScale": 2.15,
+  "fontScale": 3.3,
   "logos": [
     {
       "src": "JU_logo_white.png",

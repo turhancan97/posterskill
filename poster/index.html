@@ -274,15 +274,15 @@ function HookPanel() {
           {curve('M20 102 C 150 100, 240 60, 290 14', '3 8', .9)}
           <text x="292" y="118" textAnchor="end" style={{ fill: '#fff', fontSize: 15, fontFamily: 'Nunito', fontWeight: 700 }}>layer depth →</text>
         </svg>
-        <div><b>Every task peaks at a different depth</b>: normals at L18, depth at L21, segmentation at L24.</div>
+        <div>On DINOv3-L, NYUv2 probes <b>peak at different depths</b>: normals L18, depth L21, segmentation L24.</div>
       </div>
       <div className="hook-pt">
         <div className="hook-num">1.48</div>
-        <div><b>Best mean rank</b> over 5 dense benchmarks and 7 frozen backbones.</div>
+        <div><b>Best mean rank</b> over 5 benchmarks (4 dense + camera pose) and 7 frozen backbones.</div>
       </div>
       <div className="hook-pt">
-        <div className="hook-num">&frac14;</div>
-        <div>of the <b>trainable parameters</b> of concatenating all layers (1.8M vs 7.0M).</div>
+        <div className="hook-num">&asymp;&frac14;</div>
+        <div>of the <b>trainable parameters</b> of concatenating all layers (1.6M vs 6.8M, DINOv3-L, normals).</div>
       </div>
       <div className="hook-foot">Frozen backbone &middot; no layer search &middot; one probe, any head</div>
     </div>
@@ -331,7 +331,7 @@ function MethodSVG() {
       <text x="385" y="338" textAnchor="middle" style={{ ...F, fontSize: 24, fontWeight: 800, fill: B }}>values</text>
       <text x="385" y="372" textAnchor="middle" style={{ ...F, fontSize: 21, fill: T }}>v<tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan><tspan dy="-6"> = W</tspan><tspan dy="6" style={{ fontSize: 15 }}>v</tspan><tspan dy="-6"> h</tspan><tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan></text>
       {expertCols.map((c, k) => <rect key={k} x={318 + k * 34} y="390" width="30" height="20" rx="3" style={{ fill: c }} />)}
-      <text x="385" y="436" textAnchor="middle" style={{ ...F, fontSize: 15, fill: TL }}>D/2 ch. → 16 blocks</text>
+      <text x="385" y="436" textAnchor="middle" style={{ ...F, fontSize: 15, fill: TL }}>D/2 ch. → 16 blocks of D/32</text>
       <text x="462" y="324" textAnchor="middle" style={{ fontSize: 18 }}>🔥</text>
 
       {[0, 1, 3].map((i) => <line key={i} x1="150" y1={ly(i) + 35} x2="215" y2={ly(i) + 35} style={{ stroke: B, strokeWidth: 2.5 }} />)}
@@ -349,7 +349,7 @@ function MethodSVG() {
       <line x1="480" y1="145" x2="556" y2="145" style={{ stroke: '#444', strokeWidth: 2.5 }} markerEnd="url(#ah)" />
       <rect x="560" y="115" width="200" height="66" rx="12" style={{ fill: '#fbe9e6', stroke: R, strokeWidth: 2.5 }} />
       <text x="660" y="143" textAnchor="middle" style={{ ...F, fontSize: 20, fontWeight: 800, fill: R }}>softmax over layers</text>
-      <text x="660" y="169" textAnchor="middle" style={{ ...F, fontSize: 18, fill: T }}>a<tspan dy="6" style={{ fontSize: 13 }}>e,ℓ</tspan><tspan dy="-6"> ∝ exp(q</tspan><tspan dy="6" style={{ fontSize: 13 }}>e</tspan><tspan dy="-6">·k</tspan><tspan dy="6" style={{ fontSize: 13 }}>ℓ</tspan><tspan dy="-6">)</tspan></text>
+      <text x="660" y="169" textAnchor="middle" style={{ ...F, fontSize: 15, fill: T }}>a<tspan dy="6" style={{ fontSize: 12 }}>e,ℓ</tspan><tspan dy="-6"> = softmax</tspan><tspan dy="6" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-6">(q</tspan><tspan dy="6" style={{ fontSize: 12 }}>e</tspan><tspan dy="-6">·k</tspan><tspan dy="6" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-6"> / √D)</tspan></text>
 
       {/* attention map E x L */}
       <line x1="660" y1="181" x2="660" y2="212" style={{ stroke: R, strokeWidth: 2.5 }} markerEnd="url(#ahr)" />
@@ -462,7 +462,7 @@ function ParamsBars() {
   const L0 = 230, LW = 300, R0 = 640, RW = 280, y0 = 56, dy = 46, bh = 32;
   return (
     <svg viewBox="0 0 1000 290" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
-      <text x={L0} y="28" style={{ ...F, fontSize: 24, fontWeight: 800, fill: '#222' }}>Mean rank ↓ <tspan style={{ fontSize: 18, fontWeight: 600, fill: '#555' }}>(5 dense tasks)</tspan></text>
+      <text x={L0} y="28" style={{ ...F, fontSize: 24, fontWeight: 800, fill: '#222' }}>Mean rank ↓ <tspan style={{ fontSize: 18, fontWeight: 600, fill: '#555' }}>(4 dense + pose)</tspan></text>
       <text x={R0} y="28" style={{ ...F, fontSize: 24, fontWeight: 800, fill: '#222' }}>Trainable params (M)</text>
       {rows.map(([n, rk, pm, ours], i) => { const y = y0 + i * dy, c = ours ? '#cf4832' : '#d1d3d4', tc = ours ? '#cf4832' : '#222', fw = ours ? 900 : 600; return <g key={n}>
         <text x={L0 - 12} y={y + bh - 5} textAnchor="end" style={{ ...F, fontSize: 22, fontWeight: fw, fill: tc }}>{n}</text>
@@ -521,7 +521,7 @@ const CARD_REGISTRY = {
       <div className="setup">
         <div><b>7 frozen backbones</b><span>DINOv3-S/B/L &middot; MAE-L &middot; SigLIP2-L &middot; V-JEPA2.1-L &middot; PESpatial-L</span></div>
         <div><b>6 benchmarks</b><span>NYUv2 normals, depth, segmentation &middot; Taskonomy &middot; NAVI camera pose &middot; CUB-200</span></div>
-        <div><b>Fair comparison</b><span>same recipe for every row of a table &middot; mean of 3 seeds &middot; best-epoch validation metric</span></div>
+        <div><b>Fair comparison</b><span>same recipe for every row of a table &middot; mean of up to 3 seeds (a few cells have 1&ndash;2) &middot; best-epoch validation metric</span></div>
       </div>
     ),
   },
@@ -561,7 +561,7 @@ const CARD_REGISTRY = {
     body: (
       <>
         <div className="callouts">
-          <div className="callout"><div className="cn">1.48</div><div className="cl">best mean rank<br/>(5 dense tasks)</div></div>
+          <div className="callout"><div className="cn">1.48</div><div className="cl">best mean rank<br/>(4 dense + pose)</div></div>
           <div className="callout"><div className="cn">&frac14;</div><div className="cl">of ConcatLayers'<br/>trainable params</div></div>
           <div className="callout"><div className="cn">7&times;6</div><div className="cl">backbones &times;<br/>benchmarks</div></div>
         </div>
@@ -570,7 +570,7 @@ const CARD_REGISTRY = {
         <div className="cap"><b>Fig. 6:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). AMDF is best on normals, segmentation and Taskonomy; ConcatLayers on depth and pose; EfficientProbe on CUB-200. Full tables: handout.</div></div>
         <h3>Accuracy vs. trainable parameters</h3>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsBars /></div>
-        <div className="cap"><b>Fig. 7:</b> Mean of the per-table ranks over the 5 dense tasks; params (probe + head, ViT-L) averaged over the same tasks. CUB-200 excluded (different methods).</div></div>
+        <div className="cap"><b>Fig. 7:</b> Mean of the per-table ranks over 5 benchmarks (NYUv2 normals, depth, segmentation, Taskonomy, NAVI pose); params (probe + head, ViT-L) averaged over the same tasks. CUB-200 excluded (different methods).</div></div>
       </>
     ),
   },

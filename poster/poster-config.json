@@ -31,9 +31,6 @@
     }
   ],
   "cardHeights": {
-    "taskonomy": 104,
-    "results": 270,
-    "classification": 244,
     "method": 368,
     "analysis": 215
   },
@@ -41,7 +38,7 @@
   "logos": [
     {
       "src": "JU_logo_white.png",
-      "alt": "Jagiellonian University in Kraków",
+      "alt": "Jagiellonian University in Krak\u00f3w",
       "heightMm": 36,
       "col": 1,
       "row": 1

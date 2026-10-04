@@ -122,6 +122,8 @@
   tbody td { padding:2.2mm 2.5mm; border-bottom:1px solid #eee; }
   tbody tr:nth-child(even) { background:#f8f9fb; }
   .best { font-weight:800; color:var(--orange); }
+  td.params { color:var(--text-light); font-variant-numeric:tabular-nums; }
+  .params-note { font-size:.85em; color:var(--text-light); margin-bottom:1mm; }
   .second { font-weight:700; text-decoration:underline; text-decoration-color:#bbb; }
   .ours td { font-weight:700; }
   .ours { background:#faf6ff; }
@@ -304,37 +306,38 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
+        <p className="params-note"><b>Params (M)</b>: trainable parameters (probe + task head) with a ViT-L backbone (D=1024, 24 layers &mdash; DINOv3-L, MAE-L, SigLIP2-L, V-JEPA2.1-L, PESpatial-L).</p>
         <h3>Surface normals &mdash; d&#8321; (&uarr;)</h3>
         <table className="table-dense">
-          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Params (M)</th><th>Rank</th></tr></thead>
           <tbody>
-            <tr><td>LastLayer</td><td>22.22</td><td>24.55</td><td>23.66</td><td>32.84</td><td>13.23</td><td>36.31</td><td>16.88</td><td><Rank v={4.57}/></td></tr>
-            <tr><td>AvgLayer</td><td>20.72</td><td>27.84</td><td>31.01</td><td>35.34</td><td>15.24</td><td>32.55</td><td>17.35</td><td><Rank v={4.29}/></td></tr>
-            <tr><td>WeightedLayers</td><td>25.45</td><td>30.68</td><td>34.61</td><td>36.54</td><td>16.81</td><td>35.50</td><td>17.48</td><td><Rank v={3.14}/></td></tr>
-            <tr><td>ConcatLayers</td><td className="second">30.91</td><td className="second">35.21</td><td className="second">39.26</td><td className="second">41.00</td><td className="second">24.71</td><td className="second">39.57</td><td className="second">22.46</td><td><Rank v={2.00}/></td></tr>
-            <tr className="ours"><td>AMDF (ours)</td><td className="best">35.91</td><td className="best">40.75</td><td className="best">45.19</td><td className="best">46.96</td><td className="best">29.01</td><td className="best">45.48</td><td className="best">28.38</td><td><Rank v={1.00}/></td></tr>
+            <tr><td>LastLayer</td><td>22.22</td><td>24.55</td><td>23.66</td><td>32.84</td><td>13.23</td><td>36.31</td><td>16.88</td><td className="params">0.53</td><td><Rank v={4.57}/></td></tr>
+            <tr><td>AvgLayer</td><td>20.72</td><td>27.84</td><td>31.01</td><td>35.34</td><td>15.24</td><td>32.55</td><td>17.35</td><td className="params">0.53</td><td><Rank v={4.29}/></td></tr>
+            <tr><td>WeightedLayers</td><td>25.45</td><td>30.68</td><td>34.61</td><td>36.54</td><td>16.81</td><td>35.50</td><td>17.48</td><td className="params">0.53</td><td><Rank v={3.14}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="second">30.91</td><td className="second">35.21</td><td className="second">39.26</td><td className="second">41.00</td><td className="second">24.71</td><td className="second">39.57</td><td className="second">22.46</td><td className="params">6.82</td><td><Rank v={2.00}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">35.91</td><td className="best">40.75</td><td className="best">45.19</td><td className="best">46.96</td><td className="best">29.01</td><td className="best">45.48</td><td className="best">28.38</td><td className="params">1.62</td><td><Rank v={1.00}/></td></tr>
           </tbody>
         </table>
         <h3>Depth estimation &mdash; d&#8321; (&uarr;)</h3>
         <table className="table-dense">
-          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Params (M)</th><th>Rank</th></tr></thead>
           <tbody>
-            <tr><td>LastLayer</td><td>60.79</td><td>65.27</td><td>66.44</td><td>62.49</td><td>58.40</td><td>69.14</td><td>56.90</td><td><Rank v={4.00}/></td></tr>
-            <tr><td>AvgLayer</td><td>53.39</td><td>63.70</td><td>65.50</td><td>65.82</td><td>61.21</td><td>66.92</td><td>58.95</td><td><Rank v={4.57}/></td></tr>
-            <tr><td>WeightedLayers</td><td>57.60</td><td>65.21</td><td>66.66</td><td>66.45</td><td>61.27</td><td>68.53</td><td>59.03</td><td><Rank v={3.43}/></td></tr>
-            <tr><td>ConcatLayers</td><td className="best">65.10</td><td className="best">70.72</td><td className="best">73.21</td><td className="best">69.28</td><td className="best">66.36</td><td className="second">71.73</td><td className="best">61.42</td><td><Rank v={1.14}/></td></tr>
-            <tr className="ours"><td>AMDF (ours)</td><td className="second">62.42</td><td className="second">69.30</td><td className="second">71.83</td><td className="second">68.23</td><td className="second">63.84</td><td className="best">71.76</td><td className="second">59.46</td><td><Rank v={1.86}/></td></tr>
+            <tr><td>LastLayer</td><td>60.79</td><td>65.27</td><td>66.44</td><td>62.49</td><td>58.40</td><td>69.14</td><td>56.90</td><td className="params">0.66</td><td><Rank v={4.00}/></td></tr>
+            <tr><td>AvgLayer</td><td>53.39</td><td>63.70</td><td>65.50</td><td>65.82</td><td>61.21</td><td>66.92</td><td>58.95</td><td className="params">0.66</td><td><Rank v={4.57}/></td></tr>
+            <tr><td>WeightedLayers</td><td>57.60</td><td>65.21</td><td>66.66</td><td>66.45</td><td>61.27</td><td>68.53</td><td>59.03</td><td className="params">0.66</td><td><Rank v={3.43}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="best">65.10</td><td className="best">70.72</td><td className="best">73.21</td><td className="best">69.28</td><td className="best">66.36</td><td className="second">71.73</td><td className="best">61.42</td><td className="params">6.95</td><td><Rank v={1.14}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="second">62.42</td><td className="second">69.30</td><td className="second">71.83</td><td className="second">68.23</td><td className="second">63.84</td><td className="best">71.76</td><td className="second">59.46</td><td className="params">1.75</td><td><Rank v={1.86}/></td></tr>
           </tbody>
         </table>
         <h3>Semantic segmentation &mdash; mIoU (&uarr;)</h3>
         <table className="table-dense">
-          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Params (M)</th><th>Rank</th></tr></thead>
           <tbody>
-            <tr><td>LastLayer</td><td className="second">43.89</td><td className="best">53.38</td><td className="second">57.19</td><td>39.08</td><td>40.85</td><td className="second">44.11</td><td>32.88</td><td><Rank v={3.21}/></td></tr>
-            <tr><td>AvgLayer</td><td>33.70</td><td>47.37</td><td>50.89</td><td>40.69</td><td>42.18</td><td>42.10</td><td>33.42</td><td><Rank v={4.29}/></td></tr>
-            <tr><td>WeightedLayers</td><td>39.30</td><td>50.17</td><td>53.07</td><td>41.30</td><td>42.13</td><td>43.11</td><td>33.40</td><td><Rank v={3.86}/></td></tr>
-            <tr><td>ConcatLayers</td><td>42.92</td><td className="second">51.46</td><td>54.88</td><td className="second">41.44</td><td className="second">43.36</td><td>43.98</td><td className="best">34.12</td><td><Rank v={2.43}/></td></tr>
-            <tr className="ours"><td>AMDF (ours)</td><td className="best">44.04</td><td className="best">53.38</td><td className="best">57.20</td><td className="best">42.05</td><td className="best">43.39</td><td className="best">45.26</td><td className="second">33.49</td><td><Rank v={1.21}/></td></tr>
+            <tr><td>LastLayer</td><td className="second">43.89</td><td className="best">53.38</td><td className="second">57.19</td><td>39.08</td><td>40.85</td><td className="second">44.11</td><td>32.88</td><td className="params">0.54</td><td><Rank v={3.21}/></td></tr>
+            <tr><td>AvgLayer</td><td>33.70</td><td>47.37</td><td>50.89</td><td>40.69</td><td>42.18</td><td>42.10</td><td>33.42</td><td className="params">0.54</td><td><Rank v={4.29}/></td></tr>
+            <tr><td>WeightedLayers</td><td>39.30</td><td>50.17</td><td>53.07</td><td>41.30</td><td>42.13</td><td>43.11</td><td>33.40</td><td className="params">0.54</td><td><Rank v={3.86}/></td></tr>
+            <tr><td>ConcatLayers</td><td>42.92</td><td className="second">51.46</td><td>54.88</td><td className="second">41.44</td><td className="second">43.36</td><td>43.98</td><td className="best">34.12</td><td className="params">6.84</td><td><Rank v={2.43}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">44.04</td><td className="best">53.38</td><td className="best">57.20</td><td className="best">42.05</td><td className="best">43.39</td><td className="best">45.26</td><td className="second">33.49</td><td className="params">1.64</td><td><Rank v={1.21}/></td></tr>
           </tbody>
         </table>
       </>
@@ -348,13 +351,13 @@ const CARD_REGISTRY = {
       <>
         <h3>Aggregate L<sub>1</sub> &times;100 (&darr;)</h3>
         <table className="table-dense">
-          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Params (M)</th><th>Rank</th></tr></thead>
           <tbody>
-            <tr><td>LastLayer</td><td>41.64</td><td>39.21</td><td>39.27</td><td>39.52</td><td>46.81</td><td>36.97</td><td>42.23</td><td><Rank v={4.43}/></td></tr>
-            <tr><td>AvgLayer</td><td>43.66</td><td>39.42</td><td>38.50</td><td>38.55</td><td>45.51</td><td>37.84</td><td>41.82</td><td><Rank v={4.43}/></td></tr>
-            <tr><td>WeightedLayers</td><td>41.46</td><td>38.48</td><td>37.49</td><td>38.14</td><td>44.40</td><td>37.27</td><td>41.68</td><td><Rank v={3.14}/></td></tr>
-            <tr><td>ConcatLayers</td><td className="best">37.76</td><td className="second">35.19</td><td className="second">33.62</td><td className="second">34.54</td><td className="second">38.74</td><td className="best">33.45</td><td className="second">37.64</td><td><Rank v={1.71}/></td></tr>
-            <tr className="ours"><td>AMDF (ours)</td><td className="second">38.82</td><td className="best">34.64</td><td className="best">32.69</td><td className="best">34.13</td><td className="best">37.90</td><td className="second">35.10</td><td className="best">37.58</td><td><Rank v={1.29}/></td></tr>
+            <tr><td>LastLayer</td><td>41.64</td><td>39.21</td><td>39.27</td><td>39.52</td><td>46.81</td><td>36.97</td><td>42.23</td><td className="params">0.53</td><td><Rank v={4.43}/></td></tr>
+            <tr><td>AvgLayer</td><td>43.66</td><td>39.42</td><td>38.50</td><td>38.55</td><td>45.51</td><td>37.84</td><td>41.82</td><td className="params">0.53</td><td><Rank v={4.43}/></td></tr>
+            <tr><td>WeightedLayers</td><td>41.46</td><td>38.48</td><td>37.49</td><td>38.14</td><td>44.40</td><td>37.27</td><td>41.68</td><td className="params">0.53</td><td><Rank v={3.14}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="best">37.76</td><td className="second">35.19</td><td className="second">33.62</td><td className="second">34.54</td><td className="second">38.74</td><td className="best">33.45</td><td className="second">37.64</td><td className="params">6.82</td><td><Rank v={1.71}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="second">38.82</td><td className="best">34.64</td><td className="best">32.69</td><td className="best">34.13</td><td className="best">37.90</td><td className="second">35.10</td><td className="best">37.58</td><td className="params">1.62</td><td><Rank v={1.29}/></td></tr>
           </tbody>
         </table>
       </>
@@ -368,15 +371,15 @@ const CARD_REGISTRY = {
       <>
         <h3>CUB-200 &mdash; fine-grained bird recognition, Top-1 (&uarr;)</h3>
         <table className="table-dense">
-          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Params (M)</th><th>Rank</th></tr></thead>
           <tbody>
-            <tr><td>AvgLayer</td><td>41.19</td><td>60.29</td><td>54.71</td><td>37.41</td><td>81.45</td><td>29.96</td><td>41.39</td><td><Rank v={6.29}/></td></tr>
-            <tr><td>WeightedLayers</td><td>64.19</td><td>77.83</td><td>73.01</td><td>45.30</td><td>81.11</td><td>33.60</td><td>43.43</td><td><Rank v={4.71}/></td></tr>
-            <tr><td>ConcatLayers</td><td>56.92</td><td>73.40</td><td>71.67</td><td>49.83</td><td>81.71</td><td className="second">41.38</td><td>42.72</td><td><Rank v={4.57}/></td></tr>
-            <tr><td>AvgPool</td><td>62.70</td><td>78.19</td><td>71.79</td><td>25.58</td><td>79.66</td><td>27.05</td><td>39.81</td><td><Rank v={5.86}/></td></tr>
-            <tr><td>EfficientProbe</td><td className="best">77.22</td><td className="best">84.01</td><td className="best">86.19</td><td className="best">74.38</td><td className="second">83.95</td><td className="best">74.81</td><td className="best">71.94</td><td><Rank v={1.14}/></td></tr>
-            <tr><td>AttentiveFusionAP</td><td>64.53</td><td>77.98</td><td className="second">77.51</td><td className="second">50.17</td><td>81.99</td><td>35.80</td><td>44.17</td><td><Rank v={3.00}/></td></tr>
-            <tr className="ours"><td>AMDF (ours)</td><td className="second">65.25</td><td className="second">78.49</td><td>75.23</td><td>47.13</td><td className="best">84.62</td><td>35.88</td><td className="second">59.99</td><td><Rank v={2.43}/></td></tr>
+            <tr><td>AvgLayer</td><td>41.19</td><td>60.29</td><td>54.71</td><td>37.41</td><td>81.45</td><td>29.96</td><td>41.39</td><td className="params">0.63</td><td><Rank v={6.29}/></td></tr>
+            <tr><td>WeightedLayers</td><td>64.19</td><td>77.83</td><td>73.01</td><td>45.30</td><td>81.11</td><td>33.60</td><td>43.43</td><td className="params">0.63</td><td><Rank v={4.71}/></td></tr>
+            <tr><td>ConcatLayers</td><td>56.92</td><td>73.40</td><td>71.67</td><td>49.83</td><td>81.71</td><td className="second">41.38</td><td>42.72</td><td className="params">6.92</td><td><Rank v={4.57}/></td></tr>
+            <tr><td>AvgPool</td><td>62.70</td><td>78.19</td><td>71.79</td><td>25.58</td><td>79.66</td><td>27.05</td><td>39.81</td><td className="params">0.20</td><td><Rank v={5.86}/></td></tr>
+            <tr><td>EfficientProbe</td><td className="best">77.22</td><td className="best">84.01</td><td className="best">86.19</td><td className="best">74.38</td><td className="second">83.95</td><td className="best">74.81</td><td className="best">71.94</td><td className="params">1.27</td><td><Rank v={1.14}/></td></tr>
+            <tr><td>AttentiveFusionAP</td><td>64.53</td><td>77.98</td><td className="second">77.51</td><td className="second">50.17</td><td>81.99</td><td>35.80</td><td>44.17</td><td className="params">8.60</td><td><Rank v={3.00}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="second">65.25</td><td className="second">78.49</td><td>75.23</td><td>47.13</td><td className="best">84.62</td><td>35.88</td><td className="second">59.99</td><td className="params">1.72</td><td><Rank v={2.43}/></td></tr>
           </tbody>
         </table>
       </>
@@ -390,15 +393,15 @@ const CARD_REGISTRY = {
       <>
         <table className="table-dense table-pose">
           <thead>
-            <tr><th rowSpan="2">Method</th><th colSpan="2">DINOv3-S</th><th colSpan="2">DINOv3-B</th><th colSpan="2">DINOv3-L</th><th colSpan="2">MAE-L</th><th colSpan="2">SigLIP2-L</th><th colSpan="2">V-JEPA2.1-L</th><th colSpan="2">PESpatial-L</th><th rowSpan="2">Rank</th></tr>
+            <tr><th rowSpan="2">Method</th><th colSpan="2">DINOv3-S</th><th colSpan="2">DINOv3-B</th><th colSpan="2">DINOv3-L</th><th colSpan="2">MAE-L</th><th colSpan="2">SigLIP2-L</th><th colSpan="2">V-JEPA2.1-L</th><th colSpan="2">PESpatial-L</th><th rowSpan="2">Params (M)</th><th rowSpan="2">Rank</th></tr>
             <tr><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th></tr>
           </thead>
           <tbody>
-            <tr><td>LastLayer</td><td>45.49</td><td>0.17</td><td>44.58</td><td>0.17</td><td>40.33</td><td>0.16</td><td>38.74</td><td>0.16</td><td>62.69</td><td>0.22</td><td className="second">37.05</td><td className="best">0.15</td><td>65.22</td><td className="second">0.23</td><td><Rank v={4.25}/></td></tr>
-            <tr><td>AvgLayer</td><td>43.97</td><td>0.17</td><td>36.13</td><td>0.15</td><td>35.44</td><td>0.14</td><td>36.73</td><td className="second">0.15</td><td>59.33</td><td className="second">0.21</td><td>47.21</td><td>0.18</td><td>66.16</td><td className="second">0.23</td><td><Rank v={3.96}/></td></tr>
-            <tr><td>WeightedLayers</td><td>43.31</td><td>0.17</td><td>35.28</td><td>0.15</td><td>35.06</td><td>0.14</td><td>34.88</td><td className="best">0.14</td><td className="second">58.86</td><td className="second">0.21</td><td>43.40</td><td className="second">0.17</td><td>67.01</td><td>0.24</td><td><Rank v={3.43}/></td></tr>
-            <tr><td>ConcatLayers</td><td className="best">36.71</td><td className="best">0.15</td><td className="best">30.30</td><td className="best">0.13</td><td className="best">28.37</td><td className="best">0.12</td><td className="best">31.74</td><td className="best">0.14</td><td className="best">57.31</td><td className="best">0.20</td><td>37.58</td><td className="best">0.15</td><td className="best">57.66</td><td className="best">0.21</td><td><Rank v={1.32}/></td></tr>
-            <tr className="ours"><td>AMDF (ours)</td><td className="second">41.40</td><td className="second">0.16</td><td className="second">32.14</td><td className="second">0.14</td><td className="second">32.80</td><td className="second">0.13</td><td className="second">32.17</td><td className="best">0.14</td><td>59.10</td><td className="second">0.21</td><td className="best">34.48</td><td className="best">0.15</td><td className="second">60.31</td><td className="best">0.21</td><td><Rank v={2.04}/></td></tr>
+            <tr><td>LastLayer</td><td>45.49</td><td>0.17</td><td>44.58</td><td>0.17</td><td>40.33</td><td>0.16</td><td>38.74</td><td>0.16</td><td>62.69</td><td>0.22</td><td className="second">37.05</td><td className="best">0.15</td><td>65.22</td><td className="second">0.23</td><td className="params">1.22</td><td><Rank v={4.25}/></td></tr>
+            <tr><td>AvgLayer</td><td>43.97</td><td>0.17</td><td>36.13</td><td>0.15</td><td>35.44</td><td>0.14</td><td>36.73</td><td className="second">0.15</td><td>59.33</td><td className="second">0.21</td><td>47.21</td><td>0.18</td><td>66.16</td><td className="second">0.23</td><td className="params">1.22</td><td><Rank v={3.96}/></td></tr>
+            <tr><td>WeightedLayers</td><td>43.31</td><td>0.17</td><td>35.28</td><td>0.15</td><td>35.06</td><td>0.14</td><td>34.88</td><td className="best">0.14</td><td className="second">58.86</td><td className="second">0.21</td><td>43.40</td><td className="second">0.17</td><td>67.01</td><td>0.24</td><td className="params">1.22</td><td><Rank v={3.43}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="best">36.71</td><td className="best">0.15</td><td className="best">30.30</td><td className="best">0.13</td><td className="best">28.37</td><td className="best">0.12</td><td className="best">31.74</td><td className="best">0.14</td><td className="best">57.31</td><td className="best">0.20</td><td>37.58</td><td className="best">0.15</td><td className="best">57.66</td><td className="best">0.21</td><td className="params">7.51</td><td><Rank v={1.32}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="second">41.40</td><td className="second">0.16</td><td className="second">32.14</td><td className="second">0.14</td><td className="second">32.80</td><td className="second">0.13</td><td className="second">32.17</td><td className="best">0.14</td><td>59.10</td><td className="second">0.21</td><td className="best">34.48</td><td className="best">0.15</td><td className="second">60.31</td><td className="best">0.21</td><td className="params">2.31</td><td><Rank v={2.04}/></td></tr>
           </tbody>
         </table>
       </>

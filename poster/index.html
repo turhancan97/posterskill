@@ -158,8 +158,8 @@
   .poster .fig-wrap svg { height:auto!important; }
   .poster .fig.fill, .poster .fill > .fig-wrap { flex:1 1 auto; }
   .poster .fill > .fig-wrap img { height:100%; }
-  .setup { display:flex; flex-direction:column; gap:2.5mm; }
-  .setup > div { display:flex; flex-direction:column; background:var(--blue-light); border-radius:2mm; padding:2.5mm 4mm; }
+  .setup { display:flex; flex-direction:column; gap:1.6mm; }
+  .setup > div { display:flex; flex-direction:column; background:var(--blue-light); border-radius:2mm; padding:1.8mm 4mm; }
   .setup b { font-size:calc(10.5pt * var(--font-scale)); color:var(--blue); }
   .setup span { font-size:calc(9pt * var(--font-scale)); line-height:1.3; }
   .abl-row { display:flex; gap:2mm; margin:1mm 0 1.5mm; } .abl-cell { flex:1; background:#fbe9e6; border-radius:2mm; padding:2mm 1mm; text-align:center; }
@@ -314,7 +314,7 @@ function HookPanel() {
       </div>
       <div className="hook-pt">
         <div className="hook-num">5 / 5</div>
-        <div>benchmarks where AMDF has a <b>better mean rank than last-layer, mean and weighted fusion</b>; 1st on depth.</div>
+        <div>benchmarks where AMDF has a <b>better mean rank than last-layer, mean, weighted and per-position fusion</b>; 1st on depth.</div>
       </div>
       <div className="hook-foot">Frozen backbone &middot; no layer search<br/>one probe, any head<br/><span style={{ fontWeight: 900 }}>Full tables &rarr; take a handout</span></div>
     </div>
@@ -453,14 +453,15 @@ const RANKS = {
   rows: [
     ['AMDF (ours)',    [2.00, 1.43, 1.86, 2.00, 1.93]],
     ['ConcatLayers',   [1.00, 1.71, 1.57, 1.00, 1.21]],
-    ['WeightedLayers', [3.14, 3.57, 3.86, 3.14, 3.46]],
-    ['LastLayer',      [4.57, 3.71, 3.43, 4.43, 4.25]],
-    ['AvgLayer',       [4.29, 4.57, 4.29, 4.43, 4.14]],
+    ['WeightedLayers', [4.14, 4.00, 4.14, 3.29, 3.89]],
+    ['SpatialWeights', [3.14, 4.14, 4.43, 4.00, 4.00]],
+    ['LastLayer',      [5.43, 4.14, 3.86, 5.29, 4.96]],
+    ['AvgLayer',       [5.29, 5.57, 5.14, 5.43, 5.00]],
   ],
 };
 function RankHeatmap() {
   const F = { fontFamily: 'Nunito' };
-  const x0 = 230, cw = 150, y0 = 56, rh = 80, nT = RANKS.tasks.length;
+  const x0 = 230, cw = 150, y0 = 56, rh = 58, nT = RANKS.tasks.length;
   const colour = (v) => { const t = Math.max(0, Math.min(1, (v - 1) / 5)); const a = [184, 62, 43], b = [209, 211, 212]; const c = a.map((x, i) => Math.round(x + (b[i] - x) * t)); return `rgb(${c.join(',')})`; };
   const best = RANKS.tasks.map((_, j) => Math.min(...RANKS.rows.map(r => r[1][j]).filter(v => v != null)));
   return (
@@ -488,18 +489,18 @@ function RankHeatmap() {
    ================================================================ */
 const SCATTER = [
   ['ConcatLayers', 26.47, 1.30], ['AMDF (ours)', 1.42, 1.84],
-  ['WeightedLayers', 1.30, 3.44], ['LastLayer', 1.30, 4.08], ['AvgLayer', 1.30, 4.34],
+  ['WeightedLayers', 1.30, 3.89], ['SpatialWeights', 1.31, 3.94], ['LastLayer', 1.30, 4.74], ['AvgLayer', 1.30, 5.29],
 ];
 function ParamsScatter() {
   const F = { fontFamily: 'Nunito' };
-  const X0 = 120, X1 = 975, Y0 = 55, Y1 = 422, lo = Math.log10(0.7), hi = Math.log10(50);
+  const X0 = 120, X1 = 975, Y0 = 48, Y1 = 372, lo = Math.log10(0.7), hi = Math.log10(50);
   const px = (m) => X0 + (Math.log10(m) - lo) / (hi - lo) * (X1 - X0);
-  const py = (r) => Y0 + (r - 1) / (4.6 - 1) * (Y1 - Y0);
-  const lab = { 'ConcatLayers': [-26, -22, 'end'], 'AMDF (ours)': [22, 38, 'start'], 'WeightedLayers': [22, 10, 'start'], 'LastLayer': [22, -4, 'start'], 'AvgLayer': [22, 34, 'start'] };
+  const py = (r) => Y0 + (r - 1) / (5.5 - 1) * (Y1 - Y0);
+  const lab = { 'ConcatLayers': [-26, -22, 'end'], 'AMDF (ours)': [22, 38, 'start'], 'WeightedLayers': [22, -4, 'start'], 'SpatialWeights': [22, 30, 'start'], 'LastLayer': [22, 10, 'start'], 'AvgLayer': [22, 10, 'start'] };
   return (
-    <svg viewBox="0 0 1000 520" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1000 465" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
       <defs><marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" style={{ fill: '#b83e2b' }} /></marker></defs>
-      {[1, 2, 3, 4].map(r => <g key={r}><line x1={X0} y1={py(r)} x2={X1} y2={py(r)} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={X0 - 12} y={py(r) + 7} textAnchor="end" style={{ ...F, fontSize: 28, fill: '#555' }}>{r}</text></g>)}
+      {[1, 2, 3, 4, 5].map(r => <g key={r}><line x1={X0} y1={py(r)} x2={X1} y2={py(r)} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={X0 - 12} y={py(r) + 7} textAnchor="end" style={{ ...F, fontSize: 28, fill: '#555' }}>{r}</text></g>)}
       {[1, 3, 10, 30].map(m => <g key={m}><line x1={px(m)} y1={Y0} x2={px(m)} y2={Y1} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={px(m)} y={Y1 + 34} textAnchor="middle" style={{ ...F, fontSize: 28, fill: '#555' }}>{m}M</text></g>)}
       <text x={(X0 + X1) / 2} y={Y1 + 74} textAnchor="middle" style={{ ...F, fontSize: 28, fontWeight: 800, fill: '#222' }}>trainable parameters (log scale)</text>
       <text x="26" y={(Y0 + Y1) / 2} textAnchor="middle" transform={`rotate(-90 26 ${(Y0 + Y1) / 2})`} style={{ ...F, fontSize: 28, fontWeight: 800, fill: '#222' }}>mean rank ↓</text>
@@ -565,9 +566,9 @@ const CARD_REGISTRY = {
     grow: true,
     body: (
       <div className="setup">
-        <div><b>7 frozen backbones</b><span>DINOv3-S/B/L &middot; MAE-L &middot; SigLIP2-L &middot; V-JEPA2.1-L &middot; PESpatial-L</span></div>
-        <div><b>5 benchmarks</b><span>NYUv2 normals, depth (log-depth head), segmentation &middot; Taskonomy &middot; NAVI camera pose</span></div>
-        <div><b>Protocol</b><span>full width, 64-d keys/queries &middot; same recipe per table &middot; mean of &le;3 seeds (a few cells 1&ndash;2) &middot; best-epoch val. metric</span></div>
+        <div><b>7 backbones &times; 5 benchmarks</b><span>DINOv3-S/B/L &middot; MAE-L &middot; SigLIP2-L &middot; V-JEPA2.1-L &middot; PESpatial-L &mdash; NYUv2 normals, depth (log head), seg. &middot; Taskonomy &middot; NAVI</span></div>
+        <div><b>Baselines</b><span>Last &middot; Avg &middot; Weighted (one layer mix) &middot; SpatialWeights (per-position mix) &middot; Concat (1&times;1 proj. + GELU)</span></div>
+        <div><b>Protocol</b><span>full width, 64-d keys/queries &middot; same recipe per table &middot; mean of &le;3 seeds (few cells 1&ndash;2) &middot; best val. epoch</span></div>
       </div>
     ),
   },
@@ -605,10 +606,10 @@ const CARD_REGISTRY = {
         </div>
         <h3>Mean rank per benchmark <span style={{ fontWeight: 600, color: '#555' }}>(1 = best, &#9733; = best in table)</span></h3>
         <div className="fig"><div className="fig-wrap"><RankHeatmap /></div>
-        <div className="cap"><b>Fig. 5:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). ConcatLayers ranks first on 4 of 5 benchmarks, AMDF on depth; AMDF has a better mean rank than the three cheap baselines in every table. Full tables: handout.</div></div>
+        <div className="cap"><b>Fig. 5:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). ConcatLayers ranks first on 4 of 5 benchmarks, AMDF on depth; AMDF has a better mean rank than the four cheap baselines in every table. Full tables: handout.</div></div>
         <h3>Accuracy vs. trainable parameters</h3>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsScatter /></div>
-        <div className="cap"><b>Fig. 6:</b> Mean of the 5 per-table ranks vs. trainable parameters (probe + head, DINOv3-L, averaged over the same tasks; the pose head makes the ratio &asymp;19&times; here vs &asymp;22&times; on dense tasks alone).</div></div>
+        <div className="cap"><b>Fig. 6:</b> Mean of the 5 per-table ranks vs. trainable parameters (probe + head, DINOv3-L, averaged over the same tasks; &asymp;19&times; here, &asymp;22&times; on dense tasks alone).</div></div>
       </>
     ),
   },
@@ -632,9 +633,10 @@ const CARD_REGISTRY = {
     body: (
       <ul className="takeaways">
         <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
-        <li>AMDF has a better mean rank than LastLayer, AvgLayer and WeightedLayers in every table and ranks second only to ConcatLayers (first on depth), with <b>&asymp;22&times; fewer trainable parameters</b>.</li>
+        <li>AMDF beats all four cheap fusions by mean rank in every table and is second only to ConcatLayers (1st on depth), with <b>&asymp;22&times; fewer params</b>.</li>
+        <li>A fixed per-position mix (SpatialWeights) is no better than one global mix (mean rank 3.94 vs 3.89): choosing layers <b>from the patch's content</b> is what helps.</li>
         <li><b>Per-layer expert queries</b> improve the mean on all 5 benchmarks (on every backbone for normals and Taskonomy) for +2% parameters.</li>
-        <li>Study frozen VFMs as <b>full hierarchies</b>; no manual layer search needed.</li>
+        <li>Study frozen VFMs as <b>full hierarchies</b>.</li>
       </ul>
     ),
   },

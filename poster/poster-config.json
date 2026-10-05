@@ -15,8 +15,8 @@
       "widthMm": 372,
       "cards": [
         "method",
-        "heads",
-        "analysis"
+        "analysis",
+        "ablation"
       ]
     },
     {

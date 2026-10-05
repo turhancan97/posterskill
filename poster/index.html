@@ -162,6 +162,11 @@
   .setup > div { display:flex; flex-direction:column; background:var(--blue-light); border-radius:2mm; padding:2.5mm 4mm; }
   .setup b { font-size:calc(10.5pt * var(--font-scale)); color:var(--blue); }
   .setup span { font-size:calc(9pt * var(--font-scale)); line-height:1.3; }
+  .abl-row { display:flex; gap:2mm; margin:1mm 0 1.5mm; } .abl-cell { flex:1; background:#fbe9e6; border-radius:2mm; padding:2mm 1mm; text-align:center; }
+  .abl-cell .t { font-weight:800; font-size:calc(8pt * var(--font-scale)); } .abl-cell .g { font-weight:900; color:var(--red); font-size:calc(9.5pt * var(--font-scale)); } .abl-cell .k { font-size:calc(7pt * var(--font-scale)); color:#555; }
+  table.abl { width:100%; border-collapse:collapse; margin:1mm 0 1.5mm; font-size:calc(8.6pt * var(--font-scale)); }
+  table.abl td { padding:1mm 2mm; border-bottom:1px solid #eee; } table.abl td.g { font-weight:900; color:var(--red); }
+  .heads-line { background:var(--blue-light); border-left:3px solid var(--blue); border-radius:0 1.5mm 1.5mm 0; padding:2mm 4mm; margin-top:2mm; }
   .takeaways { background:#fbe9e6; border-left:2.5px solid var(--red); border-radius:0 1.5mm 1.5mm 0; padding:2.5mm 4mm 1.5mm 13mm !important; }
   .takeaways li { font-weight:600; }
   .second { font-weight:700; text-decoration:underline; text-decoration-color:#bbb; }
@@ -304,12 +309,12 @@ function HookPanel() {
         <div>On DINOv3-L, NYUv2 probes <b>peak at different depths</b>: normals &asymp;L18, depth &asymp;L21, segmentation L24.</div>
       </div>
       <div className="hook-pt">
-        <div className="hook-num">1.48</div>
-        <div><b>Best mean rank</b> over 5 benchmarks (4 dense + camera pose) and 7 frozen backbones.</div>
+        <div className="hook-num">&asymp;22&times;</div>
+        <div><b>fewer trainable parameters</b> than concatenating all layers (1.17M vs 26.2M, DINOv3-L, dense tasks), at the <b>2nd-best mean rank</b>.</div>
       </div>
       <div className="hook-pt">
-        <div className="hook-num">&asymp;&frac14;</div>
-        <div>of the <b>trainable parameters</b> of concatenating all layers (1.6M vs 6.8M, DINOv3-L, normals).</div>
+        <div className="hook-num">5 / 5</div>
+        <div>benchmarks where AMDF <b>beats last-layer, mean and weighted fusion</b>; 1st on depth.</div>
       </div>
       <div className="hook-foot">Frozen backbone &middot; no layer search<br/>one probe, any head<br/><span style={{ fontWeight: 900 }}>Full tables &rarr; take a handout</span></div>
     </div>
@@ -350,15 +355,15 @@ function MethodSVG() {
       <rect x="290" y="70" width="190" height="150" rx="12" style={{ fill: '#e8f1f7', stroke: B, strokeWidth: 2.5 }} />
       <text x="385" y="108" textAnchor="middle" style={{ ...F, fontSize: 24, fontWeight: 800, fill: B }}>keys</text>
       <text x="385" y="142" textAnchor="middle" style={{ ...F, fontSize: 21, fill: T }}>k<tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan><tspan dy="-6"> = W</tspan><tspan dy="6" style={{ fontSize: 15 }}>k</tspan><tspan dy="-6">(h</tspan><tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan><tspan dy="-6"> + p</tspan><tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan><tspan dy="-6">)</tspan></text>
-      <text x="385" y="174" textAnchor="middle" style={{ ...F, fontSize: 15, fill: TL }}>p<tspan dy="5" style={{ fontSize: 11 }}>ℓ</tspan><tspan dy="-5">: learned layer</tspan></text>
-      <text x="385" y="193" textAnchor="middle" style={{ ...F, fontSize: 15, fill: TL }}>embedding</text>
+      <text x="385" y="172" textAnchor="middle" style={{ ...F, fontSize: 16, fontWeight: 700, fill: B }}>D → 64</text>
+      <text x="385" y="196" textAnchor="middle" style={{ ...F, fontSize: 14, fill: TL }}>p<tspan dy="5" style={{ fontSize: 11 }}>ℓ</tspan><tspan dy="-5">: learned layer embedding</tspan></text>
       <text x="462" y="94" textAnchor="middle" style={{ fontSize: 18 }}>🔥</text>
 
       <rect x="290" y="300" width="190" height="150" rx="12" style={{ fill: '#e8f1f7', stroke: B, strokeWidth: 2.5 }} />
       <text x="385" y="338" textAnchor="middle" style={{ ...F, fontSize: 24, fontWeight: 800, fill: B }}>values</text>
       <text x="385" y="372" textAnchor="middle" style={{ ...F, fontSize: 21, fill: T }}>v<tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan><tspan dy="-6"> = W</tspan><tspan dy="6" style={{ fontSize: 15 }}>v</tspan><tspan dy="-6"> h</tspan><tspan dy="6" style={{ fontSize: 15 }}>ℓ</tspan></text>
       {expertCols.map((c, k) => <rect key={k} x={318 + k * 34} y="390" width="30" height="20" rx="3" style={{ fill: c }} />)}
-      <text x="385" y="436" textAnchor="middle" style={{ ...F, fontSize: 15, fill: TL }}>D/2 → 16 blocks</text>
+      <text x="385" y="436" textAnchor="middle" style={{ ...F, fontSize: 15, fontWeight: 700, fill: B }}>D → D, 16 blocks of D/16</text>
       <text x="462" y="324" textAnchor="middle" style={{ fontSize: 18 }}>🔥</text>
 
       {[0, 1, 3].map((i) => <line key={i} x1="150" y1={ly(i) + 35} x2="215" y2={ly(i) + 35} style={{ stroke: B, strokeWidth: 2.5 }} />)}
@@ -369,14 +374,15 @@ function MethodSVG() {
       <text x="232" y="280" style={{ ...F, fontSize: 15, fill: TL }}>tokens</text>
 
       {/* expert queries -> softmax over layers */}
-      <text x="640" y="30" textAnchor="middle" style={{ ...F, fontSize: 22, fontWeight: 800, fill: R }}>16 expert queries q<tspan dy="6" style={{ fontSize: 15 }}>e</tspan></text>
-      {[0,1,2,3].map(k => <rect key={k} x={560 + k * 42} y="44" width="34" height="30" rx="6" style={{ fill: expertCols[k] }} />)}
-      <text x="735" y="68" style={{ ...F, fontSize: 20, fill: TL }}>…</text>
+      <text x="660" y="26" textAnchor="middle" style={{ ...F, fontSize: 20, fontWeight: 800, fill: R }}>per-layer expert queries q<tspan dy="6" style={{ fontSize: 14 }}>ℓ,e</tspan></text>
+      {[0,1,2,3].map(k => <rect key={'b'+k} x={572 + k * 42} y="40" width="34" height="28" rx="6" style={{ fill: expertCols[k], opacity: .35 }} />)}
+      {[0,1,2,3].map(k => <rect key={k} x={562 + k * 42} y="48" width="34" height="28" rx="6" style={{ fill: expertCols[k] }} />)}
+      <text x="742" y="70" style={{ ...F, fontSize: 15, fill: TL }}>16 &times; L, 64-d</text>
       <line x1="640" y1="78" x2="640" y2="112" style={{ stroke: R, strokeWidth: 2.5 }} markerEnd="url(#ahr)" />
       <line x1="480" y1="145" x2="556" y2="145" style={{ stroke: '#444', strokeWidth: 2.5 }} markerEnd="url(#ah)" />
       <rect x="560" y="115" width="200" height="66" rx="12" style={{ fill: '#fbe9e6', stroke: R, strokeWidth: 2.5 }} />
       <text x="660" y="143" textAnchor="middle" style={{ ...F, fontSize: 20, fontWeight: 800, fill: R }}>softmax over layers</text>
-      <text x="660" y="169" textAnchor="middle" style={{ ...F, fontSize: 15, fill: T }}>a<tspan dy="6" style={{ fontSize: 12 }}>e,ℓ</tspan><tspan dy="-6"> = softmax</tspan><tspan dy="6" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-6">(q</tspan><tspan dy="6" style={{ fontSize: 12 }}>e</tspan><tspan dy="-6">·k</tspan><tspan dy="6" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-6"> / √D)</tspan></text>
+      <text x="660" y="169" textAnchor="middle" style={{ ...F, fontSize: 15, fill: T }}>a<tspan dy="6" style={{ fontSize: 12 }}>e,ℓ</tspan><tspan dy="-6"> = softmax</tspan><tspan dy="6" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-6">(q</tspan><tspan dy="6" style={{ fontSize: 12 }}>ℓ,e</tspan><tspan dy="-6">·k</tspan><tspan dy="6" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-6"> / √64)</tspan></text>
 
       {/* attention map E x L */}
       <line x1="660" y1="181" x2="660" y2="212" style={{ stroke: R, strokeWidth: 2.5 }} markerEnd="url(#ahr)" />
@@ -396,7 +402,7 @@ function MethodSVG() {
       {/* fused output */}
       <line x1="760" y1="405" x2="826" y2="405" style={{ stroke: '#444', strokeWidth: 2.5 }} markerEnd="url(#ah)" />
       <text x="905" y="300" textAnchor="middle" style={{ ...F, fontSize: 20, fontWeight: 800, fill: T }}>concat</text>
-      <text x="905" y="322" textAnchor="middle" style={{ ...F, fontSize: 16, fill: TL }}>16 blocks</text>
+      <text x="905" y="322" textAnchor="middle" style={{ ...F, fontSize: 16, fill: TL }}>16 blocks → D</text>
       {expertCols.map((c, k) => <rect key={k} x={835 + k * 36} y="345" width="32" height="26" rx="4" style={{ fill: c }} />)}
       <rect x="830" y="385" width="150" height="62" rx="12" style={{ fill: R }} />
       <text x="905" y="413" textAnchor="middle" style={{ ...F, fontSize: 20, fontWeight: 800, fill: '#fff' }}>fused patch</text>
@@ -404,7 +410,7 @@ function MethodSVG() {
       <text x="905" y="474" textAnchor="middle" style={{ ...F, fontSize: 16, fill: TL }}>→ task head</text>
 
       {/* legend */}
-      <text x="20" y="505" style={{ ...F, fontSize: 17, fill: TL }}>❄ frozen backbone   🔥 trainable: W<tspan dy="5" style={{ fontSize: 12 }}>k</tspan><tspan dy="-5">, W</tspan><tspan dy="5" style={{ fontSize: 12 }}>v</tspan><tspan dy="-5">, p</tspan><tspan dy="5" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-5">, q</tspan><tspan dy="5" style={{ fontSize: 12 }}>e</tspan><tspan dy="-5"> and the head  ·  repeated for every patch  ·  no bottleneck, no per-layer refinement</tspan></text>
+      <text x="20" y="505" style={{ ...F, fontSize: 17, fill: TL }}>❄ frozen backbone   🔥 trainable: p<tspan dy="5" style={{ fontSize: 12 }}>ℓ</tspan><tspan dy="-5">, W</tspan><tspan dy="5" style={{ fontSize: 12 }}>k</tspan><tspan dy="-5">, q</tspan><tspan dy="5" style={{ fontSize: 12 }}>ℓ,e</tspan><tspan dy="-5">, W</tspan><tspan dy="5" style={{ fontSize: 12 }}>v</tspan><tspan dy="-5"> and the head  ·  repeated for every patch  ·  full width, no bottleneck</tspan></text>
     </svg>
   );
 }
@@ -443,30 +449,27 @@ function HeadsSVG() {
    Rank heatmap (per-table mean rank; 1 = best)
    ================================================================ */
 const RANKS = {
-  tasks: ['Normals', 'Depth', 'Segm.', 'Taskonomy', 'Pose', 'CUB-200'],
+  tasks: ['Normals', 'Depth', 'Segm.', 'Taskonomy', 'Pose'],
   rows: [
-    ['AMDF (ours)',       [1.00, 1.86, 1.21, 1.29, 2.04, 2.43]],
-    ['ConcatLayers',      [2.00, 1.14, 2.43, 1.71, 1.32, 4.57]],
-    ['WeightedLayers',    [3.14, 3.43, 3.86, 3.14, 3.43, 4.71]],
-    ['LastLayer',         [4.57, 4.00, 3.21, 4.43, 4.25, null]],
-    ['AvgLayer',          [4.29, 4.57, 4.29, 4.43, 3.96, 6.29]],
-    ['EfficientProbe',    [null, null, null, null, null, 1.14]],
-    ['AttentiveFusionAP', [null, null, null, null, null, 3.00]],
-    ['AvgPool',           [null, null, null, null, null, 5.86]],
+    ['AMDF (ours)',    [2.00, 1.43, 1.86, 2.00, 1.93]],
+    ['ConcatLayers',   [1.00, 1.71, 1.57, 1.00, 1.21]],
+    ['WeightedLayers', [3.14, 3.57, 3.86, 3.14, 3.46]],
+    ['LastLayer',      [4.57, 3.71, 3.43, 4.43, 4.25]],
+    ['AvgLayer',       [4.29, 4.57, 4.29, 4.43, 4.14]],
   ],
 };
 function RankHeatmap() {
   const F = { fontFamily: 'Nunito' };
-  const x0 = 250, cw = 122, y0 = 56, rh = 76;
+  const x0 = 230, cw = 150, y0 = 56, rh = 80, nT = RANKS.tasks.length;
   const colour = (v) => { const t = Math.max(0, Math.min(1, (v - 1) / 5)); const a = [184, 62, 43], b = [209, 211, 212]; const c = a.map((x, i) => Math.round(x + (b[i] - x) * t)); return `rgb(${c.join(',')})`; };
   const best = RANKS.tasks.map((_, j) => Math.min(...RANKS.rows.map(r => r[1][j]).filter(v => v != null)));
   return (
-    <svg viewBox={`0 0 ${x0 + cw * 6 + 10} ${y0 + rh * RANKS.rows.length + 8}`} style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox={`0 0 ${x0 + cw * nT + 10} ${y0 + rh * RANKS.rows.length + 8}`} style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
       {RANKS.tasks.map((t, j) => <text key={t} x={x0 + cw * j + cw / 2} y="34" textAnchor="middle" style={{ ...F, fontSize: 22, fontWeight: 800, fill: '#222' }}>{t}</text>)}
       {RANKS.rows.map(([name, vals], i) => {
         const ours = i === 0, y = y0 + rh * i;
         return <g key={name}>
-          {ours && <rect x="0" y={y - 3} width={x0 + cw * 6 + 8} height={rh + 2} rx="6" style={{ fill: 'none', stroke: '#b83e2b', strokeWidth: 3 }} />}
+          {ours && <rect x="0" y={y - 3} width={x0 + cw * nT + 8} height={rh + 2} rx="6" style={{ fill: 'none', stroke: '#b83e2b', strokeWidth: 3 }} />}
           <text x={x0 - 14} y={y + rh / 2 + 8} textAnchor="end" style={{ ...F, fontSize: 22, fontWeight: ours ? 900 : 600, fill: ours ? '#b83e2b' : '#222' }}>{name}</text>
           {vals.map((v, j) => v == null
             ? <text key={j} x={x0 + cw * j + cw / 2} y={y + rh / 2 + 7} textAnchor="middle" style={{ ...F, fontSize: 18, fill: '#bbb' }}>–</text>
@@ -481,26 +484,42 @@ function RankHeatmap() {
 }
 
 /* ================================================================
-   Params vs rank bars (same verified values as before)
+   Accuracy vs trainable parameters (scatter, log x) — v3 verified values
    ================================================================ */
-function ParamsBars() {
+const SCATTER = [
+  ['ConcatLayers', 26.47, 1.30], ['AMDF (ours)', 1.42, 1.84],
+  ['WeightedLayers', 1.30, 3.44], ['LastLayer', 1.30, 4.08], ['AvgLayer', 1.30, 4.34],
+];
+function ParamsScatter() {
   const F = { fontFamily: 'Nunito' };
-  const rows = [['AMDF (ours)', 1.48, 1.79, true], ['ConcatLayers', 1.72, 6.99], ['WeightedLayers', 3.40, 0.70], ['LastLayer', 4.09, 0.70], ['AvgLayer', 4.31, 0.70]];
-  const L0 = 230, LW = 300, R0 = 640, RW = 280, y0 = 60, dy = 54, bh = 38;
+  const X0 = 120, X1 = 975, Y0 = 60, Y1 = 520, lo = Math.log10(0.7), hi = Math.log10(50);
+  const px = (m) => X0 + (Math.log10(m) - lo) / (hi - lo) * (X1 - X0);
+  const py = (r) => Y0 + (r - 1) / (4.6 - 1) * (Y1 - Y0);
+  const lab = { 'ConcatLayers': [-26, -22, 'end'], 'AMDF (ours)': [22, 38, 'start'], 'WeightedLayers': [22, 10, 'start'], 'LastLayer': [22, -4, 'start'], 'AvgLayer': [22, 34, 'start'] };
   return (
-    <svg viewBox="0 0 1000 336" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
-      <text x={L0} y="28" style={{ ...F, fontSize: 24, fontWeight: 800, fill: '#222' }}>Mean rank ↓ <tspan style={{ fontSize: 18, fontWeight: 600, fill: '#555' }}>(4 dense + pose)</tspan></text>
-      <text x={R0} y="28" style={{ ...F, fontSize: 24, fontWeight: 800, fill: '#222' }}>Trainable params (M)</text>
-      {rows.map(([n, rk, pm, ours], i) => { const y = y0 + i * dy, c = ours ? '#b83e2b' : '#d1d3d4', tc = ours ? '#b83e2b' : '#222', fw = ours ? 900 : 600; return <g key={n}>
-        <text x={L0 - 12} y={y + bh - 5} textAnchor="end" style={{ ...F, fontSize: 22, fontWeight: fw, fill: tc }}>{n}</text>
-        <rect x={L0} y={y} width={LW * rk / 5} height={bh} rx="3" style={{ fill: c }} />
-        <text x={L0 + LW * rk / 5 + 8} y={y + bh - 5} style={{ ...F, fontSize: 21, fontWeight: fw, fill: tc }}>{rk.toFixed(2)}</text>
-        <rect x={R0} y={y} width={RW * pm / 8} height={bh} rx="3" style={{ fill: c }} />
-        <text x={R0 + RW * pm / 8 + 8} y={y + bh - 5} style={{ ...F, fontSize: 21, fontWeight: fw, fill: tc }}>{pm.toFixed(2)}</text>
+    <svg viewBox="0 0 1000 620" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" style={{ fill: '#b83e2b' }} /></marker></defs>
+      {[1, 2, 3, 4].map(r => <g key={r}><line x1={X0} y1={py(r)} x2={X1} y2={py(r)} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={X0 - 12} y={py(r) + 7} textAnchor="end" style={{ ...F, fontSize: 28, fill: '#555' }}>{r}</text></g>)}
+      {[1, 3, 10, 30].map(m => <g key={m}><line x1={px(m)} y1={Y0} x2={px(m)} y2={Y1} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={px(m)} y={Y1 + 34} textAnchor="middle" style={{ ...F, fontSize: 28, fill: '#555' }}>{m}M</text></g>)}
+      <text x={(X0 + X1) / 2} y={Y1 + 74} textAnchor="middle" style={{ ...F, fontSize: 28, fontWeight: 800, fill: '#222' }}>trainable parameters (log scale)</text>
+      <text x="26" y={(Y0 + Y1) / 2} textAnchor="middle" transform={`rotate(-90 26 ${(Y0 + Y1) / 2})`} style={{ ...F, fontSize: 28, fontWeight: 800, fill: '#222' }}>mean rank ↓</text>
+      <path d={`M${px(24)} ${py(1.42)} Q ${px(6)} ${py(1.1)} ${px(1.62)} ${py(1.74)}`} style={{ fill: 'none', stroke: '#b83e2b', strokeWidth: 3, strokeDasharray: '8 6' }} markerEnd="url(#sa)" />
+      <text x={px(6.5)} y={py(1.75)} textAnchor="middle" style={{ ...F, fontSize: 30, fontWeight: 900, fill: '#b83e2b' }}>&asymp;19&times; fewer params</text>
+      {SCATTER.map(([n, m, r]) => { const ours = n.startsWith('AMDF'); const [dx, dy, an] = lab[n]; return <g key={n}>
+        <circle cx={px(m)} cy={py(r)} r={ours ? 18 : 14} style={{ fill: ours ? '#b83e2b' : (n === 'ConcatLayers' ? '#3a7eab' : '#b9bfc9'), stroke: '#fff', strokeWidth: 3 }} />
+        <text x={px(m) + dx} y={py(r) + dy} textAnchor={an} style={{ ...F, fontSize: 29, fontWeight: ours ? 900 : 700, fill: ours ? '#b83e2b' : '#333' }}>{n} <tspan style={{ fontWeight: 600, fill: '#777' }}>{r.toFixed(2)}</tspan></text>
       </g>; })}
     </svg>
   );
 }
+
+/* ================================================================
+   Ablation: per-layer vs shared depth queries (paired, same seeds)
+   ================================================================ */
+const ABLATION = [
+  ['Normals', '+1.62 d1', '7/7'], ['Taskonomy', '−0.73 L1', '7/7'], ['Segm.', '+0.16 mIoU', '6/7'],
+  ['Depth', '+0.51 d1', '5/7'], ['Pose', '−2.37° rot.', '5/7'],
+];
 
 /* ================================================================
    Card content
@@ -525,7 +544,7 @@ const CARD_REGISTRY = {
         <div className="fig"><div className="fig-wrap"><img src="fig_layer_sweep.png" alt="Single-layer probes of DINOv3-L on NYUv2 normals, depth and segmentation" /></div>
         <div className="cap"><b>Fig. 2:</b> One probe per layer of a frozen DINOv3-L on NYUv2 (single seed): the best layer moves deeper as the task gets more semantic, peaking around L18 &rarr; L21 &rarr; L24.</div></div>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_pca_layers.png" style={{ height: 'auto' }} alt="PCA-to-RGB patch features of a frozen PESpatial-L at layers 1 to 23 for a NAVI lion and an NYUv2 kitchen" /></div>
-        <div className="cap"><b>Fig. 3:</b> Layers see differently: frozen PESpatial-L patch features (one PCA per image, 770&nbsp;px input); object&ndash;background separation appears only in deep layers.</div></div>
+        <div className="cap"><b>Fig. 3:</b> Frozen PESpatial-L patch features (one PCA per image, 770&nbsp;px input): objects separate from the background only in deep layers.</div></div>
       </>
     ),
   },
@@ -535,8 +554,8 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <p className="verdict bad">&#x2717; Concatenating all layers works, but needs <b>6.8M</b> trainable parameters (vs <b>1.6M</b> for AMDF, DINOv3-L, incl. head) &mdash; and still treats every patch the same.</p>
-        <p className="verdict good">&#x2713; <b>AMDF</b> learns, for every patch, how much of each layer to use.</p>
+        <p className="verdict bad">&#x2717; Concatenating all layers is accurate but heavy: <b>26.2M</b> trainable params vs <b>1.17M</b> for AMDF (DINOv3-L, incl. head).</p>
+        <p className="verdict good">&#x2713; <b>AMDF</b> learns per patch how much of each layer to use.</p>
       </>
     ),
   },
@@ -547,8 +566,8 @@ const CARD_REGISTRY = {
     body: (
       <div className="setup">
         <div><b>7 frozen backbones</b><span>DINOv3-S/B/L &middot; MAE-L &middot; SigLIP2-L &middot; V-JEPA2.1-L &middot; PESpatial-L</span></div>
-        <div><b>6 benchmarks</b><span>NYUv2 normals, depth, segmentation &middot; Taskonomy &middot; NAVI camera pose &middot; CUB-200</span></div>
-        <div><b>Fair comparison</b><span>same recipe for every row of a table &middot; mean of up to 3 seeds (a few cells have 1&ndash;2) &middot; best-epoch validation metric</span></div>
+        <div><b>5 benchmarks</b><span>NYUv2 normals, depth (log-depth head), segmentation &middot; Taskonomy &middot; NAVI camera pose</span></div>
+        <div><b>Protocol</b><span>full width, 64-d keys/queries &middot; same recipe per table &middot; mean of &le;3 seeds (a few cells 1&ndash;2) &middot; best-epoch val. metric</span></div>
       </div>
     ),
   },
@@ -558,18 +577,10 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <p>For every patch, 16 learned expert queries each take a <b>softmax over all layers</b> and mix their own block of channels, so each expert picks its own depth.</p>
+        <p>For every patch, 16 experts &mdash; with <b>their own query for every layer</b> &mdash; score all layers with 64-d keys, take a <b>softmax over layers</b> and mix their own block of full-width channels, so each expert picks its own depth.</p>
         <div className="fig"><div className="fig-wrap"><MethodSVG /></div></div>
+        <p className="heads-line"><b>One probe, any head:</b> the fused features feed a <b>dense</b> head (upsample + conv: normals, depth, segmentation, Taskonomy) or a <b>pairwise</b> head (two images &rarr; camera pose). The backbone stays frozen; only the probe and head train.</p>
       </>
-    ),
-  },
-  heads: {
-    title: 'One probe, three kinds of heads',
-    color: 'red',
-    grow: false,
-    body: (
-      <div className="fig"><div className="fig-wrap"><HeadsSVG /></div>
-      <div className="cap"><b>Fig. 4:</b> The backbone stays frozen and all ViT blocks are used; only the fusion probe and the task head are trained.</div></div>
     ),
   },
   analysis: {
@@ -577,8 +588,8 @@ const CARD_REGISTRY = {
     color: 'red',
     grow: true,
     body: (
-      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
-      <div className="cap"><b>Fig. 5:</b> Measured on an earlier AMDF variant (with per-layer refinement). AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and classification (<i>r</i>=0.83), weaker for camera and segmentation (<i>r</i>=0.46). Datasets differ from the tables (e.g. CIFAR-100, SpaRRTa).</div></div>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '210mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="cap"><b>Fig. 4:</b> Measured on an earlier AMDF variant (with per-layer refinement). AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and classification (<i>r</i>=0.83), weaker for camera and segmentation (<i>r</i>=0.46). Datasets differ from the tables (e.g. CIFAR-100, SpaRRTa).</div></div>
     ),
   },
   results: {
@@ -588,16 +599,29 @@ const CARD_REGISTRY = {
     body: (
       <>
         <div className="callouts">
-          <div className="callout"><div className="cn">3 / 5</div><div className="cl">benchmarks won<br/>by AMDF</div></div>
-          <div className="callout"><div className="cn">16</div><div className="cl">experts, each with<br/>its own depth</div></div>
-          <div className="callout"><div className="cn">7&times;6</div><div className="cl">backbones &times;<br/>benchmarks</div></div>
+          <div className="callout"><div className="cn">&asymp;22&times;</div><div className="cl">fewer params<br/>than Concat</div></div>
+          <div className="callout"><div className="cn">2nd</div><div className="cl">mean rank<br/>(1st on depth)</div></div>
+          <div className="callout"><div className="cn">5&times;7</div><div className="cl">benchmarks &times;<br/>backbones</div></div>
         </div>
         <h3>Mean rank per benchmark <span style={{ fontWeight: 600, color: '#555' }}>(1 = best, &#9733; = best in table)</span></h3>
         <div className="fig"><div className="fig-wrap"><RankHeatmap /></div>
-        <div className="cap"><b>Fig. 6:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). AMDF is best on normals, segmentation and Taskonomy; ConcatLayers on depth and pose; EfficientProbe on CUB-200. Full tables: handout.</div></div>
+        <div className="cap"><b>Fig. 5:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). ConcatLayers ranks first on 4 of 5 benchmarks, AMDF on depth; AMDF beats the three cheap baselines everywhere. Full tables: handout.</div></div>
         <h3>Accuracy vs. trainable parameters</h3>
-        <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsBars /></div>
-        <div className="cap"><b>Fig. 7:</b> Mean of the per-table ranks over 5 benchmarks (NYUv2 normals, depth, segmentation, Taskonomy, NAVI pose); params (probe + head, ViT-L) averaged over the same tasks. CUB-200 excluded (different methods).</div></div>
+        <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsScatter /></div>
+        <div className="cap"><b>Fig. 6:</b> Mean of the 5 per-table ranks vs. trainable parameters (probe + head, DINOv3-L, averaged over the same tasks; the pose head makes the ratio &asymp;19&times; here vs &asymp;22&times; on dense tasks alone).</div></div>
+      </>
+    ),
+  },
+  ablation: {
+    title: 'Ablation: per-layer vs. shared queries',
+    color: 'red',
+    grow: false,
+    body: (
+      <>
+        <div className="abl-row">
+          {ABLATION.map(([t, g, k]) => <div key={t} className="abl-cell"><div className="t">{t}</div><div className="g">{g}</div><div className="k">{k} backbones</div></div>)}
+        </div>
+        <div className="cap" style={{ fontSize: 'calc(7.5pt * var(--font-scale))', color: '#555' }}>Paired gains (same seeds), mean over 7 backbones; per-layer queries cost +23.5k parameters (&asymp;2%). Pose gain is mostly SigLIP2-L (&minus;13&deg;).</div>
       </>
     ),
   },
@@ -608,8 +632,8 @@ const CARD_REGISTRY = {
     body: (
       <ul className="takeaways">
         <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
-        <li>AMDF has a better mean rank than LastLayer, AvgLayer and WeightedLayers in every table, and leads ConcatLayers on normals, segmentation and Taskonomy with <b>&asymp;&frac14; of its parameters</b>.</li>
-        <li>On fine-grained classification, a dedicated last-layer probe (EfficientProbe) remains stronger.</li>
+        <li>AMDF beats LastLayer, AvgLayer and WeightedLayers in every table and ranks second only to ConcatLayers (first on depth) &mdash; with <b>&asymp;22&times; fewer trainable parameters</b>.</li>
+        <li><b>Per-layer expert queries</b> help on all 5 benchmarks for +2% parameters.</li>
         <li>Study frozen VFMs as <b>full hierarchies</b>; no manual layer search needed.</li>
       </ul>
     ),
@@ -622,7 +646,7 @@ const CARD_REGISTRY = {
 const DEFAULT_LAYOUT = {
   columns: [
     { id: 'col1', widthMm: 298, cards: ['idea', 'problem1', 'problem2', 'setup'] },
-    { id: 'col2', widthMm: 372, cards: ['method', 'heads', 'analysis'] },
+    { id: 'col2', widthMm: 372, cards: ['method', 'analysis', 'ablation'] },
     { id: 'col3', widthMm: null, cards: ['results', 'conclusion'] },
   ],
 };

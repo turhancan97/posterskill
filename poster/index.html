@@ -634,9 +634,8 @@ const CARD_REGISTRY = {
       <ul className="takeaways">
         <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
         <li>AMDF beats all four cheap fusions by mean rank in every table and is second only to ConcatLayers (1st on depth), with <b>&asymp;22&times; fewer params</b>.</li>
-        <li>A fixed per-position mix (SpatialWeights) is no better than one global mix (mean rank 3.94 vs 3.89): choosing layers <b>from the patch's content</b> is what helps.</li>
+        <li>A fixed per-position layer mix (SpatialWeights) does no better than one global mix (mean rank 3.94 vs 3.89); AMDF, which picks layers <b>from each patch's features</b>, beats both in every table.</li>
         <li><b>Per-layer expert queries</b> improve the mean on all 5 benchmarks (on every backbone for normals and Taskonomy) for +2% parameters.</li>
-        <li>Study frozen VFMs as <b>full hierarchies</b>.</li>
       </ul>
     ),
   },

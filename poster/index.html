@@ -229,7 +229,8 @@
   .about-top { display:flex; align-items:center; gap:5mm; }
   .about-photo { position:relative; width:40mm; height:40mm; border-radius:50%; overflow:hidden; border:3px solid #fff; background:rgba(255,255,255,.2); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
   .about-photo span { font-size:30pt; font-weight:900; opacity:.8; }
-  .about-photo img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .about-photo img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 30%; transform:scale(1.15); }
+  .about-photo { background:#fff!important; }
   .about-name { font-size:46pt; font-weight:900; line-height:1.05; }
   .about-open { font-size:27pt; line-height:1.2; }
   .about-kw { font-size:24pt; line-height:1.3; text-align:center; opacity:.95; }
@@ -331,7 +332,7 @@ function HookPanel() {
       </div>
       <div className="about">
         <div className="about-top">
-          <div className="about-photo"><span>TCK</span><img src="me.jpg" alt="Turhan Can Kargin" onError={(e) => { e.currentTarget.style.display = 'none'; }} /></div>
+          <div className="about-photo"><span>TCK</span><img src="me.png" alt="Turhan Can Kargin" onError={(e) => { e.currentTarget.style.display = 'none'; }} /></div>
           <div>
             <div className="about-name">Let's talk!</div>
             <div className="about-open">Open to <b>research collaborations</b></div>

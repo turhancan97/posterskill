@@ -310,11 +310,11 @@ function HookPanel() {
       </div>
       <div className="hook-pt">
         <div className="hook-num">&asymp;22&times;</div>
-        <div><b>fewer trainable parameters</b> than concatenating all layers (1.17M vs 26.2M, DINOv3-L, dense tasks), at the <b>2nd-best mean rank</b>.</div>
+        <div><b>fewer trainable parameters</b> than concatenating all layers (&asymp;1.2M vs 26.2M, DINOv3-L, dense tasks), at the <b>2nd-best mean rank</b>.</div>
       </div>
       <div className="hook-pt">
         <div className="hook-num">5 / 5</div>
-        <div>benchmarks where AMDF <b>beats last-layer, mean and weighted fusion</b>; 1st on depth.</div>
+        <div>benchmarks where AMDF has a <b>better mean rank than last-layer, mean and weighted fusion</b>; 1st on depth.</div>
       </div>
       <div className="hook-foot">Frozen backbone &middot; no layer search<br/>one probe, any head<br/><span style={{ fontWeight: 900 }}>Full tables &rarr; take a handout</span></div>
     </div>
@@ -492,12 +492,12 @@ const SCATTER = [
 ];
 function ParamsScatter() {
   const F = { fontFamily: 'Nunito' };
-  const X0 = 120, X1 = 975, Y0 = 60, Y1 = 520, lo = Math.log10(0.7), hi = Math.log10(50);
+  const X0 = 120, X1 = 975, Y0 = 55, Y1 = 422, lo = Math.log10(0.7), hi = Math.log10(50);
   const px = (m) => X0 + (Math.log10(m) - lo) / (hi - lo) * (X1 - X0);
   const py = (r) => Y0 + (r - 1) / (4.6 - 1) * (Y1 - Y0);
   const lab = { 'ConcatLayers': [-26, -22, 'end'], 'AMDF (ours)': [22, 38, 'start'], 'WeightedLayers': [22, 10, 'start'], 'LastLayer': [22, -4, 'start'], 'AvgLayer': [22, 34, 'start'] };
   return (
-    <svg viewBox="0 0 1000 620" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1000 520" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
       <defs><marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" style={{ fill: '#b83e2b' }} /></marker></defs>
       {[1, 2, 3, 4].map(r => <g key={r}><line x1={X0} y1={py(r)} x2={X1} y2={py(r)} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={X0 - 12} y={py(r) + 7} textAnchor="end" style={{ ...F, fontSize: 28, fill: '#555' }}>{r}</text></g>)}
       {[1, 3, 10, 30].map(m => <g key={m}><line x1={px(m)} y1={Y0} x2={px(m)} y2={Y1} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={px(m)} y={Y1 + 34} textAnchor="middle" style={{ ...F, fontSize: 28, fill: '#555' }}>{m}M</text></g>)}
@@ -517,7 +517,7 @@ function ParamsScatter() {
    Ablation: per-layer vs shared depth queries (paired, same seeds)
    ================================================================ */
 const ABLATION = [
-  ['Normals', '+1.62 d1', '7/7'], ['Taskonomy', '−0.73 L1', '7/7'], ['Segm.', '+0.16 mIoU', '6/7'],
+  ['Normals', '+1.62 d1', '7/7'], ['Taskonomy', '−0.73 L1×100', '7/7'], ['Segm.', '+0.16 mIoU', '6/7'],
   ['Depth', '+0.51 d1', '5/7'], ['Pose', '−2.37° rot.', '5/7'],
 ];
 
@@ -554,7 +554,7 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <p className="verdict bad">&#x2717; Concatenating all layers is accurate but heavy: <b>26.2M</b> trainable params vs <b>1.17M</b> for AMDF (DINOv3-L, incl. head).</p>
+        <p className="verdict bad">&#x2717; Concatenating all layers is accurate but heavy: <b>26.2M</b> trainable params vs <b>1.17M</b> for AMDF (DINOv3-L, normals, incl. head).</p>
         <p className="verdict good">&#x2713; <b>AMDF</b> learns per patch how much of each layer to use.</p>
       </>
     ),
@@ -579,7 +579,7 @@ const CARD_REGISTRY = {
       <>
         <p>For every patch, 16 experts &mdash; with <b>their own query for every layer</b> &mdash; score all layers with 64-d keys, take a <b>softmax over layers</b> and mix their own block of full-width channels, so each expert picks its own depth.</p>
         <div className="fig"><div className="fig-wrap"><MethodSVG /></div></div>
-        <p className="heads-line"><b>One probe, any head:</b> the fused features feed a <b>dense</b> head (upsample + conv: normals, depth, segmentation, Taskonomy) or a <b>pairwise</b> head (two images &rarr; camera pose). The backbone stays frozen; only the probe and head train.</p>
+        <p className="heads-line"><b>One probe, any head:</b> the fused features feed a linear <b>dense</b> head (1&times;1 conv, then bilinear upsampling: normals, depth, segmentation, Taskonomy) or a <b>pairwise</b> head (pool both images, concatenate, MLP &rarr; camera pose). The backbone stays frozen; only the probe and head train.</p>
       </>
     ),
   },
@@ -588,7 +588,7 @@ const CARD_REGISTRY = {
     color: 'red',
     grow: true,
     body: (
-      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '210mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '178mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
       <div className="cap"><b>Fig. 4:</b> Measured on an earlier AMDF variant (with per-layer refinement). AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and classification (<i>r</i>=0.83), weaker for camera and segmentation (<i>r</i>=0.46). Datasets differ from the tables (e.g. CIFAR-100, SpaRRTa).</div></div>
     ),
   },
@@ -605,7 +605,7 @@ const CARD_REGISTRY = {
         </div>
         <h3>Mean rank per benchmark <span style={{ fontWeight: 600, color: '#555' }}>(1 = best, &#9733; = best in table)</span></h3>
         <div className="fig"><div className="fig-wrap"><RankHeatmap /></div>
-        <div className="cap"><b>Fig. 5:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). ConcatLayers ranks first on 4 of 5 benchmarks, AMDF on depth; AMDF beats the three cheap baselines everywhere. Full tables: handout.</div></div>
+        <div className="cap"><b>Fig. 5:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). ConcatLayers ranks first on 4 of 5 benchmarks, AMDF on depth; AMDF has a better mean rank than the three cheap baselines in every table. Full tables: handout.</div></div>
         <h3>Accuracy vs. trainable parameters</h3>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsScatter /></div>
         <div className="cap"><b>Fig. 6:</b> Mean of the 5 per-table ranks vs. trainable parameters (probe + head, DINOv3-L, averaged over the same tasks; the pose head makes the ratio &asymp;19&times; here vs &asymp;22&times; on dense tasks alone).</div></div>
@@ -632,8 +632,8 @@ const CARD_REGISTRY = {
     body: (
       <ul className="takeaways">
         <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
-        <li>AMDF beats LastLayer, AvgLayer and WeightedLayers in every table and ranks second only to ConcatLayers (first on depth) &mdash; with <b>&asymp;22&times; fewer trainable parameters</b>.</li>
-        <li><b>Per-layer expert queries</b> help on all 5 benchmarks for +2% parameters.</li>
+        <li>AMDF has a better mean rank than LastLayer, AvgLayer and WeightedLayers in every table and ranks second only to ConcatLayers (first on depth), with <b>&asymp;22&times; fewer trainable parameters</b>.</li>
+        <li><b>Per-layer expert queries</b> improve the mean on all 5 benchmarks (on every backbone for normals and Taskonomy) for +2% parameters.</li>
         <li>Study frozen VFMs as <b>full hierarchies</b>; no manual layer search needed.</li>
       </ul>
     ),

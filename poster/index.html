@@ -148,8 +148,8 @@
   .verdict.good { color:#1f4f70; background:var(--blue-light); border-left:3px solid var(--blue); }
   .callouts { display:flex; gap:3mm; margin:1mm 0 2mm; flex-shrink:0; }
   .callout { flex:1; background:#fbe9e6; border-radius:2.5mm; padding:5mm 2mm; text-align:center; }
-  .callout .cn { font-size:calc(26pt * var(--font-scale)); font-weight:900; color:var(--red); line-height:1; }
-  .callout .cl { font-size:calc(7.5pt * var(--font-scale)); font-weight:700; color:#444; margin-top:1mm; line-height:1.2; }
+  .callout .cn { font-size:calc(19pt * var(--font-scale)); font-weight:900; color:var(--red); line-height:1; }
+  .callout .cl { font-size:calc(6.6pt * var(--font-scale)); font-weight:700; color:#444; margin-top:1mm; line-height:1.2; }
 
   /* v2: figures take their natural height; spare space goes to card bottoms */
   .poster .fig { flex:0 0 auto; }
@@ -167,6 +167,7 @@
   table.abl { width:100%; border-collapse:collapse; margin:1mm 0 1.5mm; font-size:calc(8.6pt * var(--font-scale)); }
   table.abl td { padding:1mm 2mm; border-bottom:1px solid #eee; } table.abl td.g { font-weight:900; color:var(--red); }
   .heads-line { background:var(--blue-light); border-left:3px solid var(--blue); border-radius:0 1.5mm 1.5mm 0; padding:2mm 4mm; margin-top:2mm; }
+  .card[data-id="analysis"] .fig { margin:auto 0; }
   .takeaways { background:#fbe9e6; border-left:2.5px solid var(--red); border-radius:0 1.5mm 1.5mm 0; padding:2.5mm 4mm 1.5mm 13mm !important; }
   .takeaways li { font-weight:600; }
   .second { font-weight:700; text-decoration:underline; text-decoration-color:#bbb; }
@@ -219,6 +220,21 @@
   .drop-zone-inner { position:absolute; left:2mm; right:2mm; top:0; bottom:0; border-radius:1.5mm; background:rgba(232,148,58,.15); border:2px dashed var(--orange); transition: background .15s; cursor:pointer; }
   .drop-zone-inner:hover { background:rgba(232,148,58,.35); }
 
+
+  /* === minimal pass: keyword strip, keyword bullets, about-me box === */
+  .kwstrip { display:grid; grid-template-columns:1fr 1fr; gap:2mm; }
+  .kwstrip span { background:var(--blue-light); color:var(--blue); font-weight:900; font-size:calc(8.6pt * var(--font-scale)); padding:2mm 3.5mm; white-space:nowrap; text-align:center; border-radius:2.5mm; }
+  ul.kw { padding-left:6mm; } ul.kw li { font-size:calc(10.5pt * var(--font-scale)); margin-bottom:1mm; }
+  .about { background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.45); border-radius:4mm; padding:5mm 6mm; display:flex; flex-direction:column; gap:3mm; }
+  .about-top { display:flex; align-items:center; gap:5mm; }
+  .about-photo { position:relative; width:40mm; height:40mm; border-radius:50%; overflow:hidden; border:3px solid #fff; background:rgba(255,255,255,.2); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .about-photo span { font-size:30pt; font-weight:900; opacity:.8; }
+  .about-photo img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .about-name { font-size:46pt; font-weight:900; line-height:1.05; }
+  .about-open { font-size:27pt; line-height:1.2; }
+  .about-kw { font-size:24pt; line-height:1.3; text-align:center; opacity:.95; }
+  .about-qr { display:flex; flex-direction:column; align-items:center; gap:1.5mm; }
+  .about-url { font-size:27pt; font-weight:900; }
 </style>
 </head>
 <body>
@@ -307,18 +323,60 @@ function HookPanel() {
           {curve('M20 102 C 150 100, 240 60, 290 14', '3 8', .9)}
           <text x="292" y="118" textAnchor="end" style={{ fill: '#fff', fontSize: 15, fontFamily: 'Nunito', fontWeight: 700 }}>layer depth →</text>
         </svg>
-        <div>On DINOv3-L, NYUv2 probes <b>peak at different depths</b>: normals &asymp;L18, depth &asymp;L21, segmentation L24.</div>
+        <div>Each task peaks at a <b>different depth</b></div>
       </div>
       <div className="hook-pt">
         <div className="hook-num">&asymp;22&times;</div>
-        <div><b>fewer trainable parameters</b> than concatenating all layers (&asymp;1.2M vs 26.2M, DINOv3-L, dense tasks), at the <b>2nd-best mean rank</b>.</div>
+        <div><b>fewer params</b> than concatenating layers</div>
       </div>
-      <div className="hook-pt">
-        <div className="hook-num">5 / 5</div>
-        <div>benchmarks where AMDF has a <b>better mean rank than last-layer, mean, weighted and per-position fusion</b>; 1st on depth.</div>
+      <div className="about">
+        <div className="about-top">
+          <div className="about-photo"><span>TCK</span><img src="me.jpg" alt="Turhan Can Kargin" onError={(e) => { e.currentTarget.style.display = 'none'; }} /></div>
+          <div>
+            <div className="about-name">Let's talk!</div>
+            <div className="about-open">Open to <b>research collaborations</b></div>
+          </div>
+        </div>
+        <div className="about-kw">vision foundation models &middot; representation learning &middot; probing &amp; interpretability &middot; spatial understanding</div>
+        <div className="about-qr"><WebsiteQR size="70mm" /><div className="about-url">turhancankargin.me</div></div>
       </div>
-      <div className="hook-foot">Frozen backbone &middot; no layer search<br/>one probe, any head<br/><span style={{ fontWeight: 900 }}>Full tables &rarr; take a handout</span></div>
+      <div className="hook-foot">Full tables &rarr; take a handout</div>
     </div>
+  );
+}
+
+/* ================================================================
+   Website QR (https://turhancankargin.me/), EC level H, styled as a ViT patch grid:
+   rounded "patch" modules shifting blue -> red with depth, layer-stack finders, AMDF badge
+   ================================================================ */
+const QR_ROWS = ["111111100101010011011110101111111", "100000101001110111010100001000001", "101110101000111100111100101011101", "101110101000110110100111001011101", "101110101010000000101011001011101", "100000101101101110110111001000001", "111111101010101010101010101111111", "000000000100011111101001100000000", "001001111110101001100000110111110", "011101000101000010101001011100111", "110101111101010101011111110110001", "011110000111110100000011100101000", "110000101101000001010110101011001", "011111001100100000011111101001101", "000000110010010111100001101010001", "000010000110101011011011111000011", "101011110101110110000010001101110", "111111011101011001001001001100101", "000110100000011100000111000101111", "111010001000000011100011001001010", "000001111001011101000001000100001", "011010001101100000100100000101001", "111111110001101001101101011100101", "000101010010101110010010000001001", "111001111001110100000001111110000", "000000001001001000100100100010011", "111111101101000101011000101010101", "100000101110010000100101100011011", "101110100110110100111101111110000", "101110100100101110110101010111110", "101110101010101001011001000011011", "100000100101000011001010100001100", "111111100111110001010000101011101"];
+function WebsiteQR({ size = '48mm' }) {
+  const n = QR_ROWS.length, q = 4, N = n + 2 * q;
+  const mix = (t) => { const a = [58, 126, 171], b = [184, 62, 43]; return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(',')})`; };
+  const inFinder = (x, y) => (x < 7 && y < 7) || (x >= n - 7 && y < 7) || (x < 7 && y >= n - 7);
+  const c0 = n / 2, logoR = 4.6;
+  const cells = [];
+  QR_ROWS.forEach((row, y) => [...row].forEach((v, x) => {
+    if (v !== '1' || inFinder(x, y)) return;
+    if (Math.hypot(x + .5 - c0, y + .5 - c0) < logoR) return;
+    cells.push(<rect key={x + '-' + y} x={x + q + .03} y={y + q + .03} width=".94" height=".94" rx=".2" style={{ fill: mix((x + y) / (2 * n)) }} />);
+  }));
+  const finder = (fx, fy) => (
+    <g key={fx + '-' + fy}>
+      <rect x={fx + q + .5} y={fy + q + .5} width="6" height="6" rx="1.6" style={{ fill: 'none', stroke: '#3a7eab', strokeWidth: 1 }} />
+      <rect x={fx + q + 2} y={fy + q + 2} width="3" height="3" rx=".8" style={{ fill: '#3a7eab' }} />
+    </g>
+  );
+  return (
+    <svg viewBox={`0 0 ${N} ${N}`} style={{ width: size, height: size, display: 'block' }} xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width={N} height={N} rx="2.4" style={{ fill: '#fff' }} />
+      {cells}
+      {finder(0, 0)}{finder(n - 7, 0)}{finder(0, n - 7)}
+      <circle cx={c0 + q} cy={c0 + q} r={logoR - .4} style={{ fill: '#3a7eab' }} />
+      <g transform={`translate(${c0 + q - 1.75} ${c0 + q - 3.4}) scale(0.0078)`}>
+        <IconGlyph color="#fff" bg="#3a7eab" arrow="#fff" />
+      </g>
+    </svg>
   );
 }
 
@@ -462,22 +520,22 @@ const RANKS = {
 };
 function RankHeatmap() {
   const F = { fontFamily: 'Nunito' };
-  const x0 = 230, cw = 150, y0 = 56, rh = 58, nT = RANKS.tasks.length;
+  const x0 = 300, cw = 140, y0 = 56, rh = 135, nT = RANKS.tasks.length;
   const colour = (v) => { const t = Math.max(0, Math.min(1, (v - 1) / 5)); const a = [184, 62, 43], b = [209, 211, 212]; const c = a.map((x, i) => Math.round(x + (b[i] - x) * t)); return `rgb(${c.join(',')})`; };
   const best = RANKS.tasks.map((_, j) => Math.min(...RANKS.rows.map(r => r[1][j]).filter(v => v != null)));
   return (
     <svg viewBox={`0 0 ${x0 + cw * nT + 10} ${y0 + rh * RANKS.rows.length + 8}`} style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
-      {RANKS.tasks.map((t, j) => <text key={t} x={x0 + cw * j + cw / 2} y="34" textAnchor="middle" style={{ ...F, fontSize: 22, fontWeight: 800, fill: '#222' }}>{t}</text>)}
+      {RANKS.tasks.map((t, j) => <text key={t} x={x0 + cw * j + cw / 2} y="40" textAnchor="middle" style={{ ...F, fontSize: 30, fontWeight: 800, fill: '#222' }}>{t}</text>)}
       {RANKS.rows.map(([name, vals], i) => {
         const ours = i === 0, y = y0 + rh * i;
         return <g key={name}>
           {ours && <rect x="0" y={y - 3} width={x0 + cw * nT + 8} height={rh + 2} rx="6" style={{ fill: 'none', stroke: '#b83e2b', strokeWidth: 3 }} />}
-          <text x={x0 - 14} y={y + rh / 2 + 8} textAnchor="end" style={{ ...F, fontSize: 22, fontWeight: ours ? 900 : 600, fill: ours ? '#b83e2b' : '#222' }}>{name}</text>
+          <text x={x0 - 14} y={y + rh / 2 + 8} textAnchor="end" style={{ ...F, fontSize: 30, fontWeight: ours ? 900 : 600, fill: ours ? '#b83e2b' : '#222' }}>{name}</text>
           {vals.map((v, j) => v == null
             ? <text key={j} x={x0 + cw * j + cw / 2} y={y + rh / 2 + 7} textAnchor="middle" style={{ ...F, fontSize: 18, fill: '#bbb' }}>–</text>
             : <g key={j}>
                 <rect x={x0 + cw * j + 3} y={y + 3} width={cw - 6} height={rh - 6} rx="5" style={{ fill: colour(v) }} />
-                <text x={x0 + cw * j + cw / 2} y={y + rh / 2 + 8} textAnchor="middle" style={{ ...F, fontSize: 21, fontWeight: v === best[j] ? 900 : 600, fill: v < 3 ? '#fff' : '#333' }}>{v.toFixed(2)}{v === best[j] ? ' ★' : ''}</text>
+                <text x={x0 + cw * j + cw / 2} y={y + rh / 2 + 11} textAnchor="middle" style={{ ...F, fontSize: 31, fontWeight: v === best[j] ? 900 : 600, fill: v < 3 ? '#fff' : '#333' }}>{v.toFixed(2)}{v === best[j] ? ' ★' : ''}</text>
               </g>)}
         </g>;
       })}
@@ -494,22 +552,22 @@ const SCATTER = [
 ];
 function ParamsScatter() {
   const F = { fontFamily: 'Nunito' };
-  const X0 = 120, X1 = 975, Y0 = 48, Y1 = 372, lo = Math.log10(0.7), hi = Math.log10(50);
+  const X0 = 150, X1 = 960, Y0 = 70, Y1 = 1210, lo = Math.log10(0.7), hi = Math.log10(50);
   const px = (m) => X0 + (Math.log10(m) - lo) / (hi - lo) * (X1 - X0);
   const py = (r) => Y0 + (r - 1) / (5.5 - 1) * (Y1 - Y0);
-  const lab = { 'ConcatLayers': [-26, -22, 'end'], 'AMDF (ours)': [22, 38, 'start'], 'WeightedLayers': [22, -4, 'start'], 'SpatialWeights': [22, 30, 'start'], 'LastLayer': [22, 10, 'start'], 'AvgLayer': [22, 10, 'start'] };
+  const lab = { 'ConcatLayers': [-30, -30, 'end'], 'AMDF (ours)': [30, 52, 'start'], 'WeightedLayers': [30, -8, 'start'], 'SpatialWeights': [30, 40, 'start'], 'LastLayer': [30, 14, 'start'], 'AvgLayer': [30, 14, 'start'] };
   return (
-    <svg viewBox="0 0 1000 465" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1000 1340" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
       <defs><marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" style={{ fill: '#b83e2b' }} /></marker></defs>
-      {[1, 2, 3, 4, 5].map(r => <g key={r}><line x1={X0} y1={py(r)} x2={X1} y2={py(r)} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={X0 - 12} y={py(r) + 7} textAnchor="end" style={{ ...F, fontSize: 28, fill: '#555' }}>{r}</text></g>)}
-      {[1, 3, 10, 30].map(m => <g key={m}><line x1={px(m)} y1={Y0} x2={px(m)} y2={Y1} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={px(m)} y={Y1 + 34} textAnchor="middle" style={{ ...F, fontSize: 28, fill: '#555' }}>{m}M</text></g>)}
-      <text x={(X0 + X1) / 2} y={Y1 + 74} textAnchor="middle" style={{ ...F, fontSize: 28, fontWeight: 800, fill: '#222' }}>trainable parameters (log scale)</text>
-      <text x="26" y={(Y0 + Y1) / 2} textAnchor="middle" transform={`rotate(-90 26 ${(Y0 + Y1) / 2})`} style={{ ...F, fontSize: 28, fontWeight: 800, fill: '#222' }}>mean rank ↓</text>
+      {[1, 2, 3, 4, 5].map(r => <g key={r}><line x1={X0} y1={py(r)} x2={X1} y2={py(r)} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={X0 - 16} y={py(r) + 13} textAnchor="end" style={{ ...F, fontSize: 40, fill: '#555' }}>{r}</text></g>)}
+      {[1, 3, 10, 30].map(m => <g key={m}><line x1={px(m)} y1={Y0} x2={px(m)} y2={Y1} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={px(m)} y={Y1 + 48} textAnchor="middle" style={{ ...F, fontSize: 40, fill: '#555' }}>{m}M</text></g>)}
+      <text x={(X0 + X1) / 2} y={Y1 + 98} textAnchor="middle" style={{ ...F, fontSize: 40, fontWeight: 800, fill: '#222' }}>params (log)</text>
+      <text x="40" y={(Y0 + Y1) / 2} textAnchor="middle" transform={`rotate(-90 40 ${(Y0 + Y1) / 2})`} style={{ ...F, fontSize: 40, fontWeight: 800, fill: '#222' }}>mean rank ↓</text>
       <path d={`M${px(24)} ${py(1.42)} Q ${px(6)} ${py(1.1)} ${px(1.62)} ${py(1.74)}`} style={{ fill: 'none', stroke: '#b83e2b', strokeWidth: 3, strokeDasharray: '8 6' }} markerEnd="url(#sa)" />
-      <text x={px(6.5)} y={py(1.75)} textAnchor="middle" style={{ ...F, fontSize: 30, fontWeight: 900, fill: '#b83e2b' }}>&asymp;19&times; fewer params</text>
+      <text x={px(6.5)} y={py(1.75)} textAnchor="middle" style={{ ...F, fontSize: 42, fontWeight: 900, fill: '#b83e2b' }}>&asymp;19&times; fewer params</text>
       {SCATTER.map(([n, m, r]) => { const ours = n.startsWith('AMDF'); const [dx, dy, an] = lab[n]; return <g key={n}>
-        <circle cx={px(m)} cy={py(r)} r={ours ? 18 : 14} style={{ fill: ours ? '#b83e2b' : (n === 'ConcatLayers' ? '#3a7eab' : '#b9bfc9'), stroke: '#fff', strokeWidth: 3 }} />
-        <text x={px(m) + dx} y={py(r) + dy} textAnchor={an} style={{ ...F, fontSize: 29, fontWeight: ours ? 900 : 700, fill: ours ? '#b83e2b' : '#333' }}>{n} <tspan style={{ fontWeight: 600, fill: '#777' }}>{r.toFixed(2)}</tspan></text>
+        <circle cx={px(m)} cy={py(r)} r={ours ? 24 : 18} style={{ fill: ours ? '#b83e2b' : (n === 'ConcatLayers' ? '#3a7eab' : '#b9bfc9'), stroke: '#fff', strokeWidth: 3 }} />
+        <text x={px(m) + dx} y={py(r) + dy} textAnchor={an} style={{ ...F, fontSize: 40, fontWeight: ours ? 900 : 700, fill: ours ? '#b83e2b' : '#333' }}>{n} <tspan style={{ fontWeight: 600, fill: '#777' }}>{r.toFixed(2)}</tspan></text>
       </g>; })}
     </svg>
   );
@@ -528,49 +586,44 @@ const ABLATION = [
    ================================================================ */
 const CARD_REGISTRY = {
   idea: {
-    title: 'Different tasks live at different depths',
+    title: 'Tasks live at different depths',
     color: 'blue',
     grow: false,
     body: (
       <div className="fig"><div className="fig-wrap"><img src="fig_teaser.png" alt="Task-specific layer utility across VFM depth, fused by AMDF" /></div>
-      <div className="cap"><b>Fig. 1:</b> Geometry peaks in middle layers, semantics near the end. AMDF reads every frozen layer and fuses them per patch.</div></div>
+      <div className="cap"><b>Fig. 1:</b> Geometry peaks mid-depth, semantics at the end &mdash; AMDF fuses all layers per patch.</div></div>
     ),
   },
   problem1: {
-    title: 'Problem #1: the last layer is not the best',
+    title: 'Problem #1: last layer ≠ best',
     color: 'blue',
     grow: false,
     body: (
       <>
-        <p className="verdict bad">&#x2717; Probing only the final layer misses what a&nbsp;task&nbsp;needs.</p>
         <div className="fig"><div className="fig-wrap"><img src="fig_layer_sweep.png" alt="Single-layer probes of DINOv3-L on NYUv2 normals, depth and segmentation" /></div>
-        <div className="cap"><b>Fig. 2:</b> One probe per layer of a frozen DINOv3-L on NYUv2 (single seed): the best layer moves deeper as the task gets more semantic, peaking around L18 &rarr; L21 &rarr; L24.</div></div>
+        <div className="cap"><b>Fig. 2:</b> Best layer moves deeper with abstraction: L18 &rarr; L21 &rarr; L24 (DINOv3-L, NYUv2).</div></div>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_pca_layers.png" style={{ height: 'auto' }} alt="PCA-to-RGB patch features of a frozen PESpatial-L at layers 1 to 23 for a NAVI lion and an NYUv2 kitchen" /></div>
-        <div className="cap"><b>Fig. 3:</b> Frozen PESpatial-L patch features (one PCA per image, 770&nbsp;px input): objects separate from the background only in deep layers.</div></div>
+        <div className="cap"><b>Fig. 3:</b> Objects separate from the background only in <b>deep layers</b> (PESpatial-L, PCA).</div></div>
       </>
     ),
   },
   problem2: {
-    title: 'Problem #2: using all layers is costly',
+    title: 'Problem #2: all layers = costly',
     color: 'blue',
     grow: false,
     body: (
       <>
-        <p className="verdict bad">&#x2717; Concatenating all layers is accurate but heavy: <b>26.2M</b> trainable params vs <b>1.17M</b> for AMDF (DINOv3-L, normals, incl. head).</p>
-        <p className="verdict good">&#x2713; <b>AMDF</b> learns per patch how much of each layer to use.</p>
+        <p className="verdict bad">&#x2717; Concat all layers: <b>26.2M params</b>, same mix for every patch.</p>
+        <p className="verdict good">&#x2713; AMDF: <b>per-patch</b> layer choice, <b>&asymp;1.2M params</b>.</p>
       </>
     ),
   },
   setup: {
-    title: 'Setup',
+    title: '',
     color: 'blue',
-    grow: true,
+    grow: false,
     body: (
-      <div className="setup">
-        <div><b>7 backbones &times; 5 benchmarks</b><span>DINOv3-S/B/L &middot; MAE-L &middot; SigLIP2-L &middot; V-JEPA2.1-L &middot; PESpatial-L &mdash; NYUv2 normals, depth (log head), seg. &middot; Taskonomy &middot; NAVI</span></div>
-        <div><b>Baselines</b><span>Last &middot; Avg &middot; Weighted (one layer mix) &middot; SpatialWeights (per-position mix) &middot; Concat (1&times;1 proj. + GELU)</span></div>
-        <div><b>Protocol</b><span>full width, 64-d keys/queries &middot; same recipe per table &middot; mean of &le;3 seeds (few cells 1&ndash;2) &middot; best val. epoch</span></div>
-      </div>
+      <div className="kwstrip"><span>7 frozen VFMs</span><span>5 benchmarks</span><span>5 baselines</span><span>&le;3 seeds</span></div>
     ),
   },
   method: {
@@ -579,9 +632,12 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <p>For every patch, 16 experts &mdash; with <b>their own query for every layer</b> &mdash; score all layers with 64-d keys, take a <b>softmax over layers</b> and mix their own block of full-width channels, so each expert picks its own depth.</p>
+        <ul className="kw">
+          <li><b>Per patch</b>, 16 experts with per-layer queries</li>
+          <li><b>Softmax over layers</b> &rarr; each expert picks its depth</li>
+          <li><b>Frozen backbone</b>, any task head</li>
+        </ul>
         <div className="fig"><div className="fig-wrap"><MethodSVG /></div></div>
-        <p className="heads-line"><b>One probe, any head:</b> the fused features feed a linear <b>dense</b> head (1&times;1 conv, then bilinear upsampling: normals, depth, segmentation, Taskonomy) or a <b>pairwise</b> head (pool both images, concatenate, MLP &rarr; camera pose). The backbone stays frozen; only the probe and head train.</p>
       </>
     ),
   },
@@ -590,8 +646,8 @@ const CARD_REGISTRY = {
     color: 'red',
     grow: true,
     body: (
-      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '178mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
-      <div className="cap"><b>Fig. 4:</b> Measured on an earlier AMDF variant (with per-layer refinement). AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and classification (<i>r</i>=0.83), weaker for camera and segmentation (<i>r</i>=0.46). Datasets differ from the tables (e.g. CIFAR-100, SpaRRTa).</div></div>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="cap"><b>Fig. 4:</b> Attention tracks layer utility (earlier AMDF variant, DINOv3-L).</div></div>
     ),
   },
   results: {
@@ -605,17 +661,17 @@ const CARD_REGISTRY = {
           <div className="callout"><div className="cn">2nd</div><div className="cl">mean rank<br/>(1st on depth)</div></div>
           <div className="callout"><div className="cn">5&times;7</div><div className="cl">benchmarks &times;<br/>backbones</div></div>
         </div>
-        <h3>Mean rank per benchmark <span style={{ fontWeight: 600, color: '#555' }}>(1 = best, &#9733; = best in table)</span></h3>
+        <h3>Mean rank per benchmark</h3>
         <div className="fig"><div className="fig-wrap"><RankHeatmap /></div>
-        <div className="cap"><b>Fig. 5:</b> Each cell is a method's rank averaged over the 7 backbones of that table (NAVI: rotation and translation). ConcatLayers ranks first on 4 of 5 benchmarks, AMDF on depth; AMDF has a better mean rank than the four cheap baselines in every table. Full tables: handout.</div></div>
+        <div className="cap"><b>Fig. 5:</b> Mean rank per benchmark (&#9733; best). Concat 1st on 4/5, AMDF 1st on depth.</div></div>
         <h3>Accuracy vs. trainable parameters</h3>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsScatter /></div>
-        <div className="cap"><b>Fig. 6:</b> Mean of the 5 per-table ranks vs. trainable parameters (probe + head, DINOv3-L, averaged over the same tasks; &asymp;19&times; here, &asymp;22&times; on dense tasks alone).</div></div>
+        <div className="cap"><b>Fig. 6:</b> &asymp;19&times; fewer params than Concat (5-task average, DINOv3-L).</div></div>
       </>
     ),
   },
   ablation: {
-    title: 'Ablation: per-layer vs. shared queries',
+    title: 'Per-layer queries help (+2% params)',
     color: 'red',
     grow: false,
     body: (
@@ -623,7 +679,7 @@ const CARD_REGISTRY = {
         <div className="abl-row">
           {ABLATION.map(([t, g, k]) => <div key={t} className="abl-cell"><div className="t">{t}</div><div className="g">{g}</div><div className="k">{k} backbones</div></div>)}
         </div>
-        <div className="cap" style={{ fontSize: 'calc(7.5pt * var(--font-scale))', color: '#555' }}>Paired gains (same seeds), mean over 7 backbones; per-layer queries cost +23.5k parameters (&asymp;2%). Pose gain is mostly SigLIP2-L (&minus;13&deg;).</div>
+
       </>
     ),
   },
@@ -633,10 +689,9 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <ul className="takeaways">
-        <li>Useful features are <b>spread across depth</b>, and the best depth depends on the task.</li>
-        <li>AMDF beats all four cheap fusions by mean rank in every table and is second only to ConcatLayers (1st on depth), with <b>&asymp;22&times; fewer params</b>.</li>
-        <li>A fixed per-position layer mix (SpatialWeights) does no better than one global mix (mean rank 3.94 vs 3.89); AMDF, which picks layers <b>from each patch's features</b>, beats both in every table.</li>
-        <li><b>Per-layer expert queries</b> improve the mean on all 5 benchmarks (on every backbone for normals and Taskonomy) for +2% parameters.</li>
+        <li>Useful features are <b>spread across depth</b>.</li>
+        <li>AMDF: <b>2nd-best mean rank</b> with <b>&asymp;22&times; fewer params</b> than Concat.</li>
+        <li>AMDF beats every <b>fixed layer mix</b> by mean rank.</li>
       </ul>
     ),
   },
@@ -647,13 +702,13 @@ const CARD_REGISTRY = {
    ================================================================ */
 const DEFAULT_LAYOUT = {
   columns: [
-    { id: 'col1', widthMm: 298, cards: ['idea', 'problem1', 'problem2', 'setup'] },
-    { id: 'col2', widthMm: 372, cards: ['method', 'analysis', 'ablation'] },
-    { id: 'col3', widthMm: null, cards: ['results', 'conclusion'] },
+    { id: 'col1', widthMm: 300, cards: ['idea', 'problem1', 'problem2', 'conclusion', 'setup'] },
+    { id: 'col2', widthMm: 385, cards: ['method', 'analysis', 'ablation'] },
+    { id: 'col3', widthMm: null, cards: ['results'] },
   ],
 };
 const DEFAULT_CARD_HEIGHTS = {};
-const DEFAULT_FONT_SCALE = 3.3;
+const DEFAULT_FONT_SCALE = 4.2;
 
 /* Logos: none supplied (no author/lab website provided) */
 /* Logos are pre-whitened cutouts (white ink, transparent background) so they sit
@@ -795,7 +850,7 @@ function PosterApp() {
     const card = CARD_REGISTRY[cardId]; if (!card) return null;
     const classes = ['card']; if (card.color) classes.push(card.color); if (isCardGrow(cardId)) classes.push('grow'); if (selectedCard===cardId) classes.push('swap-selected');
     const style = {}; if (cardHeights[cardId]!=null) style.flex='0 0 '+cardHeights[cardId]+'mm';
-    return (<div key={cardId} className={classes.join(' ')} data-id={cardId} style={style}><div className="swap-handle" onClick={(e)=>handleSwapClick(cardId,e)}>&#x2725;</div><h2>{card.title}</h2>{card.body}</div>);
+    return (<div key={cardId} className={classes.join(' ')} data-id={cardId} style={style}><div className="swap-handle" onClick={(e)=>handleSwapClick(cardId,e)}>&#x2725;</div>{card.title ? <h2>{card.title}</h2> : null}{card.body}</div>);
   }
 
   function renderDropZone(colId, position) {

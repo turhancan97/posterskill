@@ -2,17 +2,18 @@
   "columns": [
     {
       "id": "col1",
-      "widthMm": 298,
+      "widthMm": 300,
       "cards": [
         "idea",
         "problem1",
         "problem2",
+        "conclusion",
         "setup"
       ]
     },
     {
       "id": "col2",
-      "widthMm": 372,
+      "widthMm": 385,
       "cards": [
         "method",
         "analysis",
@@ -23,13 +24,12 @@
       "id": "col3",
       "widthMm": null,
       "cards": [
-        "results",
-        "conclusion"
+        "results"
       ]
     }
   ],
   "cardHeights": {},
-  "fontScale": 3.3,
+  "fontScale": 4.2,
   "logos": [
     {
       "src": "JU_logo_white.png",

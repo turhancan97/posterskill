@@ -7,8 +7,7 @@
         "idea",
         "problem1",
         "problem2",
-        "conclusion",
-        "setup"
+        "conclusion"
       ]
     },
     {
@@ -17,7 +16,8 @@
       "cards": [
         "method",
         "analysis",
-        "ablation"
+        "ablation",
+        "setup"
       ]
     },
     {

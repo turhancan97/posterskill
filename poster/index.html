@@ -222,7 +222,7 @@
 
 
   /* === minimal pass: keyword strip, keyword bullets, about-me box === */
-  .kwstrip { display:grid; grid-template-columns:1fr 1fr; gap:2mm; }
+  .kwstrip { display:grid; grid-template-columns:repeat(4,1fr); gap:2mm; }
   .kwstrip span { background:var(--blue-light); color:var(--blue); font-weight:900; font-size:calc(8.6pt * var(--font-scale)); padding:2mm 3.5mm; white-space:nowrap; text-align:center; border-radius:2.5mm; }
   ul.kw { padding-left:6mm; } ul.kw li { font-size:calc(10.5pt * var(--font-scale)); margin-bottom:1mm; }
   .about { background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.45); border-radius:4mm; padding:5mm 6mm; display:flex; flex-direction:column; gap:3mm; }
@@ -323,11 +323,11 @@ function HookPanel() {
           {curve('M20 102 C 150 100, 240 60, 290 14', '3 8', .9)}
           <text x="292" y="118" textAnchor="end" style={{ fill: '#fff', fontSize: 15, fontFamily: 'Nunito', fontWeight: 700 }}>layer depth →</text>
         </svg>
-        <div>Each task peaks at a <b>different depth</b></div>
+        <div>On DINOv3-L, each NYUv2 task peaks at a <b>different depth</b></div>
       </div>
       <div className="hook-pt">
         <div className="hook-num">&asymp;22&times;</div>
-        <div><b>fewer params</b> than concatenating layers</div>
+        <div><b>fewer params</b> than concatenating layers (dense tasks)</div>
       </div>
       <div className="about">
         <div className="about-top">
@@ -595,13 +595,13 @@ const CARD_REGISTRY = {
     ),
   },
   problem1: {
-    title: 'Problem #1: last layer ≠ best',
+    title: 'Problem #1: last layer ≠ always best',
     color: 'blue',
     grow: false,
     body: (
       <>
         <div className="fig"><div className="fig-wrap"><img src="fig_layer_sweep.png" alt="Single-layer probes of DINOv3-L on NYUv2 normals, depth and segmentation" /></div>
-        <div className="cap"><b>Fig. 2:</b> Best layer moves deeper with abstraction: L18 &rarr; L21 &rarr; L24 (DINOv3-L, NYUv2).</div></div>
+        <div className="cap"><b>Fig. 2:</b> Best single layer differs per task: &asymp;L18 (normals), &asymp;L21 (depth), L24 (segmentation); one seed per layer (DINOv3-L, NYUv2).</div></div>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_pca_layers.png" style={{ height: 'auto' }} alt="PCA-to-RGB patch features of a frozen PESpatial-L at layers 1 to 23 for a NAVI lion and an NYUv2 kitchen" /></div>
         <div className="cap"><b>Fig. 3:</b> Objects separate from the background only in <b>deep layers</b> (PESpatial-L, PCA).</div></div>
       </>
@@ -613,7 +613,7 @@ const CARD_REGISTRY = {
     grow: false,
     body: (
       <>
-        <p className="verdict bad">&#x2717; Concat all layers: <b>26.2M params</b>, same mix for every patch.</p>
+        <p className="verdict bad">&#x2717; Concat all layers: <b>26.2M params</b>, the same fixed weights for every patch.</p>
         <p className="verdict good">&#x2713; AMDF: <b>per-patch</b> layer choice, <b>&asymp;1.2M params</b>.</p>
       </>
     ),
@@ -635,19 +635,19 @@ const CARD_REGISTRY = {
         <ul className="kw">
           <li><b>Per patch</b>, 16 experts with per-layer queries</li>
           <li><b>Softmax over layers</b> &rarr; each expert picks its depth</li>
-          <li><b>Frozen backbone</b>, any task head</li>
+          <li><b>Frozen backbone</b>, light task heads</li>
         </ul>
         <div className="fig"><div className="fig-wrap"><MethodSVG /></div></div>
       </>
     ),
   },
   analysis: {
-    title: 'Its attention follows layer utility',
+    title: 'Attention vs. layer utility (earlier variant)',
     color: 'red',
     grow: true,
     body: (
-      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
-      <div className="cap"><b>Fig. 4:</b> Attention tracks layer utility (earlier AMDF variant, DINOv3-L).</div></div>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '172mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="cap"><b>Fig. 4:</b> Earlier AMDF variant (DINOv3-L): attention correlates with per-layer probe utility, r = 0.46&ndash;0.85.</div></div>
     ),
   },
   results: {
@@ -671,7 +671,7 @@ const CARD_REGISTRY = {
     ),
   },
   ablation: {
-    title: 'Per-layer queries help (+2% params)',
+    title: 'Per-layer queries: better mean on all 5 tasks (+2% params)',
     color: 'red',
     grow: false,
     body: (
@@ -702,8 +702,8 @@ const CARD_REGISTRY = {
    ================================================================ */
 const DEFAULT_LAYOUT = {
   columns: [
-    { id: 'col1', widthMm: 300, cards: ['idea', 'problem1', 'problem2', 'conclusion', 'setup'] },
-    { id: 'col2', widthMm: 385, cards: ['method', 'analysis', 'ablation'] },
+    { id: 'col1', widthMm: 300, cards: ['idea', 'problem1', 'problem2', 'conclusion'] },
+    { id: 'col2', widthMm: 385, cards: ['method', 'analysis', 'ablation', 'setup'] },
     { id: 'col3', widthMm: null, cards: ['results'] },
   ],
 };

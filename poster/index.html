@@ -622,11 +622,12 @@ const CARD_REGISTRY = {
     body: (
       <>
         <ul className="kw">
-          <li><b>Per patch</b>, 16 experts with per-layer queries</li>
+          <li><b>Per patch</b>, 16 experts score all layers</li>
           <li>Each expert <b>weights all layers</b> &rarr; own depth</li>
           <li><b>Frozen backbone</b>, light task heads</li>
         </ul>
-        <div className="fig"><div className="fig-wrap"><MethodSVG /></div></div>
+        <div className="fig"><div className="fig-wrap"><img src="fig_fusion.png" alt="AMDF depth-aware fusion: per patch, queries attend over all layers and fuse them" /></div>
+        <div className="cap">Schematic. The poster&rsquo;s results use per-layer queries, a learned layer embedding on the keys, and no channel reduction.</div></div>
       </>
     ),
   },

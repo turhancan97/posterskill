@@ -2,12 +2,13 @@
   "columns": [
     {
       "id": "col1",
-      "widthMm": 300,
+      "widthMm": 310,
       "cards": [
         "idea",
         "problem1",
         "problem2",
-        "conclusion"
+        "conclusion",
+        "setup"
       ]
     },
     {
@@ -16,8 +17,7 @@
       "cards": [
         "method",
         "analysis",
-        "ablation",
-        "setup"
+        "ablation"
       ]
     },
     {

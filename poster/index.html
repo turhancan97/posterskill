@@ -635,7 +635,7 @@ const CARD_REGISTRY = {
     color: 'red',
     grow: true,
     body: (
-      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '200mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '125mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
       <div className="cap"><b>Fig. 4:</b> Earlier AMDF variant (DINOv3-L): attention correlates with per-layer probe utility, r = 0.46&ndash;0.85 across 6 tasks.</div></div>
     ),
   },
@@ -652,11 +652,20 @@ const CARD_REGISTRY = {
         </div>
         <h3>Mean rank per benchmark</h3>
         <div className="fig"><div className="fig-wrap"><RankHeatmap /></div>
-        <div className="cap"><b>Fig. 5:</b> Mean rank per benchmark (&#9733; best). Concat 1st on 4/5, AMDF 1st on depth.</div></div>
+        <div className="cap"><b>Fig. 6:</b> Mean rank per benchmark (&#9733; best). Concat 1st on 4/5, AMDF 1st on depth.</div></div>
         <h3>Accuracy vs. parameters</h3>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsScatter /></div>
-        <div className="cap"><b>Fig. 6:</b> &asymp;19&times; fewer params than Concat (5&#8209;task average, DINOv3-L).</div></div>
+        <div className="cap"><b>Fig. 7:</b> &asymp;19&times; fewer params than Concat (5&#8209;task average, DINOv3-L).</div></div>
       </>
+    ),
+  },
+  qual: {
+    title: 'What AMDF predicts',
+    color: 'red',
+    grow: false,
+    body: (
+      <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_qual_preds.png" style={{ height: 'auto', maxHeight: '88mm', width: 'auto', maxWidth: '100%' }} alt="NYUv2 surface normals and depth: ground truth, last-layer probe and AMDF" /></div>
+      <div className="cap"><b>Fig. 5:</b> NYUv2, DINOv3-L (seed-8 retrains, same config): AMDF&rsquo;s <b>normals are sharper</b> than LastLayer&rsquo;s; depth differs&nbsp;little.</div></div>
     ),
   },
   ablation: {
@@ -693,7 +702,7 @@ const CARD_REGISTRY = {
 const DEFAULT_LAYOUT = {
   columns: [
     { id: 'col1', widthMm: 310, cards: ['idea', 'problem1', 'problem2', 'conclusion', 'setup'] },
-    { id: 'col2', widthMm: 385, cards: ['method', 'analysis', 'ablation'] },
+    { id: 'col2', widthMm: 385, cards: ['method', 'analysis', 'qual', 'ablation'] },
     { id: 'col3', widthMm: null, cards: ['results'] },
   ],
 };

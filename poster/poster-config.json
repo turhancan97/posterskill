@@ -17,6 +17,7 @@
       "cards": [
         "method",
         "analysis",
+        "qual",
         "ablation"
       ]
     },

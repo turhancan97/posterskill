@@ -163,7 +163,7 @@
   .setup b { font-size:calc(10.5pt * var(--font-scale)); color:var(--blue); }
   .setup span { font-size:calc(9pt * var(--font-scale)); line-height:1.3; }
   .abl-row { display:flex; gap:2mm; margin:1mm 0 1.5mm; } .abl-cell { flex:1; background:#fbe9e6; border-radius:2mm; padding:2mm 1mm; text-align:center; }
-  .abl-cell .t { font-weight:800; font-size:calc(8pt * var(--font-scale)); } .abl-cell .g { font-weight:900; color:var(--red); font-size:calc(9.5pt * var(--font-scale)); } .abl-cell .k { font-size:calc(7pt * var(--font-scale)); color:#555; }
+  .abl-cell .t { font-weight:800; font-size:calc(8pt * var(--font-scale)); } .abl-cell .g { font-weight:900; color:var(--red); font-size:calc(8.2pt * var(--font-scale)); white-space:nowrap; } .abl-cell .k { font-size:calc(7pt * var(--font-scale)); color:#555; }
   table.abl { width:100%; border-collapse:collapse; margin:1mm 0 1.5mm; font-size:calc(8.6pt * var(--font-scale)); }
   table.abl td { padding:1mm 2mm; border-bottom:1px solid #eee; } table.abl td.g { font-weight:900; color:var(--red); }
   .heads-line { background:var(--blue-light); border-left:3px solid var(--blue); border-radius:0 1.5mm 1.5mm 0; padding:2mm 4mm; margin-top:2mm; }
@@ -578,7 +578,7 @@ function ParamsScatter() {
    Ablation: per-layer vs shared depth queries (paired, same seeds)
    ================================================================ */
 const ABLATION = [
-  ['Normals', '+1.62 d1', '7/7'], ['Taskonomy', '−0.73 L1×100', '7/7'], ['Segm.', '+0.16 mIoU', '6/7'],
+  ['Normals', '+1.62 d1', '7/7'], ['Taskonomy', '−0.73 L1', '7/7'], ['Segm.', '+0.16 mIoU', '6/7'],
   ['Depth', '+0.51 d1', '5/7'], ['Pose', '−2.37° rot.', '5/7'],
 ];
 
@@ -680,7 +680,7 @@ const CARD_REGISTRY = {
         <div className="abl-row">
           {ABLATION.map(([t, g, k]) => <div key={t} className="abl-cell"><div className="t">{t}</div><div className="g">{g}</div><div className="k">{k} backbones</div></div>)}
         </div>
-        <div className="abl-note">Paired gains vs. shared queries, mean over 7 backbones; cost: <b>+2% params</b>.</div>
+        <div className="abl-note">Paired gains vs. shared queries, mean over 7 backbones; Taskonomy L1&nbsp;&times;100; cost:&nbsp;<b>+2%&nbsp;params</b>.</div>
 
       </>
     ),

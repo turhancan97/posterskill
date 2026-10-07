@@ -635,7 +635,7 @@ const CARD_REGISTRY = {
     color: 'red',
     grow: true,
     body: (
-      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '125mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" style={{ maxHeight: '157mm', objectFit: 'contain' }} alt="Correlation between single-layer performance and AMDF layer attention" /></div>
       <div className="cap"><b>Fig. 4:</b> Earlier AMDF variant (DINOv3-L): attention correlates with per-layer probe utility, r = 0.46&ndash;0.85 across 6 tasks.</div></div>
     ),
   },
@@ -664,8 +664,8 @@ const CARD_REGISTRY = {
     color: 'red',
     grow: false,
     body: (
-      <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_qual_preds.png" style={{ height: 'auto', maxHeight: '88mm', width: 'auto', maxWidth: '100%' }} alt="NYUv2 surface normals and depth: ground truth, last-layer probe and AMDF" /></div>
-      <div className="cap"><b>Fig. 5:</b> NYUv2, DINOv3-L (seed-8 retrains, same config): AMDF&rsquo;s <b>normals are sharper</b> than LastLayer&rsquo;s; depth differs&nbsp;little.</div></div>
+      <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><img src="fig_qual_normals.png" style={{ height: 'auto' }} alt="NYUv2 surface normals: input, ground truth, last-layer probe and AMDF for two scenes" /></div>
+      <div className="cap"><b>Fig. 5:</b> NYUv2 surface normals, DINOv3-L (seed-8 retrains): AMDF recovers <b>sharper geometry</b> than the last-layer probe, though both are smoother than the ground&nbsp;truth.</div></div>
     ),
   },
   ablation: {

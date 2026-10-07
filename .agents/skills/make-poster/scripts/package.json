@@ -1,0 +1,14 @@
+{
+  "name": "make-poster-scripts",
+  "private": true,
+  "description": "Layout check, PDF export and QR check for posterskill posters",
+  "scripts": {
+    "check": "node check_layout.js",
+    "pdf": "node export_pdf.js",
+    "qr": "node check_qr.js"
+  },
+  "dependencies": {
+    "jsqr": "^1.4.0",
+    "playwright": "^1.58.0"
+  }
+}

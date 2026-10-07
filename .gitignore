@@ -5,7 +5,6 @@ references/*
 !references/.gitkeep
 
 # Generated output
-poster/
 
 # OS
 .DS_Store

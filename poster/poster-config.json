@@ -1,0 +1,76 @@
+{
+  "columns": [
+    {
+      "id": "col1",
+      "widthMm": 271,
+      "cards": [
+        "overview",
+        "task",
+        "correlation",
+        "attention",
+        "layerwise"
+      ]
+    },
+    {
+      "id": "col2",
+      "widthMm": null,
+      "cards": [
+        "problem",
+        "environments",
+        "asset_library",
+        "pipeline",
+        "probing_methods"
+      ]
+    },
+    {
+      "id": "col3",
+      "widthMm": 260,
+      "cards": [
+        "impact",
+        "ego_alloc",
+        "complexity",
+        "findings",
+        "takeaways",
+        "project_qr"
+      ]
+    }
+  ],
+  "cardHeights": {
+    "overview": 163.50818458941757,
+    "problem": 183.8769627004929,
+    "environments": 146.09717171168845,
+    "asset_library": 192.20068065450997,
+    "pipeline": 206.9863396982576,
+    "impact": 199.6164718180155,
+    "ego_alloc": 187.40543803494168,
+    "complexity": 189.35087063045228,
+    "findings": 127.30480176295617,
+    "attention": 279.9863402493651,
+    "takeaways": 148.7869601167172,
+    "correlation": 157.97593060931914,
+    "task": 229.60325637484422
+  },
+  "fontScale": 3.220000000000002,
+  "logos": [
+    {
+      "src": "logos/uj.png",
+      "alt": "Jagiellonian University",
+      "heightMm": 12
+    },
+    {
+      "src": "logos/agh.png",
+      "alt": "AGH University of Krakow",
+      "heightMm": 12
+    },
+    {
+      "src": "logos/ideas.png",
+      "alt": "IDEAS NCBR",
+      "heightMm": 12
+    },
+    {
+      "src": "logos/gmum.png",
+      "alt": "GMUM",
+      "heightMm": 12
+    }
+  ]
+}

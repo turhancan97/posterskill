@@ -29,7 +29,12 @@
       ]
     }
   ],
-  "cardHeights": {},
+  "cardHeights": {
+    "idea": 167.0,
+    "problem1": 236.0,
+    "problem2": 116.0,
+    "method": 270.0
+  },
   "fontScale": 4.2,
   "logos": [
     {

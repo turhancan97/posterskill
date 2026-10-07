@@ -329,7 +329,7 @@ function HookPanel() {
       </div>
       <div className="hook-pt">
         <div className="hook-num">&asymp;22&times;</div>
-        <div><b>fewer params</b> than concatenating layers (dense tasks)</div>
+        <div><b>fewer params</b> than concatenating layers (ViT-L, dense tasks)</div>
       </div>
       <div className="about">
         <div className="about-top">
@@ -646,7 +646,7 @@ const CARD_REGISTRY = {
     body: (
       <>
         <div className="callouts">
-          <div className="callout"><div className="cn">&asymp;22&times;</div><div className="cl">fewer params<br/>than Concat</div></div>
+          <div className="callout"><div className="cn">&asymp;22&times;</div><div className="cl">fewer params than<br/>Concat (ViT-L)</div></div>
           <div className="callout"><div className="cn">2nd</div><div className="cl">mean rank<br/>(1st on depth)</div></div>
           <div className="callout"><div className="cn">5&times;7</div><div className="cl">benchmarks &times;<br/>backbones</div></div>
         </div>
@@ -655,7 +655,7 @@ const CARD_REGISTRY = {
         <div className="cap"><b>Fig. 6:</b> Mean rank per benchmark (&#9733; best). Concat 1st on 4/5, AMDF 1st on depth.</div></div>
         <h3>Accuracy vs. parameters</h3>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsScatter /></div>
-        <div className="cap"><b>Fig. 7:</b> &asymp;19&times; fewer params than Concat (5&#8209;task average, DINOv3-L).</div></div>
+        <div className="cap"><b>Fig. 7:</b> ViT-L, all 5 tasks: &asymp;19&times; (pose head larger; &asymp;22&times; on dense&nbsp;tasks).</div></div>
       </>
     ),
   },
@@ -689,7 +689,7 @@ const CARD_REGISTRY = {
     body: (
       <ul className="takeaways">
         <li>Useful features are <b>spread across depth</b>.</li>
-        <li>AMDF: <b>2nd-best mean rank</b> with <b>&asymp;22&times; fewer params</b> than Concat.</li>
+        <li>AMDF: <b>2nd-best mean rank</b> with <b>&asymp;22&times; fewer params</b> than Concat (ViT-L).</li>
         <li>AMDF beats every <b>fixed layer mix</b> by mean&nbsp;rank.</li>
       </ul>
     ),

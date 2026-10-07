@@ -169,6 +169,7 @@
   .heads-line { background:var(--blue-light); border-left:3px solid var(--blue); border-radius:0 1.5mm 1.5mm 0; padding:2mm 4mm; margin-top:2mm; }
   .card[data-id="analysis"] .fig { margin:auto 0; }
   .abl-note { font-size:calc(7.5pt * var(--font-scale)); color:var(--text-light); line-height:1.25; }
+  .kw-note { text-align:center; font-size:calc(6.4pt * var(--font-scale)); color:var(--text-light); margin-top:1mm; line-height:1.15; white-space:nowrap; }
   .takeaways { background:#fbe9e6; border-left:2.5px solid var(--red); border-radius:0 1.5mm 1.5mm 0; padding:2.5mm 4mm 1.5mm 13mm !important; }
   .takeaways li { font-weight:600; }
   .second { font-weight:700; text-decoration:underline; text-decoration-color:#bbb; }
@@ -223,8 +224,8 @@
 
 
   /* === minimal pass: keyword strip, keyword bullets, about-me box === */
-  .kwstrip { display:grid; grid-template-columns:1fr 1fr; gap:2mm; }
-  .kwstrip span { background:var(--blue-light); color:var(--blue); font-weight:900; font-size:calc(8.6pt * var(--font-scale)); padding:2mm 3.5mm; white-space:nowrap; text-align:center; border-radius:2.5mm; }
+  .kwstrip { display:grid; grid-template-columns:1fr 1fr; gap:1.5mm; }
+  .kwstrip span { background:var(--blue-light); color:var(--blue); font-weight:900; font-size:calc(8.6pt * var(--font-scale)); padding:1.2mm 3.5mm; white-space:nowrap; text-align:center; border-radius:2.5mm; }
   ul.kw { padding-left:11mm!important; } ul.kw li { font-size:calc(10.5pt * var(--font-scale)); margin-bottom:1mm; }
   .about { background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.45); border-radius:4mm; padding:5mm 6mm; display:flex; flex-direction:column; gap:3mm; }
   .about-top { display:flex; align-items:center; gap:5mm; }
@@ -541,12 +542,12 @@ const SCATTER = [
 ];
 function ParamsScatter() {
   const F = { fontFamily: 'Nunito' };
-  const X0 = 150, X1 = 960, Y0 = 70, Y1 = 1290, lo = Math.log10(0.7), hi = Math.log10(50);
+  const X0 = 150, X1 = 960, Y0 = 70, Y1 = 1410, lo = Math.log10(0.7), hi = Math.log10(50);
   const px = (m) => X0 + (Math.log10(m) - lo) / (hi - lo) * (X1 - X0);
   const py = (r) => Y0 + (r - 1) / (5.5 - 1) * (Y1 - Y0);
   const lab = { 'ConcatLayers': [-30, -30, 'end'], 'AMDF (ours)': [30, 52, 'start'], 'WeightedLayers': [30, -8, 'start'], 'SpatialWeights': [30, 40, 'start'], 'LastLayer': [30, 14, 'start'], 'AvgLayer': [30, 14, 'start'] };
   return (
-    <svg viewBox="0 0 1000 1420" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1000 1540" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
       <defs><marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" style={{ fill: '#b83e2b' }} /></marker></defs>
       {[1, 2, 3, 4, 5].map(r => <g key={r}><line x1={X0} y1={py(r)} x2={X1} y2={py(r)} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={X0 - 16} y={py(r) + 13} textAnchor="end" style={{ ...F, fontSize: 40, fill: '#555' }}>{r}</text></g>)}
       {[1, 3, 10, 30].map(m => <g key={m}><line x1={px(m)} y1={Y0} x2={px(m)} y2={Y1} style={{ stroke: '#e6e6e6', strokeWidth: 1.5 }} /><text x={px(m)} y={Y1 + 48} textAnchor="middle" style={{ ...F, fontSize: 40, fill: '#555' }}>{m}M</text></g>)}
@@ -612,7 +613,8 @@ const CARD_REGISTRY = {
     color: 'blue',
     grow: false,
     body: (
-      <div className="kwstrip"><span>7 frozen VFMs</span><span>5 benchmarks</span><span>5 baselines</span><span>3 seeds</span></div>
+      <><div className="kwstrip"><span>7 frozen VFMs</span><span>5 benchmarks</span><span>5 baselines</span><span>3 seeds</span></div>
+      <div className="kw-note">DINOv3-S/B/L &middot; MAE-L &middot; SigLIP2-L &middot; V-JEPA2.1-L &middot; PESpatial-L</div></>
     ),
   },
   method: {
@@ -652,7 +654,7 @@ const CARD_REGISTRY = {
         </div>
         <h3>Mean rank per benchmark</h3>
         <div className="fig"><div className="fig-wrap"><RankHeatmap /></div>
-        <div className="cap"><b>Fig. 6:</b> Mean rank per benchmark (&#9733; best). Concat 1st on 4/5, AMDF 1st on depth. Backbones: DINOv3-S/B/L &middot; MAE-L &middot; SigLIP2-L &middot; V-JEPA2.1-L &middot; PESpatial-L.</div></div>
+        <div className="cap"><b>Fig. 6:</b> Mean rank per benchmark (&#9733; best). Concat 1st on 4/5, AMDF 1st on depth.</div></div>
         <h3>Accuracy vs. parameters</h3>
         <div className="fig" style={{ flex: '0 0 auto' }}><div className="fig-wrap" style={{ flex: '0 0 auto' }}><ParamsScatter /></div>
         <div className="cap"><b>Fig. 7:</b> ViT-L, all 5 tasks: &asymp;19&times; (pose head larger; &asymp;22&times; on dense&nbsp;tasks).</div></div>
@@ -706,7 +708,7 @@ const DEFAULT_LAYOUT = {
     { id: 'col3', widthMm: null, cards: ['results'] },
   ],
 };
-const DEFAULT_CARD_HEIGHTS = { idea: 167.0, problem1: 236.0, problem2: 116.0, method: 270.0 };
+const DEFAULT_CARD_HEIGHTS = { idea: 166.5, problem1: 234.5, problem2: 114.5, method: 270.0 };
 const DEFAULT_FONT_SCALE = 4.2;
 
 /* Logos: none supplied (no author/lab website provided) */

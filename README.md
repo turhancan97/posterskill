@@ -49,7 +49,7 @@ Make my poster.
 
 ## Supported agents
 
-All agents share one source of truth: `.agents/skills/make-poster/` (`SKILL.md` + `assets/template.html`). Everything else is a thin pointer to it:
+All agents share one source of truth: `.agents/skills/make-poster/` (`SKILL.md`, `assets/`, `scripts/`). Everything else is a thin pointer to it:
 
 | Agent | Entry point |
 |-------|-------------|
@@ -78,6 +78,35 @@ The poster is a **self-contained HTML file** with a built-in visual editor:
 
 No npm, no build step, no server. Just open `index.html` in Chrome.
 
+### Default template
+
+`assets/template.html` is a story-driven design (hook → problem → solution → results → take-home), generalized from the [ML in PL 2026 poster](https://turhancan97.github.io/posterskill/mlinpl2026/). It starts with placeholder content and inline-SVG figure boxes, and includes:
+
+- **Hook panel**: a question, a one-line answer and three points. It sits on the left in landscape and becomes a top band in portrait.
+- **Result widgets**, each fed by a small data array: big-number callouts, a rank heatmap, a params-vs-rank scatter, ablation tiles and a setup keyword strip.
+- **Optional about-me box** with your photo and a styled QR code generated at runtime from a URL.
+- **Palette variables** in one `:root` block (frame gradient, accent, highlight); all widgets derive their colours from them.
+- **Orientation switch**: `POSTER = { size: 'A0', orientation: 'landscape' | 'portrait' }` (or `?orientation=portrait` in the URL), with a default layout for each.
+- **Print-safe CSS**: blur, shadows and glow are disabled when printing, because Chrome can drop or box them in the PDF.
+- **Per-poster layout storage**, so several posters on one site don't share saved layouts.
+
+The original upstream template is kept as `assets/template_classic.html`.
+
+### Checking and exporting
+
+`scripts/` holds Node + Playwright helpers that check the print layout rather than the screen:
+
+```bash
+cd .agents/skills/make-poster/scripts && npm install && npx playwright install chromium && cd -
+S=.agents/skills/make-poster/scripts
+node $S/check_layout.js poster/index.html                 # clip/slack per card (screen + print), graphics share, word count
+node $S/export_pdf.js poster/index.html --out poster/poster_A0.pdf
+node $S/export_pdf.js poster/index.html --size A1 --out poster/poster_A1.pdf   # vector downscale, same design
+node $S/check_qr.js poster/index.html --expect https://your.site/
+```
+
+Add `--orientation portrait` to check or export the other orientation.
+
 ## Inputs
 
 | Input | Source | Required |
@@ -97,7 +126,7 @@ No npm, no build step, no server. Just open `index.html` in Chrome.
 3. Click **Copy Config** in the toolbar
 4. Paste the JSON back to the agent — it updates the defaults
 5. Repeat until you're happy
-6. Click **Preview** to verify, then print to PDF (margins: none, background graphics: on)
+6. Click **Preview** to verify, then export with `scripts/export_pdf.js` (or print to PDF with margins: none, background graphics: on) and check the PDF, not the screen
 
 ## How it works under the hood
 

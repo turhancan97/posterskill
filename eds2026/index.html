@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMDF - EDS 2026 Poster</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  :root {
+    --blue: #2d7fc1; --blue-light: #e3f0fa;
+    --orange: #e8943a; --orange-light: #fdf0e0;
+    --teal: #2aaa8a; --purple: #7c5cbf; --red: #d94f4f;
+    --text: #222; --text-light: #555;
+    --bg: #f0ece6; --card-bg: #fff;
+    --gap: 3mm; --pad: 10mm;
+    --font-scale: 1.3;
+  }
+
+  /* Poster size: A0 landscape */
+  @page { size: 1189mm 841mm; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-family: 'Nunito', sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { width: 1189mm; height: 841mm; background: var(--bg); overflow: hidden; transform-origin: top left; }
+  #root { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr; }
+  @media screen { html { background:#bbb; overflow:hidden; width:100vw; height:100vh; } body { position:absolute; box-shadow:0 4px 30px rgba(0,0,0,.3); border-radius:4px; } }
+  @media print { html { background:none; } body { position:static; transform:none!important; box-shadow:none; border-radius:0; } .toolbar,.divider,.swap-handle,.drop-zone{display:none!important;} }
+  body.preview .divider, body.preview .swap-handle, body.preview .drop-zone { display:none!important; }
+
+  /* === HEADER === */
+  .header { background: linear-gradient(135deg,#d6434d,#f9535c 50%,#ff7a82); padding:7mm var(--pad) 6mm; display:flex; align-items:center; gap:9mm; }
+  .header-left { flex:1; }
+  .header h1 { font-size:48pt; font-weight:900; line-height:1.08; color:#fff; margin-bottom:3mm; text-shadow:0 1px 3px rgba(0,0,0,.15); }
+  .header h1 .m { color:#ffd060; }
+  .header .authors { font-size:27pt; color:#fff; font-weight:700; }
+  .header .authors sup { font-size:15pt; color:#ffd060; }
+  .header .aff { font-size:20pt; color:rgba(255,255,255,.85); margin-top:2.4mm; font-weight:600; }
+  .header .aff sup { color:#ffd060; font-size:15pt; }
+
+  /* Institution logos: pre-whitened PNGs sit directly on the header; grouped with a wider gap between institutions */
+  /* header-logos: a horizontal row of "blocks"; each block stacks its own rows
+     vertically (e.g. a 2x2 block of JU/GMUM over CTU/VRG), with a divider and
+     vertical centering between blocks (e.g. Aachen as its own single-row block). */
+  .header-logos { display:flex; align-items:center; gap:7mm; flex-shrink:0; }
+  .header-logos .logo-block { display:flex; flex-direction:column; align-items:center; gap:0; padding:0 3mm; }
+  .header-logos .logo-row { display:flex; align-items:center; justify-content:center; gap:5mm; min-height:40mm; }
+  .header-logos .logo-hr { width:44mm; height:1.5px; background:rgba(255,255,255,.4); margin:2mm 0; flex-shrink:0; }
+  .header-logos .logo-vr { width:1.5px; height:80mm; background:rgba(255,255,255,.4); margin:0 3.5mm; flex-shrink:0; }
+  .header-logos .logo-item { display:flex; align-items:center; justify-content:center; }
+  .header-logos .logo-chip { background:#fff; padding:2mm 3.5mm; border-radius:1.5mm; }
+  .header-logos img { object-fit:contain; display:block; }
+
+  .header-right { display:flex; flex-direction:row; align-items:center; gap:7mm; }
+
+  /* Event card: logo + name + subtitle + location, all as one aligned unit */
+  /* Frosted-glass panel instead of a flat white box: translucent gradient +
+     blur, a soft glow behind the logo, and gold/white text matching the rest
+     of the header's accent palette so it reads as part of the header, not a sticker. */
+  .event-card { position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; text-align:center;
+    background:linear-gradient(160deg, rgba(255,255,255,.30), rgba(255,255,255,.08));
+    -webkit-backdrop-filter:blur(7px); backdrop-filter:blur(7px);
+    border:1.5px solid rgba(255,255,255,.55);
+    box-shadow:0 4px 20px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.35);
+    padding:4mm 9mm; border-radius:4mm; }
+  .event-card::before { content:''; position:absolute; top:-16mm; left:50%; transform:translateX(-50%);
+    width:70mm; height:70mm; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.4), rgba(255,255,255,0) 70%);
+    pointer-events:none; }
+  .event-card > * { position:relative; z-index:1; }
+  .event-card img { height:42mm; width:auto; margin-bottom:2mm; filter:drop-shadow(0 2px 6px rgba(0,0,0,.2)); }
+  .event-card .ev-name { font-size:26pt; font-weight:900; color:#ffd060; line-height:1.15; text-shadow:0 1px 3px rgba(0,0,0,.25); }
+  .event-card .ev-sub { font-size:13.5pt; font-weight:700; color:#fff; margin-top:1.2mm; line-height:1.3; text-shadow:0 1px 2px rgba(0,0,0,.2); }
+  .event-card .ev-loc { font-size:13.5pt; font-weight:800; color:#ffd060; margin-top:1mm; text-shadow:0 1px 2px rgba(0,0,0,.2); }
+
+  .header-right .qr img { width:24mm; height:24mm; border-radius:1.5mm; background:#fff; padding:.8mm; }
+  .header-right .ql { font-size:8pt; color:#ffd060; font-weight:800; text-align:center; }
+  .header-right .qr { text-align:center; }
+
+  /* === POSTER COLUMNS === */
+  .poster { display:flex; gap:var(--gap); padding:var(--gap) var(--pad); min-height:0; flex:1; overflow:hidden; }
+  .col { display:flex; flex-direction:column; gap:var(--gap); min-height:0; overflow:hidden; }
+
+  /* === CARD === */
+  .card { background:var(--card-bg); border-radius:2.5mm; padding:3mm 4mm; box-shadow:0 1px 3px rgba(0,0,0,.08); border-top:2.5px solid var(--blue); display:flex; flex-direction:column; overflow:hidden; min-height:0; flex:0 0 auto; position:relative; transition: outline .15s; }
+  .card.grow { flex:1 1 0; }
+  .card.orange { border-top-color:var(--orange); }
+  .card.teal   { border-top-color:var(--teal); }
+  .card.purple { border-top-color:var(--purple); }
+  .card.red    { border-top-color:var(--red); }
+
+  .card h2 { font-size:calc(11pt * var(--font-scale)); font-weight:800; margin-bottom:1.5mm; flex-shrink:0; color:var(--blue); }
+  .card.orange h2{color:var(--orange);} .card.teal h2{color:var(--teal);} .card.purple h2{color:var(--purple);} .card.red h2{color:var(--red);}
+  .card p,.card li { font-size:calc(9.5pt * var(--font-scale)); line-height:1.38; }
+  .card ul,.card ol { padding-left:5mm; flex-shrink:0; }
+  .card li { margin-bottom:1.3mm; }
+  .card p { margin-bottom:1.6mm; }
+  .card li::marker { font-weight:700; }
+  .card h3 { font-size:calc(11pt * var(--font-scale)); font-weight:800; color:var(--text); margin:2.2mm 0 1.3mm; flex-shrink:0; }
+
+  /* Highlight box */
+  .hl { background:var(--blue-light); border-left:2.5px solid var(--blue); padding:3mm 4.5mm; border-radius:0 1.5mm 1.5mm 0; margin-bottom:2mm; flex-shrink:0; }
+  .hl p { font-size:calc(9.5pt * var(--font-scale)); line-height:1.5; font-weight:600; margin-bottom:0; }
+
+  /* Figure — MUST use width/height 100% + object-fit:contain for zero whitespace */
+  .fig { flex:1; display:flex; flex-direction:column; min-height:0; margin:1mm 0; }
+  .fig-wrap { flex:1; display:flex; align-items:center; justify-content:center; min-height:0; overflow:hidden; }
+  .fig-wrap img { width:100%; height:100%; object-fit:contain; border-radius:1.5mm; display:block; }
+  .fig .cap { font-size:calc(7.5pt * var(--font-scale)); color:var(--text-light); margin-top:.8mm; line-height:1.2; flex-shrink:0; }
+  .fig .cap b { color:var(--text); }
+  .fig-row { display:flex; gap:3mm; flex:1; min-height:0; }
+  .fig-row .fig { flex:1; }
+
+  /* Tables */
+  table { width:100%; border-collapse:collapse; font-size:calc(8.6pt * var(--font-scale)); margin:2mm 0; }
+  thead th { background:var(--blue); color:#fff; padding:2.4mm 2.5mm; text-align:left; font-weight:700; font-size:calc(8.2pt * var(--font-scale)); }
+  .card.purple thead th { background:var(--purple); }
+  tbody td { padding:2.2mm 2.5mm; border-bottom:1px solid #eee; }
+  tbody tr:nth-child(even) { background:#f8f9fb; }
+  .best { font-weight:800; color:var(--orange); }
+  .second { font-weight:700; text-decoration:underline; text-decoration-color:#bbb; }
+  .ours td { font-weight:700; }
+  .ours { background:#faf6ff; }
+
+  /* Dense full-backbone tables: smaller, tighter than prose tables */
+  .table-dense { font-size:calc(7.6pt * var(--font-scale)); margin:1mm 0; }
+  .table-dense thead th { padding:1mm 1.6mm; font-size:calc(7.4pt * var(--font-scale)); white-space:nowrap; }
+  .table-dense tbody td { padding:0.85mm 1.6mm; white-space:nowrap; }
+  .table-dense tbody td:first-child, .table-dense thead th:first-child { white-space:normal; }
+  /* Camera-pose table has 2 metrics x 7 backbones = extra columns; scale down to fit */
+  .table-pose { font-size:calc(6.2pt * var(--font-scale)); }
+  .table-pose thead th { padding:0.8mm 1mm; font-size:calc(6pt * var(--font-scale)); }
+  .table-pose tbody td { padding:0.7mm 1mm; }
+  .rank-badge { display:inline-block; min-width:8mm; padding:.3mm 1.4mm; border-radius:1mm; text-align:center; font-weight:800; color:#fff; }
+
+  /* Math */
+  .katex { font-size:calc(9.5pt * var(--font-scale))!important; }
+  .eq { background:var(--orange-light); border:1px solid var(--orange); border-radius:1.5mm; padding:1.5mm 2.5mm; margin:1.5mm 0; text-align:center; flex-shrink:0; }
+
+  /* Links */
+  .links { display:flex; align-items:center; gap:3mm; background:var(--blue-light); padding:2.5mm 3.5mm; border-radius:1.5mm; margin-top:2mm; flex-shrink:0; }
+  .links .ll { font-size:calc(8.5pt * var(--font-scale)); line-height:1.5; }
+  .links .ll b { color:var(--blue); }
+
+  /* === TOOLBAR === */
+  .toolbar { position:fixed; top:8px; right:8px; z-index:1000; display:flex; gap:6px; align-items:center; }
+  .toolbar button { font-family:'Nunito'; font-size:11px; font-weight:700; padding:5px 12px; border-radius:6px; border:none; cursor:pointer; background:#eee; color:#555; }
+  .toolbar button:hover { background:#ddd; }
+
+  /* Swap handles */
+  .card .swap-handle { position:absolute; top:1.5mm; right:1.5mm; width:8mm; height:8mm; background:var(--blue); color:#fff; border-radius:1.5mm; font-size:9pt; text-align:center; line-height:8mm; cursor:pointer; z-index:10; user-select:none; opacity:.4; transition: opacity .15s, background .15s, transform .15s; }
+  .card .swap-handle:hover { opacity:.8; transform:scale(1.15); }
+  .card.swap-selected { outline:3px solid var(--orange); outline-offset:-1px; }
+  .card.swap-selected .swap-handle { background:var(--orange); opacity:1; transform:scale(1.2); }
+
+  /* Dividers (same style for column and row) */
+  .divider { position:relative; z-index:50; flex-shrink:0; }
+  .divider::after { content:''; position:absolute; background:rgba(45,127,193,.12); border-radius:1.5mm; transition:background .15s; }
+  .divider:hover::after, .divider.active::after { background:rgba(45,127,193,.5); }
+  .col-resize { width:6mm; cursor:col-resize; margin:0 -3mm; }
+  .col-resize::after { top:0; bottom:0; left:1.5mm; width:3mm; }
+  .row-resize { height:6mm; cursor:row-resize; margin:-3mm 0; }
+  .row-resize::after { left:0; right:0; top:1.5mm; height:3mm; }
+
+  /* Drop zones */
+  .drop-zone { height:0; position:relative; z-index:60; transition: height .15s; }
+  .drop-zone.visible { height:5mm; }
+  .drop-zone-inner { position:absolute; left:2mm; right:2mm; top:0; bottom:0; border-radius:1.5mm; background:rgba(232,148,58,.15); border:2px dashed var(--orange); transition: background .15s; cursor:pointer; }
+  .drop-zone-inner:hover { background:rgba(232,148,58,.35); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useRef, useEffect, useCallback } = React;
+const MM = 3.7795275591;
+/* Poster dimensions in mm: A0 landscape */
+const POSTER_W_MM = 1189;
+const POSTER_H_MM = 841;
+
+/* Rank badge: green (best, ~1) to red (worst, ~6), matching the paper's rank color coding */
+function Rank(props) {
+  const v = props.v;
+  const t = Math.max(0, Math.min(1, (v - 1) / 5));
+  const r = Math.round(43 + t * (196 - 43));
+  const g = Math.round(153 - t * (153 - 60));
+  const b = Math.round(94 - t * (94 - 60));
+  return <span className="rank-badge" style={{background: 'rgb(' + r + ',' + g + ',' + b + ')'}}>{v.toFixed(2)}</span>;
+}
+
+/* ================================================================
+   Card content — one entry per poster section
+   ================================================================ */
+const CARD_REGISTRY = {
+  tldr: {
+    title: 'TL;DR',
+    color: null,
+    grow: false,
+    body: (
+      <>
+        <div className="hl"><p>The final layer of a Vision Foundation Model is <b>not</b> always the best representation. AMDF learns to fuse dense features from <b>every</b> frozen backbone layer, independently for each spatial patch and each downstream task.</p></div>
+        <ul>
+          <li>We identify an <b>abstraction&ndash;depth correlation</b>: geometric tasks peak at intermediate layers, semantic tasks peak near the final layer &mdash; so no single fixed depth is right for every task.</li>
+          <li>We propose <b>AMDF</b>: per-layer spatial refinement followed by patch-wise cross-attention fusion across the full VFM depth, with the backbone frozen throughout training.</li>
+          <li>AMDF sets the strongest overall probing performance across DINOv3, MAE, SigLIP&nbsp;2, V-JEPA2.1 and Perception Encoder, on dense geometric, semantic, and shared multi-task benchmarks.</li>
+          <li>Its learned depth-attention is interpretable, and recovers the same semantic&ndash;geometric split across depth found via exhaustive oracle layer sweeps.</li>
+        </ul>
+      </>
+    ),
+  },
+  overview: {
+    title: 'Motivation & Overview',
+    color: null,
+    grow: false,
+    body: (
+      <>
+        <p>Representations change abstraction level across network depth: low-level geometry, mid-level scene structure, and high-level semantics peak at different layers. AMDF removes the need to hand-pick a layer &mdash; it refines every layer, then fuses them <b>per patch</b> with a learned depth-attention distribution.</p>
+        <div className="fig"><div className="fig-wrap"><img src="fig_teaser.png" alt="Motivation and overview of AMDF" /></div>
+        <div className="cap"><b>Fig. 1:</b> Task-specific layer utility varies with abstraction level (low/mid/high). AMDF refines each frozen layer, then fuses all layers per patch into a task-specific dense representation.</div></div>
+      </>
+    ),
+  },
+  evidence: {
+    title: 'Abstraction–Depth Correlation: Empirical Evidence',
+    color: null,
+    grow: false,
+    body: (
+      <>
+        <p>We probe a frozen DINOv3-L/16 independently at every layer &#8467; &isin; {'{1,...,24}'} on three NYUv2 tasks of increasing abstraction, training a lightweight head per layer and recording its validation score. All three tasks share the same training images, yet the best-performing layer shifts systematically deeper as task abstraction increases.</p>
+        <div className="fig"><div className="fig-wrap"><img src="fig_motivation.png" alt="Layer sweeps on NYUv2 for surface normals, depth and segmentation" /></div>
+        <div className="cap"><b>Fig. 2:</b> Layer-wise probing on NYUv2 with DINOv3-L/16: the best layer shifts deeper as tasks become more semantic &mdash; surface normals peak at layer&nbsp;18, depth at layer&nbsp;21, segmentation at the final layer&nbsp;24 (the last layer).</div></div>
+        <div className="hl"><p>Exhaustive per-task layer search is costly and still commits to one <i>fixed</i> depth. Worse, a single layer ignores that complementary information may be spread across <i>multiple</i> depths at once &mdash; while naively concatenating all layers yields prohibitively large dense features. This motivates AMDF's holistic, patch-wise fusion across the full frozen hierarchy.</p></div>
+      </>
+    ),
+  },
+  method: {
+    title: 'Method: Adaptive Multi-Layer Dense Fusion',
+    color: 'teal',
+    grow: false,
+    body: (
+      <>
+        <p><b>(1) Layer-specific refinement</b> &mdash; learnable per-layer queries cross-attend to each layer's patch tokens and scatter back to the patch grid, preserving dense spatial structure.</p>
+        <div className="fig"><div className="fig-wrap"><img src="fig_stage2.png" alt="Layer-specific refinement" /></div></div>
+        <p><b>(2) Depth-aware fusion</b> &mdash; for every spatial patch, learnable depth queries cross-attend over the refined layer stack (with layer position embeddings), yielding a patch-specific mixture over network depth.</p>
+        <div className="fig"><div className="fig-wrap"><img src="fig_stage3.png" alt="Depth-aware fusion" /></div></div>
+      </>
+    ),
+  },
+  implementation: {
+    title: 'Implementation & Task Heads',
+    color: null,
+    grow: true,
+    body: (
+      <>
+        <ul>
+          <li>Every extracted layer is first projected to a shared, low-dimensional bottleneck before the refinement / fusion attention, keeping dense multi-layer attention cheap in memory and compute.</li>
+          <li>The VFM backbone stays <b>frozen</b> throughout; only the lightweight refinement + fusion probe and the downstream task head are trained end-to-end.</li>
+          <li>All available ViT blocks are exposed to AMDF: no manual subset selection or hand-picked layer depth is required.</li>
+          <li>AMDF adds only a small fraction of the frozen backbone's parameters &mdash; the bottleneck projections, refinement queries, and depth-fusion queries are the sole trainable components besides the task head.</li>
+        </ul>
+        <div className="fig" style={{ flex: 1 }}>
+          <div className="fig-wrap">
+            <svg viewBox="0 0 660 230" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+              <rect x="230" y="10" width="200" height="50" rx="7" style={{ fill: 'var(--blue-light)', stroke: 'var(--blue)', strokeWidth: 2 }} />
+              <text x="330" y="32" textAnchor="middle" style={{ fill: 'var(--blue)', fontWeight: 800, fontSize: 15, fontFamily: 'Nunito' }}>Fused representation</text>
+              <text x="330" y="50" textAnchor="middle" style={{ fill: 'var(--text-light)', fontSize: 11, fontFamily: 'Nunito' }}>F_AMDF &mdash; dense, per patch</text>
+
+              <line x1="330" y1="60" x2="330" y2="90" style={{ stroke: '#bbb', strokeWidth: 2 }} />
+              <line x1="90" y1="90" x2="570" y2="90" style={{ stroke: '#bbb', strokeWidth: 2 }} />
+              <line x1="90" y1="90" x2="90" y2="112" style={{ stroke: '#bbb', strokeWidth: 2 }} />
+              <line x1="330" y1="90" x2="330" y2="112" style={{ stroke: '#bbb', strokeWidth: 2 }} />
+              <line x1="570" y1="90" x2="570" y2="112" style={{ stroke: '#bbb', strokeWidth: 2 }} />
+
+              <rect x="5" y="112" width="170" height="100" rx="7" style={{ fill: '#e3faf5', stroke: 'var(--teal)', strokeWidth: 2 }} />
+              <text x="90" y="135" textAnchor="middle" style={{ fill: 'var(--teal)', fontWeight: 800, fontSize: 14, fontFamily: 'Nunito' }}>Dense head</text>
+              <text x="90" y="155" textAnchor="middle" style={{ fill: 'var(--text)', fontSize: 10.5, fontFamily: 'Nunito' }}>upsample +</text>
+              <text x="90" y="169" textAnchor="middle" style={{ fill: 'var(--text)', fontSize: 10.5, fontFamily: 'Nunito' }}>shallow conv</text>
+              <text x="90" y="195" textAnchor="middle" style={{ fill: 'var(--text-light)', fontSize: 10, fontFamily: 'Nunito', fontStyle: 'italic' }}>seg &middot; depth &middot; normals</text>
+
+              <rect x="245" y="112" width="170" height="100" rx="7" style={{ fill: '#f3edfc', stroke: 'var(--purple)', strokeWidth: 2 }} />
+              <text x="330" y="135" textAnchor="middle" style={{ fill: 'var(--purple)', fontWeight: 800, fontSize: 14, fontFamily: 'Nunito' }}>Global head</text>
+              <text x="330" y="155" textAnchor="middle" style={{ fill: 'var(--text)', fontSize: 10.5, fontFamily: 'Nunito' }}>pool +</text>
+              <text x="330" y="169" textAnchor="middle" style={{ fill: 'var(--text)', fontSize: 10.5, fontFamily: 'Nunito' }}>linear / MLP</text>
+              <text x="330" y="195" textAnchor="middle" style={{ fill: 'var(--text-light)', fontSize: 10, fontFamily: 'Nunito', fontStyle: 'italic' }}>classification</text>
+
+              <rect x="485" y="112" width="170" height="100" rx="7" style={{ fill: '#fdf0e0', stroke: 'var(--orange)', strokeWidth: 2 }} />
+              <text x="570" y="135" textAnchor="middle" style={{ fill: 'var(--orange)', fontWeight: 800, fontSize: 14, fontFamily: 'Nunito' }}>Pairwise head</text>
+              <text x="570" y="155" textAnchor="middle" style={{ fill: 'var(--text)', fontSize: 10.5, fontFamily: 'Nunito' }}>2 images, joint</text>
+              <text x="570" y="169" textAnchor="middle" style={{ fill: 'var(--text)', fontSize: 10.5, fontFamily: 'Nunito' }}>regressor</text>
+              <text x="570" y="195" textAnchor="middle" style={{ fill: 'var(--text-light)', fontSize: 10, fontFamily: 'Nunito', fontStyle: 'italic' }}>camera pose</text>
+            </svg>
+          </div>
+          <div className="cap"><b>Fig. 3:</b> The same frozen-backbone fusion module feeds three task-specific heads &mdash; only the head (and its supervision) changes per task.</div>
+        </div>
+      </>
+    ),
+  },
+  results: {
+    title: 'Results on NYUv2 (increasing abstraction)',
+    color: 'purple',
+    grow: false,
+    body: (
+      <>
+        <h3>Surface normals &mdash; d&#8321; (&uarr;)</h3>
+        <table className="table-dense">
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <tbody>
+            <tr><td>BestLayer (oracle)</td><td>52.47</td><td>57.67</td><td>61.32</td><td>53.12</td><td>41.95</td><td>61.89</td><td>54.43</td><td><Rank v={5.00}/></td></tr>
+            <tr><td>LastLayer</td><td>48.75</td><td>51.90</td><td>53.01</td><td>49.13</td><td>30.58</td><td>60.01</td><td>40.04</td><td><Rank v={6.00}/></td></tr>
+            <tr><td>AvgLayer</td><td>52.88</td><td>58.87</td><td>62.86</td><td>55.42</td><td>47.16</td><td>62.03</td><td>56.12</td><td><Rank v={3.86}/></td></tr>
+            <tr><td>WeightedLayers</td><td>53.03</td><td>59.08</td><td>62.90</td><td>55.45</td><td>49.28</td><td>61.95</td><td>56.99</td><td><Rank v={3.14}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="second">54.00</td><td className="second">59.61</td><td className="second">63.27</td><td className="second">55.97</td><td className="second">50.14</td><td className="second">62.39</td><td className="second">58.33</td><td><Rank v={2.00}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">54.65</td><td className="best">59.63</td><td className="best">63.40</td><td className="best">56.26</td><td className="best">52.57</td><td className="best">62.97</td><td className="best">59.66</td><td><Rank v={1.00}/></td></tr>
+          </tbody>
+        </table>
+        <h3>Depth estimation &mdash; d&#8321; (&uarr;)</h3>
+        <table className="table-dense">
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <tbody>
+            <tr><td>BestLayer (oracle)</td><td>80.01</td><td>83.99</td><td>85.02</td><td>74.17</td><td>76.46</td><td>86.91</td><td>85.98</td><td><Rank v={4.71}/></td></tr>
+            <tr><td>LastLayer</td><td>79.28</td><td>82.33</td><td>83.23</td><td>68.43</td><td>72.23</td><td>86.23</td><td>83.55</td><td><Rank v={6.00}/></td></tr>
+            <tr><td>AvgLayer</td><td>79.59</td><td className="best">84.73</td><td>87.20</td><td className="second">76.56</td><td>79.90</td><td className="second">87.51</td><td>86.08</td><td><Rank v={3.00}/></td></tr>
+            <tr><td>WeightedLayers</td><td>80.08</td><td className="second">84.49</td><td>87.32</td><td>76.55</td><td>80.10</td><td>87.27</td><td>85.87</td><td><Rank v={3.29}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="second">80.40</td><td>84.48</td><td className="second">87.52</td><td className="best">76.95</td><td className="second">80.54</td><td>87.31</td><td className="second">87.13</td><td><Rank v={2.14}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">80.47</td><td>84.47</td><td className="best">87.56</td><td>76.43</td><td className="best">81.42</td><td className="best">87.95</td><td className="best">87.40</td><td><Rank v={1.86}/></td></tr>
+          </tbody>
+        </table>
+        <h3>Semantic segmentation &mdash; mIoU (&uarr;)</h3>
+        <table className="table-dense">
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <tbody>
+            <tr><td>BestLayer (oracle)</td><td>52.29</td><td>58.75</td><td>64.03</td><td>33.21</td><td>44.01</td><td className="second">56.77</td><td>59.24</td><td><Rank v={4.93}/></td></tr>
+            <tr><td>LastLayer</td><td>52.29</td><td>58.75</td><td>64.03</td><td>33.21</td><td>44.01</td><td className="second">56.77</td><td>59.24</td><td><Rank v={4.93}/></td></tr>
+            <tr><td>AvgLayer</td><td>52.40</td><td>58.88</td><td>63.96</td><td>38.69</td><td className="second">48.09</td><td>56.26</td><td className="second">59.84</td><td><Rank v={3.57}/></td></tr>
+            <tr><td>WeightedLayers</td><td className="second">52.99</td><td className="second">59.34</td><td className="second">64.07</td><td className="second">38.74</td><td className="best">48.25</td><td>56.22</td><td>59.58</td><td><Rank v={2.64}/></td></tr>
+            <tr><td>ConcatLayers</td><td>52.75</td><td>58.98</td><td className="second">64.07</td><td>38.51</td><td>47.21</td><td>55.93</td><td>59.64</td><td><Rank v={3.64}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">53.22</td><td className="best">60.12</td><td className="best">64.86</td><td className="best">38.83</td><td>47.98</td><td className="best">57.48</td><td className="best">60.00</td><td><Rank v={1.29}/></td></tr>
+          </tbody>
+        </table>
+      </>
+    ),
+  },
+  taskonomy: {
+    title: 'Shared multi-task representation (Taskonomy)',
+    color: 'purple',
+    grow: false,
+    body: (
+      <>
+        <h3>Aggregate L<sub>1</sub> &times;100 (&darr;)</h3>
+        <table className="table-dense">
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <tbody>
+            <tr><td>BestLayer (oracle)</td><td>31.86</td><td>28.94</td><td>27.94</td><td>28.93</td><td>33.19</td><td>26.99</td><td>30.81</td><td><Rank v={5.00}/></td></tr>
+            <tr><td>LastLayer</td><td>33.02</td><td>30.41</td><td>29.75</td><td>30.41</td><td>36.83</td><td>27.78</td><td>33.68</td><td><Rank v={6.00}/></td></tr>
+            <tr><td>AvgLayer</td><td>30.50</td><td>28.11</td><td>26.46</td><td>28.04</td><td>30.94</td><td>26.60</td><td>30.24</td><td><Rank v={3.57}/></td></tr>
+            <tr><td>WeightedLayers</td><td>30.43</td><td className="second">28.07</td><td>26.45</td><td>28.09</td><td>30.69</td><td>26.61</td><td>30.16</td><td><Rank v={3.14}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="second">30.35</td><td>28.13</td><td className="second">26.38</td><td className="second">28.03</td><td className="second">30.57</td><td className="second">26.39</td><td className="second">30.12</td><td><Rank v={2.29}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">29.53</td><td className="best">27.56</td><td className="best">26.01</td><td className="best">27.98</td><td className="best">29.97</td><td className="best">26.14</td><td className="best">29.62</td><td><Rank v={1.00}/></td></tr>
+          </tbody>
+        </table>
+      </>
+    ),
+  },
+  classification: {
+    title: 'Fine-Grained & Wildlife Classification (Top-1)',
+    color: 'purple',
+    grow: false,
+    body: (
+      <>
+        <h3>Stanford Cars &mdash; fine-grained vehicle recognition</h3>
+        <table className="table-dense">
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <tbody>
+            <tr><td>BestLayer (oracle)</td><td>72.76</td><td>86.77</td><td>89.81</td><td>47.93</td><td>94.11</td><td>50.89</td><td>64.33</td><td><Rank v={6.14}/></td></tr>
+            <tr><td>LastLayer</td><td>72.76</td><td>86.77</td><td>89.73</td><td>47.89</td><td>93.89</td><td>50.89</td><td>64.33</td><td><Rank v={6.71}/></td></tr>
+            <tr><td>AvgLayer</td><td>67.88</td><td>83.65</td><td>87.16</td><td>56.92</td><td>94.34</td><td>59.89</td><td>63.52</td><td><Rank v={7.43}/></td></tr>
+            <tr><td>WeightedLayers</td><td>73.92</td><td>86.49</td><td>90.55</td><td>59.45</td><td>94.43</td><td>60.74</td><td>64.95</td><td><Rank v={4.43}/></td></tr>
+            <tr><td>ConcatLayers</td><td>72.51</td><td>85.99</td><td>89.95</td><td>63.29</td><td>94.18</td><td>64.18</td><td>63.93</td><td><Rank v={5.57}/></td></tr>
+            <tr><td>AvgPool</td><td>68.41</td><td>86.61</td><td>89.05</td><td>35.55</td><td>93.93</td><td>42.01</td><td>57.46</td><td><Rank v={8.14}/></td></tr>
+            <tr><td>EfficientProbe</td><td className="best">89.32</td><td className="second">92.03</td><td className="second">93.78</td><td className="best">88.07</td><td className="second">94.83</td><td className="second">84.33</td><td className="best">87.46</td><td><Rank v={1.57}/></td></tr>
+            <tr><td>AttentiveFusionAP</td><td>74.79</td><td>87.69</td><td>90.85</td><td>58.99</td><td>94.63</td><td>59.94</td><td>65.19</td><td><Rank v={3.57}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="second">88.98</td><td className="best">92.56</td><td className="best">94.69</td><td className="second">87.78</td><td className="best">95.15</td><td className="best">89.11</td><td className="second">86.22</td><td><Rank v={1.43}/></td></tr>
+          </tbody>
+        </table>
+        <h3>CzechLynx &mdash; individual wildlife re-identification</h3>
+        <table className="table-dense">
+          <thead><tr><th>Method</th><th>DINOv3-S</th><th>DINOv3-B</th><th>DINOv3-L</th><th>MAE-L</th><th>SigLIP2-L</th><th>V-JEPA2.1-L</th><th>PESpatial-L</th><th>Rank</th></tr></thead>
+          <tbody>
+            <tr><td>BestLayer (oracle)</td><td>27.57</td><td>35.53</td><td>40.04</td><td>27.61</td><td>20.19</td><td>31.45</td><td>23.79</td><td><Rank v={7.57}/></td></tr>
+            <tr><td>LastLayer</td><td>27.57</td><td>35.53</td><td>39.18</td><td>27.26</td><td>28.92</td><td>31.45</td><td>23.79</td><td><Rank v={7.57}/></td></tr>
+            <tr><td>AvgLayer</td><td>33.72</td><td>38.24</td><td>42.72</td><td>35.01</td><td>35.92</td><td>37.65</td><td>29.18</td><td><Rank v={4.43}/></td></tr>
+            <tr><td>WeightedLayers</td><td>34.12</td><td>39.02</td><td>44.12</td><td>35.19</td><td className="second">36.65</td><td>37.55</td><td>29.88</td><td><Rank v={3.00}/></td></tr>
+            <tr><td>ConcatLayers</td><td>34.01</td><td>38.68</td><td>43.13</td><td>35.02</td><td>35.82</td><td>36.75</td><td>29.65</td><td><Rank v={4.14}/></td></tr>
+            <tr><td>AvgPool</td><td>26.07</td><td>34.28</td><td>37.22</td><td>24.11</td><td>28.46</td><td>29.91</td><td>22.83</td><td><Rank v={8.86}/></td></tr>
+            <tr><td>EfficientProbe</td><td className="second">37.12</td><td className="best">47.49</td><td className="best">52.35</td><td className="best">46.47</td><td>35.11</td><td className="second">42.72</td><td className="second">32.26</td><td><Rank v={2.00}/></td></tr>
+            <tr><td>AttentiveFusionAP</td><td>31.28</td><td>37.12</td><td>40.40</td><td>31.09</td><td>34.89</td><td>34.33</td><td>27.92</td><td><Rank v={6.00}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">37.50</td><td className="second">44.73</td><td className="second">52.10</td><td className="second">41.34</td><td className="best">41.75</td><td className="best">47.82</td><td className="best">39.92</td><td><Rank v={1.43}/></td></tr>
+          </tbody>
+        </table>
+      </>
+    ),
+  },
+  camerapose: {
+    title: 'NAVI Camera Pose (Pairwise Head)',
+    color: 'purple',
+    grow: true,
+    body: (
+      <>
+        <table className="table-dense table-pose">
+          <thead>
+            <tr><th rowSpan="2">Method</th><th colSpan="2">DINOv3-S</th><th colSpan="2">DINOv3-B</th><th colSpan="2">DINOv3-L</th><th colSpan="2">MAE-L</th><th colSpan="2">SigLIP2-L</th><th colSpan="2">V-JEPA2.1-L</th><th colSpan="2">PESpatial-L</th><th rowSpan="2">Rank</th></tr>
+            <tr><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th><th>Rot.</th><th>Trans.</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>BestLayer (oracle)</td><td>46.61</td><td>0.18</td><td>42.98</td><td>0.16</td><td>36.24</td><td>0.14</td><td>39.71</td><td>0.16</td><td>51.42</td><td>0.18</td><td>38.95</td><td>0.16</td><td>61.14</td><td>0.21</td><td><Rank v={4.43}/></td></tr>
+            <tr><td>LastLayer</td><td>46.86</td><td>0.18</td><td>44.18</td><td>0.17</td><td>40.17</td><td>0.16</td><td>41.01</td><td>0.16</td><td>63.69</td><td>0.23</td><td>39.13</td><td>0.16</td><td>65.97</td><td>0.23</td><td><Rank v={5.68}/></td></tr>
+            <tr><td>AvgLayer</td><td>42.89</td><td>0.17</td><td>32.81</td><td>0.14</td><td>33.50</td><td className="second">0.13</td><td>35.80</td><td>0.15</td><td>56.44</td><td>0.21</td><td>41.14</td><td>0.16</td><td>62.69</td><td>0.22</td><td><Rank v={4.14}/></td></tr>
+            <tr><td>WeightedLayers</td><td>42.31</td><td className="second">0.16</td><td>32.63</td><td>0.14</td><td className="second">32.22</td><td className="second">0.13</td><td className="second">33.69</td><td className="second">0.14</td><td>55.05</td><td>0.20</td><td>40.01</td><td>0.16</td><td>56.61</td><td>0.20</td><td><Rank v={3.14}/></td></tr>
+            <tr><td>ConcatLayers</td><td className="second">39.22</td><td className="second">0.16</td><td className="second">31.12</td><td className="second">0.13</td><td className="best">28.82</td><td className="best">0.12</td><td className="best">31.58</td><td className="best">0.13</td><td className="second">43.48</td><td className="second">0.17</td><td className="second">38.79</td><td className="second">0.15</td><td className="second">51.17</td><td className="second">0.19</td><td><Rank v={1.68}/></td></tr>
+            <tr className="ours"><td>AMDF (ours)</td><td className="best">33.69</td><td className="best">0.14</td><td className="best">27.49</td><td className="best">0.12</td><td>35.79</td><td>0.14</td><td>36.01</td><td>0.15</td><td className="best">27.53</td><td className="best">0.13</td><td className="best">35.31</td><td className="best">0.15</td><td className="best">48.56</td><td className="best">0.19</td><td><Rank v={1.93}/></td></tr>
+          </tbody>
+        </table>
+      </>
+    ),
+  },
+  analysis: {
+    title: 'Learned depth-attention tracks layer utility',
+    color: 'teal',
+    grow: false,
+    body: (
+      <div className="fig"><div className="fig-wrap"><img src="fig_layer_attention.png" alt="Correlation between single-layer performance and AMDF layer attention" /></div>
+      <div className="cap"><b>Fig. 4:</b> AMDF's learned depth-attention (middle) tracks per-layer probe performance (left) on DINOv3-L/16. Alignment (Pearson <i>r</i>, right) is strongest for dense geometric tasks (depth <i>r</i>=0.85, normals <i>r</i>=0.81, Taskonomy <i>r</i>=0.73) and shifts toward deep layers for semantic tasks (classification <i>r</i>=0.83).</div></div>
+    ),
+  },
+  conclusion: {
+    title: 'Conclusion',
+    color: 'teal',
+    grow: true,
+    body: (
+      <>
+        <ul>
+          <li>VFM capabilities are <b>distributed across depth</b>, not concentrated in the final layer &mdash; final-layer probing systematically underestimates them.</li>
+          <li>AMDF's dense, patch-wise depth fusion beats final-layer, oracle single-layer, and static multi-layer (mean / weighted / concat) baselines across geometric, semantic and multi-task benchmarks.</li>
+          <li>Learned depth-attention is interpretable: it recovers the same semantic&ndash;geometric split found via exhaustive oracle layer sweeps.</li>
+          <li>This encourages moving beyond final-layer probing &mdash; frozen VFMs should be studied as full representational hierarchies, not single-output feature extractors.</li>
+          <li><b>No manual layer search needed:</b> AMDF replaces exhaustive per-task, per-layer sweeps with one learned, adaptive probe.</li>
+        </ul>
+      </>
+    ),
+  },
+};
+
+/* ================================================================
+   Default layout — column widths and card ordering
+   ================================================================ */
+const DEFAULT_LAYOUT = {
+  columns: [
+    { id: 'col1', widthMm: 355, cards: ['tldr', 'overview', 'evidence', 'implementation'] },
+    { id: 'col2', widthMm: 347, cards: ['method', 'analysis', 'conclusion'] },
+    { id: 'col3', widthMm: null, cards: ['results', 'taskonomy', 'classification', 'camerapose'] },
+  ],
+};
+const DEFAULT_CARD_HEIGHTS = { taskonomy: 104, results: 270, classification: 244, method: 368, analysis: 215 };
+const DEFAULT_FONT_SCALE = 2;
+
+/* Logos: none supplied (no author/lab website provided) */
+/* Logos are pre-whitened cutouts (white ink, transparent background) so they sit
+   directly on the red header; grouped by institution (group index) with a divider
+   between groups, matching the author affiliations. */
+/* Logos stacked in three rows: row 1 = JU+GMUM, row 2 = CTU+VRG, row 3 = Aachen alone. */
+/* Logos: a 2x2 block (JU+GMUM over CTU+VRG) with Aachen as its own column to the right. */
+/* Logos: 3 stacked columns, each centered so logos of different widths still
+   share the same vertical centerline — universities (JU/CTU), labs (GMUM/VRG),
+   and Aachen alone — separated by dividers. */
+const DEFAULT_LOGOS = [
+  { src: 'JU_logo_white.png', alt: 'Jagiellonian University in Kraków', heightMm: 36, col: 1, row: 1 },
+  { src: 'CTU_logo_white.png', alt: 'Czech Technical University in Prague', heightMm: 36, col: 1, row: 2 },
+  { src: 'gmum_logo.png', alt: 'GMUM - Group of Machine Learning Research', heightMm: 27, col: 2, row: 1 },
+  { src: 'vrg_logo_white.png', alt: 'VRG - Visual Recognition Group', heightMm: 36, col: 2, row: 2 },
+  { src: 'aachen_logo_white.png', alt: 'RWTH Aachen University', heightMm: 34, col: 3, row: 1 },
+];
+
+/* Event metadata */
+const EVENT_NAME = 'EDS 2026';
+const EVENT_LOGO = { src: 'event_logo.png', alt: 'ELLIS Doctoral Symposium on Trustworthy AI logo' };
+
+/* No project website was provided, so no project QR code */
+const PROJECT_QR = { enabled: false, src: 'qr.png', label: 'Project page', alt: 'Project QR' };
+
+/* ================================================================
+   FRAMEWORK CODE — generally don't need to modify below this line
+   ================================================================ */
+
+function cloneLayout(layout) {
+  return { columns: layout.columns.map(c => ({ id: c.id, widthMm: c.widthMm, cards: [...c.cards] })) };
+}
+
+const LS_KEY = 'posterConfig';
+function getFullConfig(layout, cardHeights, fontScale, logos) {
+  return { columns: layout.columns, cardHeights, fontScale, logos };
+}
+function loadInitialConfig() {
+  try { const s = localStorage.getItem(LS_KEY); if (s) return JSON.parse(s); } catch(e) {}
+  return null;
+}
+const INIT_CONFIG = loadInitialConfig();
+
+function PosterApp() {
+  const [layout, setLayout] = useState(INIT_CONFIG ? cloneLayout({columns: INIT_CONFIG.columns}) : cloneLayout(DEFAULT_LAYOUT));
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [cardHeights, setCardHeights] = useState(INIT_CONFIG?.cardHeights || {...DEFAULT_CARD_HEIGHTS});
+  const [preview, setPreview] = useState(false);
+  const [logos, setLogos] = useState(INIT_CONFIG?.logos || DEFAULT_LOGOS);
+  const [fontScale, setFontScaleState] = useState(INIT_CONFIG?.fontScale || DEFAULT_FONT_SCALE);
+  const currentScaleRef = useRef(1);
+  const posterRef = useRef(null);
+
+  useEffect(() => { const cfg = getFullConfig(layout, cardHeights, fontScale, logos); localStorage.setItem(LS_KEY, JSON.stringify(cfg)); }, [layout, cardHeights, fontScale, logos]);
+  useEffect(() => { document.documentElement.style.setProperty('--font-scale', fontScale); }, [fontScale]);
+  useEffect(() => { document.body.classList.toggle('preview', preview); }, [preview]);
+
+  const fit = useCallback(() => {
+    if (window.matchMedia('print').matches) return;
+    const pW = POSTER_W_MM * MM, pH = POSTER_H_MM * MM;
+    const scale = Math.min(window.innerWidth / pW, window.innerHeight / pH);
+    currentScaleRef.current = scale;
+    const left = (window.innerWidth - pW * scale) / 2;
+    const top = (window.innerHeight - pH * scale) / 2;
+    document.body.style.transform = 'translate(' + left + 'px,' + top + 'px) scale(' + scale + ')';
+  }, []);
+  useEffect(() => { fit(); window.addEventListener('resize', fit); return () => window.removeEventListener('resize', fit); }, [fit]);
+
+  useEffect(() => { if (typeof renderMathInElement === 'function') renderMathInElement(document.body, {delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]}); });
+
+  useEffect(() => {
+    function handler(e) { if (selectedCard && !e.target.closest('.swap-handle') && !e.target.closest('.drop-zone')) setSelectedCard(null); }
+    document.addEventListener('click', handler); return () => document.removeEventListener('click', handler);
+  }, [selectedCard]);
+
+  function swapCards(id1, id2) {
+    if (id1 === id2) return false;
+    setLayout(prev => { const next = cloneLayout(prev); let l1, l2; for (const c of next.columns) { const i1 = c.cards.indexOf(id1); if (i1!==-1) l1={col:c,idx:i1}; const i2 = c.cards.indexOf(id2); if (i2!==-1) l2={col:c,idx:i2}; } if (!l1||!l2) return prev; l1.col.cards[l1.idx]=id2; l2.col.cards[l2.idx]=id1; return next; });
+    setCardHeights(prev => { const n={...prev}; delete n[id1]; delete n[id2]; return n; });
+    return true;
+  }
+  function moveCard(cardId, targetColId, position) {
+    setLayout(prev => { const next = cloneLayout(prev); for (const c of next.columns) { const i = c.cards.indexOf(cardId); if (i!==-1) { c.cards.splice(i,1); break; } } const tc = next.columns.find(c=>c.id===targetColId); if (!tc) return prev; tc.cards.splice(Math.max(0,Math.min(position,tc.cards.length)),0,cardId); return next; });
+    setCardHeights(prev => { const n={...prev}; delete n[cardId]; return n; });
+  }
+  function setColumnWidth(colId, widthMm) { setLayout(prev => { const next = cloneLayout(prev); const c = next.columns.find(c=>c.id===colId); if (!c) return prev; c.widthMm = widthMm; return next; }); }
+  function setCardHeight(cardId, heightMm) { setCardHeights(prev => ({...prev, [cardId]: heightMm})); }
+  function getWaste() { let total=0; const details=[]; document.querySelectorAll('.fig-wrap').forEach(fw => { const img=fw.querySelector('img'); if(!img)return; const fr=fw.getBoundingClientRect(),ir=img.getBoundingClientRect(); const wH=Math.abs(fr.height-ir.height),wW=Math.abs(fr.width-ir.width); total+=wH+wW; details.push({card:fw.closest('.card')?.dataset.id,wasteH:Math.round(wH),wasteW:Math.round(wW),pct:Math.round((wH+wW)/(fr.height+fr.width)*100)}); }); return {total:Math.round(total),details}; }
+  function getLayout() { const s=currentScaleRef.current; const r=[]; document.querySelectorAll('#poster > .col').forEach(col => { const cards=[]; col.querySelectorAll('.card').forEach(c => { const b=c.getBoundingClientRect(); cards.push({id:c.dataset.id,height:Math.round(b.height/s),heightMm:Math.round(b.height/s/MM),grow:c.classList.contains('grow')}); }); r.push({colId:col.id,widthPx:Math.round(col.getBoundingClientRect().width/s),widthMm:Math.round(col.getBoundingClientRect().width/s/MM),cards}); }); return r; }
+
+  function resetLayout() { setLayout(cloneLayout(DEFAULT_LAYOUT)); setCardHeights({...DEFAULT_CARD_HEIGHTS}); setFontScaleState(DEFAULT_FONT_SCALE); setLogos([...DEFAULT_LOGOS]); setSelectedCard(null); localStorage.removeItem(LS_KEY); }
+  function saveConfig() { const cfg=getFullConfig(layout,cardHeights,fontScale,logos); const b=new Blob([JSON.stringify(cfg,null,2)+'\n'],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download='poster-config.json'; a.click(); URL.revokeObjectURL(u); }
+  function copyConfig() { navigator.clipboard.writeText(JSON.stringify(getFullConfig(layout,cardHeights,fontScale,logos),null,2)).then(()=>alert('Config copied! Paste it to Codex.')); }
+  function setFontScale(s) { setFontScaleState(parseFloat(s)||1.3); }
+
+  useEffect(() => { window.posterAPI = { swapCards, moveCard, setColumnWidth, setCardHeight, setFontScale, getWaste, getLayout, getConfig:()=>getFullConfig(layout,cardHeights,fontScale,logos), resetLayout, saveConfig, copyConfig }; });
+
+  function handleSwapClick(cardId, e) { e.stopPropagation(); if (!selectedCard) setSelectedCard(cardId); else if (selectedCard===cardId) setSelectedCard(null); else { swapCards(selectedCard, cardId); setSelectedCard(null); } }
+  function handleDropZone(targetColId, position, e) { e.stopPropagation(); if (!selectedCard) return; moveCard(selectedCard, targetColId, position); setSelectedCard(null); }
+
+  /* Generic N-column resize: each divider adjusts the (fixed-width) column
+     immediately to its left; the last column is left with widthMm=null so it
+     always absorbs remaining space and never overflows the fixed poster width. */
+  function handleColResize(dividerIdx, e) {
+    e.preventDefault(); const handle=e.currentTarget; handle.classList.add('active');
+    const targetColIdx=dividerIdx; const invert=1;
+    const targetEl=document.getElementById(layout.columns[targetColIdx].id);
+    const startX=e.clientX; const scale=currentScaleRef.current;
+    const startW=targetEl.getBoundingClientRect().width/scale;
+    function onMove(ev) { const dx=(ev.clientX-startX)/scale*invert; const newW=Math.max(120,(startW+dx)/MM); setLayout(prev => { const next=cloneLayout(prev); next.columns[targetColIdx].widthMm=Math.round(newW); return next; }); }
+    function onUp() { document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); handle.classList.remove('active'); document.body.style.cursor=''; }
+    document.body.style.cursor='col-resize'; document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
+  }
+
+  function handleRowResize(colId, cardAboveIdx, e) {
+    e.preventDefault(); const handle=e.currentTarget; handle.classList.add('active');
+    const col=layout.columns.find(c=>c.id===colId); const aboveId=col.cards[cardAboveIdx];
+    const aboveEl=document.querySelector('[data-id="'+aboveId+'"]'); if(!aboveEl)return;
+    const startY=e.clientY; const scale=currentScaleRef.current; const startH=aboveEl.getBoundingClientRect().height/scale;
+    setCardHeights(prev=>({...prev,[aboveId]:startH/MM}));
+    function onMove(ev) { const dy=(ev.clientY-startY)/scale; setCardHeights(prev=>({...prev,[aboveId]:Math.max(20,(startH+dy)/MM)})); }
+    function onUp() { document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); handle.classList.remove('active'); document.body.style.cursor=''; }
+    document.body.style.cursor='row-resize'; document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
+  }
+
+  function isCardGrow(cardId) {
+    if (cardHeights[cardId] != null) return false;
+    for (const col of layout.columns) {
+      const idx = col.cards.indexOf(cardId); if (idx===-1) continue;
+      const hasGrower = col.cards.some(cid => CARD_REGISTRY[cid]?.grow && cardHeights[cid]==null);
+      if (hasGrower) return CARD_REGISTRY[cardId]?.grow || false;
+      const lastFlexible = [...col.cards].reverse().find(cid => cardHeights[cid]==null);
+      return cardId === lastFlexible;
+    }
+    return false;
+  }
+
+  function renderCard(cardId) {
+    const card = CARD_REGISTRY[cardId]; if (!card) return null;
+    const classes = ['card']; if (card.color) classes.push(card.color); if (isCardGrow(cardId)) classes.push('grow'); if (selectedCard===cardId) classes.push('swap-selected');
+    const style = {}; if (cardHeights[cardId]!=null) style.flex='0 0 '+cardHeights[cardId]+'mm';
+    return (<div key={cardId} className={classes.join(' ')} data-id={cardId} style={style}><div className="swap-handle" onClick={(e)=>handleSwapClick(cardId,e)}>&#x2725;</div><h2>{card.title}</h2>{card.body}</div>);
+  }
+
+  function renderDropZone(colId, position) {
+    const visible = selectedCard !== null;
+    return (<div key={'dz-'+colId+'-'+position} className={'drop-zone'+(visible?' visible':'')} onClick={(e)=>handleDropZone(colId,position,e)}>{visible && <div className="drop-zone-inner" />}</div>);
+  }
+
+  function renderColumn(col) {
+    const style = col.widthMm != null ? {flex:'0 0 '+col.widthMm+'mm'} : {flex:'1.5'};
+    const children = [renderDropZone(col.id, 0)];
+    col.cards.forEach((cardId, i) => {
+      children.push(renderCard(cardId));
+      if (i < col.cards.length - 1) children.push(<div key={'row-'+col.id+'-'+i} className="divider row-resize" onMouseDown={(e)=>handleRowResize(col.id,i,e)} />);
+      children.push(renderDropZone(col.id, i + 1));
+    });
+    return (<div key={col.id} className="col" id={col.id} style={style}>{children}</div>);
+  }
+
+  return (
+    <>
+      <div className="toolbar">
+        <button onClick={()=>setPreview(!preview)} style={preview?{background:'#2d7fc1',color:'#fff'}:{}}>{preview?'Edit':'Preview'}</button>
+        {!preview && <>
+          <button onClick={()=>setFontScale(Math.max(0.8,fontScale-0.1))}>A-</button>
+          <button onClick={()=>setFontScale(fontScale+0.1)}>A+</button>
+          <button onClick={saveConfig} title="Download poster-config.json">Save</button>
+          <button onClick={copyConfig} title="Copy config JSON to clipboard">Copy Config</button>
+          <button onClick={resetLayout}>Reset</button>
+        </>}
+      </div>
+
+      <div className="header">
+        <div className="header-left">
+          <h1><span className="m">AMDF:</span> Holistic Probing of Vision Foundation Models<br/>with Adaptive Multi-Layer Dense Fusion</h1>
+          <div className="authors">Turhan Can Kargin<sup>1,2</sup> &middot; Bill Psomas<sup>3,4</sup> &middot; Paul Wagner<sup>5</sup> &middot; Giorgos Tolias<sup>3,4</sup> &middot; Bartosz Zieli&#324;ski<sup>1,2</sup> &middot; Marcin Przewi&#281;&#378;likowski<sup>1,2</sup></div>
+          <div className="aff"><sup>1</sup> Jagiellonian University in Krak&oacute;w &nbsp;&nbsp; <sup>2</sup> GMUM &nbsp;&nbsp; <sup>3</sup> Czech Technical University in Prague &nbsp;&nbsp; <sup>4</sup> VRG &nbsp;&nbsp; <sup>5</sup> RWTH Aachen University</div>
+        </div>
+        {logos.length > 0 && (
+          <div className="header-logos">
+            {(() => {
+              const blocks = [];
+              logos.forEach((logo) => {
+                const c = logo.col ?? blocks.length;
+                let block = blocks.find((x) => x.col === c);
+                if (!block) { block = { col: c, rows: [] }; blocks.push(block); }
+                const r = logo.row ?? block.rows.length;
+                let rowObj = block.rows.find((x) => x.row === r);
+                if (!rowObj) { rowObj = { row: r, items: [] }; block.rows.push(rowObj); }
+                rowObj.items.push(logo);
+              });
+              return blocks.map((block, bi) => (
+                <React.Fragment key={bi}>
+                  {bi > 0 && <div className="logo-vr" />}
+                  <div className="logo-block">
+                    {block.rows.map((rowObj, ri) => (
+                      <React.Fragment key={ri}>
+                        {ri > 0 && <div className="logo-hr" />}
+                        <div className="logo-row">
+                          {rowObj.items.map((logo, i) => (
+                            <div key={i} className={'logo-item' + (logo.chip ? ' logo-chip' : '')}>
+                              <img src={logo.src} alt={logo.alt} style={{ height: (logo.heightMm || 24) + 'mm' }} />
+                            </div>
+                          ))}
+                        </div>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </React.Fragment>
+              ));
+            })()}
+          </div>
+        )}
+        <div className="header-right">
+          {EVENT_LOGO && (
+            <div className="event-card">
+              <img src={EVENT_LOGO.src} alt={EVENT_LOGO.alt || 'Event logo'} />
+              {EVENT_NAME && <div className="ev-name">{EVENT_NAME}</div>}
+              <div className="ev-sub">ELLIS Doctoral Symposium&nbsp;on Trustworthy AI</div>
+              <div className="ev-loc">Lisbon &middot; July 27&ndash;30, 2026</div>
+            </div>
+          )}
+          {PROJECT_QR.enabled && (
+            <div className="qr">
+              <img src={PROJECT_QR.src} alt={PROJECT_QR.alt || 'Project QR'} />
+              <div className="ql">{PROJECT_QR.label || 'Project page'}</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="poster" id="poster" ref={posterRef}>
+        {layout.columns.map((col, colIdx) => {
+          const elements = [];
+          if (colIdx > 0) elements.push(<div key={'col-div-'+colIdx} className="divider col-resize" onMouseDown={(e)=>handleColResize(colIdx-1,e)} />);
+          elements.push(renderColumn(col));
+          return elements;
+        })}
+      </div>
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<PosterApp />);
+</script>
+</body>
+</html>
